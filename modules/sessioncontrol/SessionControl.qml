@@ -29,6 +29,31 @@ PanelWindow {
     //WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
     exclusionMode: ExclusionMode.Ignore
 
+    property list<string> shutdownCommand: ["hyprshutdown", "-p", "systemctl poweroff"]
+    property list<string> rebootCommand: ["hyprshutdown", "-p", "systemctl reboot"]
+    property list<string> lockCommand: ["qylock-lock"]
+    property list<string> suspendCommand: ["systemctl", "sleep"]
+    property list<string> logoutCommand: ["hyprshutdown"]
+    property list<string> hibernateCommand: ["systemctl", "hibernate"]
+
+    readonly property var _commandList: [
+        shutdownCommand,
+        rebootCommand,
+        lockCommand,
+        suspendCommand,
+        logoutCommand,
+        hibernateCommand
+    ]
+
+    function executeSessionControl(type: int) {
+        const cmd = _commandList[type]
+        if (cmd && cmd.length > 0) {
+            Quickshell.execDetached(cmd)
+        } else {
+            console.warn("No command configured for session control:", type)
+        }
+    }
+
     HyprlandFocusGrab {
         id: grab
         windows: [root]
@@ -80,14 +105,13 @@ PanelWindow {
         anchors.fill: parent
         anchors.centerIn: parent
         hoverEnabled: true
+        property int region: 0
 
         // Prevent layout feedback by checking polar coordinates relative to origin
         onPositionChanged: mouse => {
             let dx = mouse.x - width / 2;
             let dy = -(mouse.y - height / 2);
             let dist = Math.sqrt(dx * dx + dy * dy);
-
-            let region = -1;
 
             // Set all as non hovered if pointing the dead center
             if (dist >= root.centerDeadZone) {
@@ -99,6 +123,8 @@ PanelWindow {
                 let angleNormal = ((newAngle % (2 * Math.PI)) + (2 * Math.PI)) % (2 * Math.PI);
 
                 region = Math.floor(angleNormal / (2 * Math.PI) * sliceRepeater.count);
+            } else {
+                region = -1;
             }
 
             for (let i = 0; i < sliceRepeater.count; i++) {
@@ -111,6 +137,12 @@ PanelWindow {
                 } else {
                     item.isHovered = true;
                 }
+            }
+        }
+
+        onClicked: mouse => {
+            if (region >= 0) {
+                root.executeSessionControl(region)
             }
         }
     }
