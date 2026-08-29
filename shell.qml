@@ -1,7 +1,9 @@
 import Quickshell
+import Quickshell.Wayland
 import Quickshell.Io
 import QtQuick
 import "modules/sessioncontrol"
+import "modules/solarclock"
 
 ShellRoot {
     LazyLoader {
@@ -11,6 +13,25 @@ ShellRoot {
           SessionControl {
               visible: false
           }
+    }
+
+    PanelWindow {
+        id: root
+        anchors {
+            top: true
+            left: true
+            right: true
+            bottom: true
+        }
+
+        color: "#00000000"
+
+        WlrLayershell.layer: WlrLayer.Overlay
+        exclusionMode: ExclusionMode.Ignore
+
+        SolarClock {
+
+        }
     }
 
     IpcHandler {
