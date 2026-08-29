@@ -29,8 +29,15 @@ ShellRoot {
         WlrLayershell.layer: WlrLayer.Overlay
         exclusionMode: ExclusionMode.Ignore
 
-        SolarClock {
+        Image {
+            source: "file:assets/images/outerwilds/backgrounds/StarrySky.png"
+            anchors.fill: parent
+            fillMode: Image.PreserveAspectCrop
+            opacity: 0.9
+        }
 
+        SolarClock {
+            scale: 0.7
         }
     }
 
