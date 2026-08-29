@@ -12,25 +12,24 @@ Item {
     property real planetRadius: 50
     property real satelliteRadius: 20
     property real sunStationOrbitDistance: 35
-    property real planetOrbitDistance: 200
+    property real planetOrbitDistance: 160
     property real satelliteOrbitDistance: 30
 
-    property double timeScale: 1000
+    property double timeScale: 1
 
     // Orbit periods in ms
-    property double sunStationOrbitPeriod: 1320000 / timeScale // 22 minutes
-    property double twinsOrbitPeriod: 3600000 / timeScale // 1 hour
-    property double twinsRotationPeriod: 100000 / timeScale
-    property double timberHearthOrbitPeriod: 43200000 / timeScale // 12 hours
-    property double brittleHollowOrbitPeriod: 604800000 / timeScale // 1 week
-    property double giantsDeepOrbitPeriod: 2592000000 / timeScale // 1 month
-    property double darkBrambleOrbitPeriod: 3110400000 / timeScale // 1 year
+    property double sunStationOrbitPeriod: 1320000 / timeScale // 22 minutes :P
+    property double twinsRotationPeriod: 10000 / timeScale
+    property double satelliteOrbitPeriod: 5000 / timeScale
 
-    anchors {
-        top: parent.top
-        left: parent.left
-        right: parent.right
-        bottom: parent.bottom
+    anchors.fill: parent
+
+    // So that the 0 degree is at the top, like a clock.
+    rotation: -90
+
+    SystemClock {
+        id: clock
+        precision: SystemClock.Minutes
     }
 
     Image {
@@ -56,7 +55,14 @@ Item {
 
     RotationAnchor {
         item: sun
-        rotationPeriod: root.sunStationOrbitPeriod
+
+        RotationAnimation on rotation {
+            from: 0
+            to: 360
+            duration: root.sunStationOrbitPeriod
+            loops: Animation.Infinite
+            direction: RotationAnimation.Clockwise
+        }
 
         Image {
             source: root.planetsPath + "SunStation.png"
@@ -82,7 +88,15 @@ Item {
     RotationAnchor {
         id: twinsOrbit
         item: sun
-        rotationPeriod: root.twinsOrbitPeriod
+
+        // 1 loop per hour
+        rotation: clock.minutes * 6
+
+        Behavior on rotation {
+            PropertyAnimation {
+                easing.type: Easing.InOutQuad
+            }
+        }
 
         Image {
             id: sandFlow
@@ -130,7 +144,16 @@ Item {
 
     RotationAnchor {
         item: sun
-        rotationPeriod: root.timberHearthOrbitPeriod
+
+        // The Timber Hearth orbit is completed in 12 hours (like a wall clock)
+        rotation: (((clock.hours % 12) * 60 + clock.minutes) / 720) * 360
+
+        // Clockhand-like snap
+        Behavior on rotation {
+            PropertyAnimation {
+                easing.type: Easing.InOutQuad
+            }
+        }
 
         Image {
             id: timberHearth
@@ -146,7 +169,14 @@ Item {
 
         RotationAnchor {
             item: timberHearth
-            rotationPeriod: root.sunStationOrbitPeriod / 2
+
+            RotationAnimation on rotation {
+                from: 0
+                to: 360
+                duration: root.satelliteOrbitPeriod
+                loops: Animation.Infinite
+                direction: RotationAnimation.Clockwise
+            }
 
             Image {
                 id: attlerock
@@ -164,7 +194,14 @@ Item {
 
     RotationAnchor {
         item: sun
-        rotationPeriod: root.brittleHollowOrbitPeriod
+
+        rotation: (clock.date.getDay() / 7) * 360
+
+        Behavior on rotation {
+            PropertyAnimation {
+                easing.type: Easing.InOutQuad
+            }
+        }
 
         Image {
             id: brittleHollow
@@ -180,7 +217,14 @@ Item {
 
         RotationAnchor {
             item: brittleHollow
-            rotationPeriod: root.sunStationOrbitPeriod / 2
+
+            RotationAnimation on rotation {
+                from: 0
+                to: 360
+                duration: root.satelliteOrbitPeriod
+                loops: Animation.Infinite
+                direction: RotationAnimation.Clockwise
+            }
 
             Image {
                 id: hollowLantern
@@ -198,7 +242,19 @@ Item {
 
     RotationAnchor {
         item: sun
-        rotationPeriod: root.giantsDeepOrbitPeriod
+
+        rotation: {
+            let day = clock.date.getDate();
+            //let daysInMonth = Date(clock.date.getFullYear(), clock.date.getMonth()+1, 0).getDate();
+
+            return (day / 31) * 360
+        }
+
+        Behavior on rotation {
+            PropertyAnimation {
+                easing.type: Easing.InOutQuad
+            }
+        }
 
         Image {
             id: giantsDeep
@@ -214,7 +270,14 @@ Item {
 
         RotationAnchor {
             item: giantsDeep
-            rotationPeriod: root.sunStationOrbitPeriod
+
+            RotationAnimation on rotation {
+                from: 0
+                to: 360
+                duration: root.satelliteOrbitPeriod
+                loops: Animation.Infinite
+                direction: RotationAnimation.Clockwise
+            }
 
             Image {
                 id: orbitalProbeCannon
@@ -227,21 +290,21 @@ Item {
                 x: giantsDeep.width / 2 - width / 2 + root.satelliteOrbitDistance
                 y: -height / 2
 
-                // Counterbalance the rotation to stay put
-                RotationAnimation on rotation {
-                    from: 90
-                    to: -270
-                    duration: 10000
-                    loops: Animation.Infinite
-                    direction: RotationAnimation.Clockwise
-                }
+                rotation: 90
             }
         }
     }
 
     RotationAnchor {
         item: sun
-        rotationPeriod: root.darkBrambleOrbitPeriod
+
+        rotation: (clock.date.getMonth() / 12) * 360
+
+        Behavior on rotation {
+            PropertyAnimation {
+                easing.type: Easing.InOutQuad
+            }
+        }
 
         Image {
             id: darkBramble

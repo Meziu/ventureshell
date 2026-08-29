@@ -7,12 +7,12 @@ import "modules/solarclock"
 
 ShellRoot {
     LazyLoader {
-          id: sessionControlLoader
-          loading: true
+        id: sessionControlLoader
+        loading: true
 
-          SessionControl {
-              visible: false
-          }
+        SessionControl {
+            visible: false
+        }
     }
 
     PanelWindow {
@@ -37,7 +37,7 @@ ShellRoot {
         }
 
         SolarClock {
-            scale: 0.7
+            scale: 0.5
         }
     }
 
