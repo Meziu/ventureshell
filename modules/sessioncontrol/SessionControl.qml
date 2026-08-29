@@ -18,10 +18,11 @@ PanelWindow {
 
     property string eyeColor: "#6A7DFE"
     property real centerRadius: 260
-    property real centerDeadZone: root.centerRadius / 2
     property real eyeScalePerHundredRadius: 0.2
     property real sliceLength: 200
     property real sliceLengthIncrease: 60
+    property real centerDeadZone: root.centerRadius / 2
+    property real outerDeadZone: centerRadius + sliceLength + sliceLengthIncrease + 100
 
     color: "#00000000"
 
@@ -57,7 +58,7 @@ PanelWindow {
     HyprlandFocusGrab {
         id: grab
         windows: [root]
-        active: true
+        active: root.visible
     }
 
     Image {
@@ -114,7 +115,7 @@ PanelWindow {
             let dist = Math.sqrt(dx * dx + dy * dy);
 
             // Set all as non hovered if pointing the dead center
-            if (dist >= root.centerDeadZone) {
+            if (dist >= root.centerDeadZone && dist <= root.outerDeadZone) {
                 let angle = Math.atan2(dx, dy);
 
                 // We add back the offset of the first slice, which is half in the positive side and half in the negative
@@ -141,8 +142,11 @@ PanelWindow {
         }
 
         onClicked: mouse => {
+            if (region == -1) {
+                root.visible = false;
+            }
             if (region >= 0) {
-                root.executeSessionControl(region)
+                root.executeSessionControl(region);
             }
         }
     }
