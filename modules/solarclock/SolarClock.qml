@@ -24,298 +24,334 @@ Item {
 
     anchors.fill: parent
 
-    // So that the 0 degree is at the top, like a clock.
-    rotation: -90
-
     SystemClock {
         id: clock
         precision: SystemClock.Minutes
+        readonly property int daysInMonth: new Date(clock.date.getFullYear(), clock.date.getMonth()+1, 0).getDate()
     }
 
-    Image {
-        id: sun
-        source: root.planetsPath + "Sun.png"
-        fillMode: Image.PreserveAspectFit
-        anchors.centerIn: parent
+    Repeater {
+        id: crownsRepeater
 
-        width: root.sunRadius * 2
-        height: width
-    }
+        model: [
+                { slices: 4, sliceOffset: 0.5, labels: "0-15,15-30,30-45,45-59" },
+                { slices: 12, sliceOffset: 1, labels: "index" },
+                { slices: 7, sliceOffset: 0, labels: "Mon,Tue,Wed,Thur,Fri,Sat,Sun" },
+                { slices: clock.daysInMonth, sliceOffset: 0, labels: "index" },
+                { slices: 12, sliceOffset: 0, labels: "Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec" }
+            ]
 
-    Rectangle {
-        anchors.centerIn: parent
+        Repeater {
+            id: sliceRepeater
+            required property int index
+            required property int slices
+            required property real sliceOffset
+            required property string labels
+            model: slices
 
-        border.color: "#FFFFFF"
-        color: "transparent"
+            RadialSlice {
+                id: slice
+                required property int index
 
-        width: root.orbitWidth * 6
-        height: root.orbitWidth * 6
-        radius: root.width / 2
-    }
+                fractions: sliceRepeater.count
+                length: root.planetOrbitDistance + 10
+                innerRadius: root.sunRadius + root.planetOrbitDistance * (sliceRepeater.index + 1) - root.planetRadius * 1.5
+                margin: 0
+                rotation: (this.index + sliceRepeater.sliceOffset) * 360 / fractions
 
-    RotationAnchor {
-        item: sun
+                Text {
+                    anchors.centerIn: parent
+                    text: {
+                        if (sliceRepeater.labels === "index") {
+                            return slice.index + 1
+                        } else {
+                            return sliceRepeater.labels.split(",")[slice.index]
+                        }
+                    }
+                    font.pixelSize: 36
+                    font.bold: true
+                }
 
-        RotationAnimation on rotation {
-            from: 0
-            to: 360
-            duration: root.sunStationOrbitPeriod
-            loops: Animation.Infinite
-            direction: RotationAnimation.Clockwise
+                visible: true
+            }
         }
+    }
+
+    Item {
+        // So that the 0 degree is at the top, like a clock.
+        rotation: -90
+
+        anchors.fill: parent
 
         Image {
-            source: root.planetsPath + "SunStation.png"
+            id: sun
+            source: root.planetsPath + "Sun.png"
             fillMode: Image.PreserveAspectFit
+            anchors.centerIn: parent
 
-            width: root.planetRadius
+            width: root.sunRadius * 2
             height: width
+        }
 
-            x: root.sunRadius + root.sunStationOrbitDistance - width / 2
-            y: -height / 2
+        RotationAnchor {
+            item: sun
 
-            // Counterbalance and stay looking at the sun
             RotationAnimation on rotation {
-                from: 90
-                to: -270
+                from: 0
+                to: 360
                 duration: root.sunStationOrbitPeriod
                 loops: Animation.Infinite
                 direction: RotationAnimation.Clockwise
             }
-        }
-    }
-
-    RotationAnchor {
-        id: twinsOrbit
-        item: sun
-
-        // 1 loop per hour
-        rotation: clock.minutes * 6
-
-        Behavior on rotation {
-            PropertyAnimation {
-                easing.type: Easing.InOutQuad
-            }
-        }
-
-        Image {
-            id: sandFlow
-            source: root.planetsPath + "SandFlow.png"
-            fillMode: Image.PreserveAspectFit
-
-            width: root.planetRadius
-            height: width
-            scale: 1.5
-
-            x: root.sunRadius + root.planetOrbitDistance - width / 2
-            y: -height / 2
-
-            RotationAnimation on rotation {
-                from: 0
-                to: 360
-                duration: root.twinsRotationPeriod
-                loops: Animation.Infinite
-                direction: RotationAnimation.Clockwise
-            }
 
             Image {
-                id: ashTwin
-                source: root.planetsPath + "AshTwin.png"
+                source: root.planetsPath + "SunStation.png"
                 fillMode: Image.PreserveAspectFit
 
                 width: root.planetRadius
                 height: width
 
-                x: sandFlow.width/2
+                x: root.sunRadius + root.sunStationOrbitDistance - width / 2
+                y: -height / 2
+
+                // Counterbalance and stay looking at the sun
+                RotationAnimation on rotation {
+                    from: 90
+                    to: -270
+                    duration: root.sunStationOrbitPeriod
+                    loops: Animation.Infinite
+                    direction: RotationAnimation.Clockwise
+                }
+            }
+        }
+
+        RotationAnchor {
+            id: twinsOrbit
+            item: sun
+
+            // 1 loop per hour
+            rotation: clock.minutes * 6
+
+            Behavior on rotation {
+                PropertyAnimation {
+                    easing.type: Easing.InOutQuad
+                }
             }
 
             Image {
-                id: amberTwin
-                source: root.planetsPath + "AmberTwin.png"
+                id: sandFlow
+                source: root.planetsPath + "SandFlow.png"
                 fillMode: Image.PreserveAspectFit
 
                 width: root.planetRadius
                 height: width
+                scale: 1.5
 
-                x: -sandFlow.width/2
+                x: root.sunRadius + root.planetOrbitDistance - width / 2
+                y: -height / 2
+
+                RotationAnimation on rotation {
+                    from: 0
+                    to: 360
+                    duration: root.twinsRotationPeriod
+                    loops: Animation.Infinite
+                    direction: RotationAnimation.Clockwise
+                }
+
+                Image {
+                    id: ashTwin
+                    source: root.planetsPath + "AshTwin.png"
+                    fillMode: Image.PreserveAspectFit
+
+                    width: root.planetRadius
+                    height: width
+
+                    x: sandFlow.width / 2
+                }
+
+                Image {
+                    id: amberTwin
+                    source: root.planetsPath + "AmberTwin.png"
+                    fillMode: Image.PreserveAspectFit
+
+                    width: root.planetRadius
+                    height: width
+
+                    x: -sandFlow.width / 2
+                }
             }
-        }
-    }
-
-    RotationAnchor {
-        item: sun
-
-        // The Timber Hearth orbit is completed in 12 hours (like a wall clock)
-        rotation: (((clock.hours % 12) * 60 + clock.minutes) / 720) * 360
-
-        // Clockhand-like snap
-        Behavior on rotation {
-            PropertyAnimation {
-                easing.type: Easing.InOutQuad
-            }
-        }
-
-        Image {
-            id: timberHearth
-            source: root.planetsPath + "TimberHearth.png"
-            fillMode: Image.PreserveAspectFit
-
-            width: root.planetRadius * 2
-            height: width
-
-            x: root.sunRadius + root.planetOrbitDistance * 2 - width / 2
-            y: -height / 2
         }
 
         RotationAnchor {
-            item: timberHearth
+            item: sun
 
-            RotationAnimation on rotation {
-                from: 0
-                to: 360
-                duration: root.satelliteOrbitPeriod
-                loops: Animation.Infinite
-                direction: RotationAnimation.Clockwise
+            // The Timber Hearth orbit is completed in 12 hours (like a wall clock)
+            rotation: (((clock.hours % 12) * 60 + clock.minutes) / 720) * 360
+
+            // Clockhand-like snap
+            Behavior on rotation {
+                PropertyAnimation {
+                    easing.type: Easing.InOutQuad
+                }
             }
 
             Image {
-                id: attlerock
-                source: root.planetsPath + "Attlerock.png"
+                id: timberHearth
+                source: root.planetsPath + "TimberHearth.png"
                 fillMode: Image.PreserveAspectFit
 
-                width: root.satelliteRadius * 2
+                width: root.planetRadius * 2
                 height: width
 
-                x: timberHearth.width / 2 - width / 2 + root.satelliteOrbitDistance
+                x: root.sunRadius + root.planetOrbitDistance * 2 - width / 2
                 y: -height / 2
             }
-        }
-    }
 
-    RotationAnchor {
-        item: sun
+            RotationAnchor {
+                item: timberHearth
 
-        rotation: (clock.date.getDay() / 7) * 360
+                RotationAnimation on rotation {
+                    from: 0
+                    to: 360
+                    duration: root.satelliteOrbitPeriod
+                    loops: Animation.Infinite
+                    direction: RotationAnimation.Clockwise
+                }
 
-        Behavior on rotation {
-            PropertyAnimation {
-                easing.type: Easing.InOutQuad
+                Image {
+                    id: attlerock
+                    source: root.planetsPath + "Attlerock.png"
+                    fillMode: Image.PreserveAspectFit
+
+                    width: root.satelliteRadius * 2
+                    height: width
+
+                    x: timberHearth.width / 2 - width / 2 + root.satelliteOrbitDistance
+                    y: -height / 2
+                }
             }
-        }
-
-        Image {
-            id: brittleHollow
-            source: root.planetsPath + "BrittleHollow.png"
-            fillMode: Image.PreserveAspectFit
-
-            width: root.planetRadius * 2
-            height: width
-
-            x: root.sunRadius + root.planetOrbitDistance * 3 - width / 2
-            y: -height / 2
         }
 
         RotationAnchor {
-            item: brittleHollow
+            item: sun
 
-            RotationAnimation on rotation {
-                from: 0
-                to: 360
-                duration: root.satelliteOrbitPeriod
-                loops: Animation.Infinite
-                direction: RotationAnimation.Clockwise
+            rotation: (((clock.date.getDay()+6) % 7) / 7) * 360
+
+            Behavior on rotation {
+                PropertyAnimation {
+                    easing.type: Easing.InOutQuad
+                }
             }
 
             Image {
-                id: hollowLantern
-                source: root.planetsPath + "HollowLantern.png"
+                id: brittleHollow
+                source: root.planetsPath + "BrittleHollow.png"
                 fillMode: Image.PreserveAspectFit
 
-                width: root.satelliteRadius * 2
+                width: root.planetRadius * 2
                 height: width
 
-                x: brittleHollow.width / 2 - width / 2 + root.satelliteOrbitDistance
+                x: root.sunRadius + root.planetOrbitDistance * 3 - width / 2
                 y: -height / 2
             }
-        }
-    }
 
-    RotationAnchor {
-        item: sun
+            RotationAnchor {
+                item: brittleHollow
 
-        rotation: {
-            let day = clock.date.getDate();
-            //let daysInMonth = Date(clock.date.getFullYear(), clock.date.getMonth()+1, 0).getDate();
+                RotationAnimation on rotation {
+                    from: 0
+                    to: 360
+                    duration: root.satelliteOrbitPeriod
+                    loops: Animation.Infinite
+                    direction: RotationAnimation.Clockwise
+                }
 
-            return (day / 31) * 360
-        }
+                Image {
+                    id: hollowLantern
+                    source: root.planetsPath + "HollowLantern.png"
+                    fillMode: Image.PreserveAspectFit
 
-        Behavior on rotation {
-            PropertyAnimation {
-                easing.type: Easing.InOutQuad
+                    width: root.satelliteRadius * 2
+                    height: width
+
+                    x: brittleHollow.width / 2 - width / 2 + root.satelliteOrbitDistance
+                    y: -height / 2
+                }
             }
-        }
-
-        Image {
-            id: giantsDeep
-            source: root.planetsPath + "GiantsDeep.png"
-            fillMode: Image.PreserveAspectFit
-
-            width: root.planetRadius * 2
-            height: width
-
-            x: root.sunRadius + root.planetOrbitDistance * 4 - width / 2
-            y: -height / 2
         }
 
         RotationAnchor {
-            item: giantsDeep
+            item: sun
 
-            RotationAnimation on rotation {
-                from: 0
-                to: 360
-                duration: root.satelliteOrbitPeriod
-                loops: Animation.Infinite
-                direction: RotationAnimation.Clockwise
+            rotation: ((clock.date.getDate() - 1) / clock.daysInMonth) * 360
+
+            Behavior on rotation {
+                PropertyAnimation {
+                    easing.type: Easing.InOutQuad
+                }
             }
 
             Image {
-                id: orbitalProbeCannon
-                source: root.planetsPath + "OrbitalProbeCannon.png"
+                id: giantsDeep
+                source: root.planetsPath + "GiantsDeep.png"
                 fillMode: Image.PreserveAspectFit
 
-                width: root.satelliteRadius * 2
+                width: root.planetRadius * 2
                 height: width
 
-                x: giantsDeep.width / 2 - width / 2 + root.satelliteOrbitDistance
+                x: root.sunRadius + root.planetOrbitDistance * 4 - width / 2
                 y: -height / 2
+            }
 
-                rotation: 90
+            RotationAnchor {
+                item: giantsDeep
+
+                RotationAnimation on rotation {
+                    from: 0
+                    to: 360
+                    duration: root.satelliteOrbitPeriod
+                    loops: Animation.Infinite
+                    direction: RotationAnimation.Clockwise
+                }
+
+                Image {
+                    id: orbitalProbeCannon
+                    source: root.planetsPath + "OrbitalProbeCannon.png"
+                    fillMode: Image.PreserveAspectFit
+
+                    width: root.satelliteRadius * 2
+                    height: width
+
+                    x: giantsDeep.width / 2 - width / 2 + root.satelliteOrbitDistance
+                    y: -height / 2
+
+                    rotation: 90
+                }
             }
         }
-    }
 
-    RotationAnchor {
-        item: sun
+        RotationAnchor {
+            item: sun
 
-        rotation: (clock.date.getMonth() / 12) * 360
+            rotation: (clock.date.getMonth() / 12) * 360
 
-        Behavior on rotation {
-            PropertyAnimation {
-                easing.type: Easing.InOutQuad
+            Behavior on rotation {
+                PropertyAnimation {
+                    easing.type: Easing.InOutQuad
+                }
             }
-        }
 
-        Image {
-            id: darkBramble
-            source: root.planetsPath + "DarkBramble.png"
-            fillMode: Image.PreserveAspectFit
+            Image {
+                id: darkBramble
+                source: root.planetsPath + "DarkBramble.png"
+                fillMode: Image.PreserveAspectFit
 
-            width: root.planetRadius * 2
-            height: width
+                width: root.planetRadius * 2
+                height: width
 
-            x: root.sunRadius + root.planetOrbitDistance * 5 - width / 2
-            y: -height / 2
+                x: root.sunRadius + root.planetOrbitDistance * 5 - width / 2
+                y: -height / 2
+            }
         }
     }
 }
