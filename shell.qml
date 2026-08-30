@@ -37,6 +37,7 @@ ShellRoot {
         }
 
         SolarClock {
+            anchors.centerIn: parent
             scale: 0.5
         }
     }
