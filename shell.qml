@@ -1,9 +1,9 @@
 import Quickshell
-import Quickshell.Wayland
 import Quickshell.Io
 import QtQuick
+
 import "modules/sessioncontrol"
-import "modules/solarclock"
+import "modules/lockscreen"
 
 ShellRoot {
     LazyLoader {
@@ -15,31 +15,8 @@ ShellRoot {
         }
     }
 
-    PanelWindow {
-        id: root
-        anchors {
-            top: true
-            left: true
-            right: true
-            bottom: true
-        }
+    LockScreen {
 
-        color: "#00000000"
-
-        WlrLayershell.layer: WlrLayer.Overlay
-        exclusionMode: ExclusionMode.Ignore
-
-        Image {
-            source: "file:assets/images/outerwilds/backgrounds/StarrySky.png"
-            anchors.fill: parent
-            fillMode: Image.PreserveAspectCrop
-            opacity: 0.9
-        }
-
-        SolarClock {
-            anchors.centerIn: parent
-            scale: 0.5
-        }
     }
 
     IpcHandler {
