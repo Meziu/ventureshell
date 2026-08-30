@@ -4,6 +4,7 @@ import QtQuick
 Item {
     id: root
     required property Item item
+
     width: 0
     height: 0
 

@@ -15,8 +15,13 @@ ShellRoot {
         }
     }
 
-    LockScreen {
+    LazyLoader {
+        id: lockScreenLoader
+        loading: true
 
+        LockScreen {
+            visible: true
+        }
     }
 
     IpcHandler {

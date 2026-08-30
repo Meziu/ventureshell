@@ -31,6 +31,6 @@ PanelWindow {
             verticalCenter: parent.verticalCenter
         }
         scale: 0.5
-        transformOrigin: Item.Left
+        transformOrigin: Item.Center
     }
 }

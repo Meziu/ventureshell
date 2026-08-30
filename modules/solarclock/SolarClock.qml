@@ -20,7 +20,7 @@ Item {
     height: width
 
     function crownLength(crownIndex) {
-        return root.planetOrbitDistance;
+        return root.planetOrbitDistance + 2;
     }
 
     function crownInnerRadius(crownIndex) {
@@ -41,7 +41,7 @@ Item {
                 return i;
             }
         }
-        return -1;
+        return -2;
     }
 
     property double timeScale: 1
@@ -121,7 +121,7 @@ Item {
                 }
 
                 visible: opacity > 0
-                opacity: sliceRepeater.isHovered ? 1 : 0
+                opacity: sliceRepeater.isHovered ? 0.3 : 0
                 scale: sliceRepeater.isHovered ? 1 : 0.95
 
                 Behavior on opacity {
@@ -160,7 +160,7 @@ Item {
                 if (item == null) {
                     break;
                 }
-                item.isHovered = (i === crownIndex);
+                item.isHovered = (i === crownIndex || crownIndex === -1);
             }
         }
     }
