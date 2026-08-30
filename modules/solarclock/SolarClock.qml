@@ -3,6 +3,7 @@ import Quickshell.Wayland
 import QtQuick
 
 import "../shapes"
+import "../behaviours"
 
 Item {
     id: root
@@ -179,310 +180,163 @@ Item {
             height: width
         }
 
-        RotationAnchor {
+        // --- Sun station: tight orbit around the sun, always facing it ---
+        OrbitingBody {
+            id: sunStationOrbit
             item: sun
+            orbitDistance: root.sunStationOrbitDistance
+            size: root.planetRadius
+            source: root.planetsPath + "SunStation.png"
 
-            RotationAnimation on rotation {
-                from: 0
-                to: 360
+            ContinuousSpin on rotation {
                 duration: root.sunStationOrbitPeriod
-                loops: Animation.Infinite
-                direction: RotationAnimation.Clockwise
             }
 
-            Image {
-                source: root.planetsPath + "SunStation.png"
-                fillMode: Image.PreserveAspectFit
-
-                width: root.planetRadius
-                height: width
-
-                x: root.sunRadius + root.sunStationOrbitDistance - width / 2
-                y: -height / 2
-
-                // Counterbalance and stay looking at the sun
-                RotationAnimation on rotation {
-                    from: 90
-                    to: -270
-                    duration: root.sunStationOrbitPeriod
-                    loops: Animation.Infinite
-                    direction: RotationAnimation.Clockwise
-                }
+            // Counter-rotate the station image itself so it stays
+            // facing the sun as the orbit above carries it around.
+            ContinuousSpin {
+                target: sunStationOrbit.body
+                property: "rotation"
+                from: 90
+                to: -270
+                duration: root.sunStationOrbitPeriod
             }
         }
 
-        RotationAnchor {
+        OrbitingBody {
+            id: twinsOrbit
             item: sun
+            rotation: clock.minutes * 6 // 1 loop per hour
+            SmoothRotation on rotation {}
 
-            // 1 loop per hour
-            rotation: clock.minutes * 6
+            orbitDistance: root.planetOrbitDistance
+            size: root.planetRadius
+            imageScale: 1.5
+            source: root.planetsPath + "SandFlow.png"
 
-            Behavior on rotation {
-                PropertyAnimation {
-                    easing.type: Easing.InOutQuad
-                }
+            // The twins spin continuously about their shared pivot.
+            ContinuousSpin {
+                target: twinsOrbit.body
+                property: "rotation"
+                duration: root.twinsRotationPeriod
             }
 
-            Image {
-                id: sandFlow
-                source: root.planetsPath + "SandFlow.png"
-                fillMode: Image.PreserveAspectFit
-
-                width: root.planetRadius
-                height: width
-                scale: 1.5
-
-                x: root.sunRadius + root.planetOrbitDistance - width / 2
-                y: -height / 2
-
-                RotationAnimation on rotation {
-                    from: 0
-                    to: 360
-                    duration: root.twinsRotationPeriod
-                    loops: Animation.Infinite
-                    direction: RotationAnimation.Clockwise
-                }
-
+            bodyChildren: [
                 Image {
-                    id: ashTwin
                     source: root.planetsPath + "AshTwin.png"
                     fillMode: Image.PreserveAspectFit
-
                     width: root.planetRadius
-                    height: width
-
-                    x: sandFlow.width / 2
-                }
-
+                    height: root.planetRadius
+                    x: twinsOrbit.body.width / 2
+                },
                 Image {
-                    id: amberTwin
                     source: root.planetsPath + "AmberTwin.png"
                     fillMode: Image.PreserveAspectFit
-
                     width: root.planetRadius
-                    height: width
-
-                    x: -sandFlow.width / 2
+                    height: root.planetRadius
+                    x: -twinsOrbit.body.width / 2
                 }
-            }
+            ]
         }
 
-        RotationAnchor {
+        OrbitingBody {
+            id: timberHearthOrbit
             item: sun
-
-            // The Timber Hearth orbit is completed in 12 hours (like a wall clock)
             rotation: (((clock.hours % 12) * 60 + clock.minutes) / 720) * 360
+            SmoothRotation on rotation {}
 
-            // Clockhand-like snap
-            Behavior on rotation {
-                PropertyAnimation {
-                    easing.type: Easing.InOutQuad
-                }
-            }
+            orbitDistance: root.planetOrbitDistance * 2
+            size: root.planetRadius * 2
+            source: root.planetsPath + "TimberHearth.png"
 
-            Image {
-                id: timberHearth
-                source: root.planetsPath + "TimberHearth.png"
-                fillMode: Image.PreserveAspectFit
+            OrbitingBody {
+                item: timberHearthOrbit.body
+                orbitDistance: root.satelliteOrbitDistance
+                size: root.satelliteRadius * 2
+                source: root.planetsPath + "Attlerock.png"
 
-                width: root.planetRadius * 2
-                height: width
-
-                x: root.sunRadius + root.planetOrbitDistance * 2 - width / 2
-                y: -height / 2
-            }
-
-            RotationAnchor {
-                item: timberHearth
-
-                RotationAnimation on rotation {
-                    from: 0
-                    to: 360
+                ContinuousSpin on rotation {
                     duration: root.satelliteOrbitPeriod
-                    loops: Animation.Infinite
-                    direction: RotationAnimation.Clockwise
-                }
-
-                Image {
-                    id: attlerock
-                    source: root.planetsPath + "Attlerock.png"
-                    fillMode: Image.PreserveAspectFit
-
-                    width: root.satelliteRadius * 2
-                    height: width
-
-                    x: timberHearth.width / 2 - width / 2 + root.satelliteOrbitDistance
-                    y: -height / 2
                 }
             }
         }
 
-        RotationAnchor {
+        OrbitingBody {
+            id: brittleHollowOrbit
             item: sun
-
             rotation: (((clock.date.getDay() + 6) % 7) / 7) * 360
+            SmoothRotation on rotation {}
 
-            Behavior on rotation {
-                PropertyAnimation {
-                    easing.type: Easing.InOutQuad
-                }
-            }
+            orbitDistance: root.planetOrbitDistance * 3
+            size: root.planetRadius * 2
+            source: root.planetsPath + "BrittleHollow.png"
 
-            Image {
-                id: brittleHollow
-                source: root.planetsPath + "BrittleHollow.png"
-                fillMode: Image.PreserveAspectFit
+            OrbitingBody {
+                item: brittleHollowOrbit.body
+                orbitDistance: root.satelliteOrbitDistance
+                size: root.satelliteRadius * 2
+                source: root.planetsPath + "HollowLantern.png"
 
-                width: root.planetRadius * 2
-                height: width
-
-                x: root.sunRadius + root.planetOrbitDistance * 3 - width / 2
-                y: -height / 2
-            }
-
-            RotationAnchor {
-                item: brittleHollow
-
-                RotationAnimation on rotation {
-                    from: 0
-                    to: 360
+                ContinuousSpin on rotation {
                     duration: root.satelliteOrbitPeriod
-                    loops: Animation.Infinite
-                    direction: RotationAnimation.Clockwise
-                }
-
-                Image {
-                    id: hollowLantern
-                    source: root.planetsPath + "HollowLantern.png"
-                    fillMode: Image.PreserveAspectFit
-
-                    width: root.satelliteRadius * 2
-                    height: width
-
-                    x: brittleHollow.width / 2 - width / 2 + root.satelliteOrbitDistance
-                    y: -height / 2
                 }
             }
         }
 
-        RotationAnchor {
+        OrbitingBody {
+            id: giantsDeepOrbit
             item: sun
-
             rotation: ((clock.date.getDate() - 1) / clock.daysInMonth) * 360
+            SmoothRotation on rotation {}
 
-            Behavior on rotation {
-                PropertyAnimation {
-                    easing.type: Easing.InOutQuad
-                }
-            }
+            orbitDistance: root.planetOrbitDistance * 4
+            size: root.planetRadius * 2
+            source: root.planetsPath + "GiantsDeep.png"
 
-            Image {
-                id: giantsDeep
-                source: root.planetsPath + "GiantsDeep.png"
-                fillMode: Image.PreserveAspectFit
+            OrbitingBody {
+                item: giantsDeepOrbit.body
+                orbitDistance: root.satelliteOrbitDistance
+                size: root.satelliteRadius * 2
+                source: root.planetsPath + "OrbitalProbeCannon.png"
+                imageRotation: 90
 
-                width: root.planetRadius * 2
-                height: width
-
-                x: root.sunRadius + root.planetOrbitDistance * 4 - width / 2
-                y: -height / 2
-            }
-
-            RotationAnchor {
-                item: giantsDeep
-
-                RotationAnimation on rotation {
-                    from: 0
-                    to: 360
+                ContinuousSpin on rotation {
                     duration: root.satelliteOrbitPeriod
-                    loops: Animation.Infinite
-                    direction: RotationAnimation.Clockwise
-                }
-
-                Image {
-                    id: orbitalProbeCannon
-                    source: root.planetsPath + "OrbitalProbeCannon.png"
-                    fillMode: Image.PreserveAspectFit
-
-                    width: root.satelliteRadius * 2
-                    height: width
-
-                    x: giantsDeep.width / 2 - width / 2 + root.satelliteOrbitDistance
-                    y: -height / 2
-
-                    rotation: 90
                 }
             }
         }
 
-        RotationAnchor {
+        OrbitingBody {
+            id: darkBrambleOrbit
             item: sun
-
             rotation: (clock.date.getMonth() / 12) * 360
+            SmoothRotation on rotation {}
 
-            Behavior on rotation {
-                PropertyAnimation {
-                    easing.type: Easing.InOutQuad
-                }
-            }
-
-            Image {
-                id: darkBramble
-                source: root.planetsPath + "DarkBramble.png"
-                fillMode: Image.PreserveAspectFit
-
-                width: root.planetRadius * 2
-                height: width
-
-                x: root.sunRadius + root.planetOrbitDistance * 5 - width / 2
-                y: -height / 2
-            }
+            orbitDistance: root.planetOrbitDistance * 5
+            size: root.planetRadius * 2
+            source: root.planetsPath + "DarkBramble.png"
         }
 
-        RotationAnchor {
+        OrbitingBody {
             id: quantumOrbit
 
             function randomPlanet() {
-                let choice = Math.floor(Math.random() * 6);
-
-                if (choice === 0) {
-                    return null
-                } else if (choice === 1) {
-                    return sandFlow
-                } else if (choice === 2) {
-                    return timberHearth
-                } else if (choice === 3) {
-                    return brittleHollow
-                } else if (choice === 4) {
-                    return giantsDeep
-                } else if (choice === 5) {
-                    return darkBramble
-                }
+                const candidates = [null, twinsOrbit.body, timberHearthOrbit.body, brittleHollowOrbit.body, giantsDeepOrbit.body, darkBrambleOrbit.body];
+                return candidates[Math.floor(Math.random() * candidates.length)];
             }
 
-            item: randomPlanet()
-            visible: item == null ? false : true
+            item: quantumOrbit.randomPlanet()
+            visible: item !== null
 
-            RotationAnimation on rotation {
+            orbitDistance: root.satelliteOrbitDistance
+            size: root.satelliteRadius * 2
+            source: root.planetsPath + "QuantumMoon.png"
+            imageRotation: 90
+
+            ContinuousSpin on rotation {
                 from: 180
                 to: 540
                 duration: root.satelliteOrbitPeriod
-                loops: Animation.Infinite
-                direction: RotationAnimation.Clockwise
-            }
-
-            Image {
-                id: quantumMoon
-                source: root.planetsPath + "QuantumMoon.png"
-                fillMode: Image.PreserveAspectFit
-
-                width: root.satelliteRadius * 2
-                height: width
-
-                x: quantumOrbit.item ? quantumOrbit.item.width / 2 - width / 2 + root.satelliteOrbitDistance : 0
-                y: -height / 2
-
-                rotation: 90
             }
         }
     }
