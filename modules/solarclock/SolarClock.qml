@@ -212,7 +212,6 @@ Item {
         }
 
         RotationAnchor {
-            id: twinsOrbit
             item: sun
 
             // 1 loop per hour
@@ -437,6 +436,53 @@ Item {
 
                 x: root.sunRadius + root.planetOrbitDistance * 5 - width / 2
                 y: -height / 2
+            }
+        }
+
+        RotationAnchor {
+            id: quantumOrbit
+
+            function randomPlanet() {
+                let choice = Math.floor(Math.random() * 6);
+
+                if (choice === 0) {
+                    return null
+                } else if (choice === 1) {
+                    return sandFlow
+                } else if (choice === 2) {
+                    return timberHearth
+                } else if (choice === 3) {
+                    return brittleHollow
+                } else if (choice === 4) {
+                    return giantsDeep
+                } else if (choice === 5) {
+                    return darkBramble
+                }
+            }
+
+            item: randomPlanet()
+            visible: item == null ? false : true
+
+            RotationAnimation on rotation {
+                from: 180
+                to: 540
+                duration: root.satelliteOrbitPeriod
+                loops: Animation.Infinite
+                direction: RotationAnimation.Clockwise
+            }
+
+            Image {
+                id: quantumMoon
+                source: root.planetsPath + "QuantumMoon.png"
+                fillMode: Image.PreserveAspectFit
+
+                width: root.satelliteRadius * 2
+                height: width
+
+                x: quantumOrbit.item ? quantumOrbit.item.width / 2 - width / 2 + root.satelliteOrbitDistance : 0
+                y: -height / 2
+
+                rotation: 90
             }
         }
     }
