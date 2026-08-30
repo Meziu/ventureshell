@@ -73,17 +73,17 @@ Item {
             },
             {
                 slices: 7,
-                sliceOffset: 0,
+                sliceOffset: 0.5,
                 labels: "Mon,Tue,Wed,Thur,Fri,Sat,Sun"
             },
             {
                 slices: clock.daysInMonth,
-                sliceOffset: 0,
+                sliceOffset: 0.5,
                 labels: "index"
             },
             {
                 slices: 12,
-                sliceOffset: 0,
+                sliceOffset: 0.5,
                 labels: "Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec"
             }
         ]
@@ -264,7 +264,7 @@ Item {
         OrbitingBody {
             id: brittleHollowOrbit
             item: sun
-            rotation: (((clock.date.getDay() + 6) % 7) / 7) * 360
+            rotation: ((((clock.date.getDay() + 6) % 7) * 24 + clock.hours) / 168) * 360
             SmoothRotation on rotation {}
 
             orbitDistance: root.planetOrbitDistance * 3
@@ -286,7 +286,7 @@ Item {
         OrbitingBody {
             id: giantsDeepOrbit
             item: sun
-            rotation: ((clock.date.getDate() - 1) / clock.daysInMonth) * 360
+            rotation: (((clock.date.getDate() - 1) * 24 + clock.hours) / (clock.daysInMonth * 24)) * 360
             SmoothRotation on rotation {}
 
             orbitDistance: root.planetOrbitDistance * 4
@@ -309,7 +309,7 @@ Item {
         OrbitingBody {
             id: darkBrambleOrbit
             item: sun
-            rotation: (clock.date.getMonth() / 12) * 360
+            rotation: ((clock.date.getMonth() * clock.daysInMonth + clock.date.getDate()) / (12 * clock.daysInMonth)) * 360
             SmoothRotation on rotation {}
 
             orbitDistance: root.planetOrbitDistance * 5
