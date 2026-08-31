@@ -126,14 +126,14 @@ Item {
 
                 Behavior on opacity {
                     NumberAnimation {
-                        duration: sliceRepeater.isHovered ? 140 : 320
+                        duration: sliceRepeater.isHovered ? 120 : 200
                         easing.type: sliceRepeater.isHovered ? Easing.OutQuad : Easing.InQuad
                     }
                 }
 
                 Behavior on scale {
                     NumberAnimation {
-                        duration: sliceRepeater.isHovered ? 140 : 280
+                        duration: sliceRepeater.isHovered ? 120 : 200
                         easing.type: sliceRepeater.isHovered ? Easing.OutBack : Easing.InQuad
                         easing.overshoot: 1.1
                     }
