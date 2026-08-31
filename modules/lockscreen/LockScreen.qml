@@ -17,6 +17,13 @@ WlSessionLock {
             precision: SystemClock.Minutes
         }
 
+        FontLoader {
+            id: uiFont
+            source: "file:assets/fonts/itc-serif-gothic/itc-serif-gothic-extra-bold-588cef7e1f5d9.otf"
+
+            property string color: "#F28B2C"
+        }
+
         Button {
             text: "unlock me"
             onClicked: lock.locked = false
@@ -44,7 +51,7 @@ WlSessionLock {
         Column {
             anchors {
                 right: parent.right
-                rightMargin: root.screenMargins
+                rightMargin: root.screenMargins * 2
                 verticalCenter: parent.verticalCenter
             }
 
@@ -57,8 +64,11 @@ WlSessionLock {
                 }
 
                 text: Qt.formatTime(clock.date, "hh:mm")
-                color: "white"
-                font.pointSize: 120
+                color: uiFont.color
+                font.family: uiFont.font.family
+                font.weight: uiFont.font.weight
+                font.styleName: uiFont.font.styleName
+                font.pointSize: 140
                 horizontalAlignment: Text.AlignRight
 
                 renderType: Text.CurveRendering
@@ -66,9 +76,12 @@ WlSessionLock {
             }
 
             Text {
-                text: Qt.formatDate(clock.date, "dddd MMMM d yy")
-                color: "white"
-                font.pointSize: 40
+                text: Qt.formatDate(clock.date, "dddd, MMMM d")
+                color: uiFont.color
+                font.family: uiFont.font.family
+                font.weight: uiFont.font.weight
+                font.styleName: uiFont.font.styleName
+                font.pointSize: 50
                 horizontalAlignment: Text.AlignRight
 
                 renderType: Text.CurveRendering
