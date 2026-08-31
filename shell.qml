@@ -20,7 +20,7 @@ ShellRoot {
         loading: true
 
         LockScreen {
-            locked: true
+            locked: false
         }
     }
 
@@ -30,6 +30,15 @@ ShellRoot {
         function toggle(): void {
             sessionControlLoader.active = true;
             sessionControlLoader.item.visible = !sessionControlLoader.item.visible;
+        }
+    }
+
+    IpcHandler {
+        target: "lockscreen"
+
+        function lock(): void {
+            lockScreenLoader.active = true;
+            lockScreenLoader.item.locked = true;
         }
     }
 }

@@ -146,6 +146,8 @@ Item {
         id: crownMouseArea
         anchors.fill: parent
         hoverEnabled: true
+
+        property int rawCrownIndex: -2
         property int crownIndex: -2
 
         onPositionChanged: mouse => {
@@ -153,11 +155,23 @@ Item {
             let dy = -(mouse.y - height / 2);
             let dist = Math.sqrt(dx * dx + dy * dy);
 
-            crownIndex = root.crownIndexForDistance(dist);
+            let newIndex = root.crownIndexForDistance(dist);
+            if (newIndex !== crownMouseArea.rawCrownIndex) {
+                crownMouseArea.rawCrownIndex = newIndex;
+                settleTimer.restart();
+            }
         }
 
         onExited: {
-            crownIndex = -2
+            settleTimer.stop();
+            rawCrownIndex = -2;
+            crownIndex = -2;
+        }
+
+        Timer {
+            id: settleTimer
+            interval: 60
+            onTriggered: crownMouseArea.crownIndex = crownMouseArea.rawCrownIndex
         }
     }
 
