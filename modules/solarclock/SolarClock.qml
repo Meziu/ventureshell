@@ -94,7 +94,7 @@ Item {
             required property int slices
             required property real sliceOffset
             required property string labels
-            property bool isHovered: false
+            property bool isHovered: (index === crownMouseArea.crownIndex || crownMouseArea.crownIndex === -1)
             model: slices
 
             RadialSlice {
@@ -143,10 +143,10 @@ Item {
     }
 
     MouseArea {
-        id: sliceMouseArea
+        id: crownMouseArea
         anchors.fill: parent
         hoverEnabled: true
-        property int crownIndex: 0
+        property int crownIndex: -2
 
         onPositionChanged: mouse => {
             let dx = mouse.x - width / 2;
@@ -154,14 +154,10 @@ Item {
             let dist = Math.sqrt(dx * dx + dy * dy);
 
             crownIndex = root.crownIndexForDistance(dist);
+        }
 
-            for (let i = 0; i < crownRepeater.count; i++) {
-                let item = crownRepeater.itemAt(i);
-                if (item == null) {
-                    break;
-                }
-                item.isHovered = (i === crownIndex || crownIndex === -1);
-            }
+        onExited: {
+            crownIndex = -2
         }
     }
 

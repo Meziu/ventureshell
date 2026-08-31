@@ -20,7 +20,7 @@ ShellRoot {
         loading: true
 
         LockScreen {
-            visible: true
+            locked: true
         }
     }
 
