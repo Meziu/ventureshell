@@ -11,33 +11,11 @@ WlSessionLock {
     id: lock
     locked: true
 
-    PamContext {
-        id: pam
-
-        onPamMessage: {
-            if (pam.responseRequired) {
-                pam.respond(passwordField.text);
-            }
-        }
-
-        onCompleted: result => {
-            if (result === PamResult.Success) {
-                lock.locked = false;
-            } else {
-                passwordField.text = "";
-                passwordField.placeholderText = "Incorrect password"
-                passwordField.placeholderTextColor = "red"
-            }
-        }
-
-        onError: error => {
-            console.log("PAM error:", error);
-        }
-    }
-
     WlSessionLockSurface {
         id: root
         readonly property real screenMargins: 60
+
+        color: "#00000000"
 
         SystemClock {
             id: clock
@@ -50,14 +28,6 @@ WlSessionLock {
 
             property string color: "#F28B2C"
         }
-
-        Button {
-            text: "unlock me"
-            onClicked: lock.locked = false
-            z: 1
-        }
-
-        color: "#00000000"
 
         Image {
             source: "file:assets/images/outerwilds/backgrounds/StarrySky.png"
@@ -73,6 +43,30 @@ WlSessionLock {
             }
             scale: 0.5
             transformOrigin: Item.Left
+        }
+
+        PamContext {
+            id: pam
+
+            onPamMessage: {
+                if (pam.responseRequired) {
+                    pam.respond(passwordField.text);
+                }
+            }
+
+            onCompleted: result => {
+                if (result === PamResult.Success) {
+                    lock.locked = false;
+                } else {
+                    passwordField.text = "";
+                    passwordField.placeholderText = "Incorrect password"
+                    passwordField.placeholderTextColor = "red"
+                }
+            }
+
+            onError: error => {
+                console.log("PAM error:", error);
+            }
         }
 
         ColumnLayout {
