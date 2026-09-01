@@ -2,6 +2,7 @@ import Quickshell
 import Quickshell.Io
 import QtQuick
 
+import "modules/bars"
 import "modules/sessioncontrol"
 import "modules/lockscreen"
 
@@ -22,6 +23,10 @@ ShellRoot {
         LockScreen {
             locked: false
         }
+    }
+
+    HorizontalBar {
+
     }
 
     IpcHandler {

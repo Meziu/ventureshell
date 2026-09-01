@@ -6,6 +6,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 
 import "../solarclock"
+import "../assetloaders"
 
 WlSessionLock {
     id: lock
@@ -20,13 +21,6 @@ WlSessionLock {
         SystemClock {
             id: clock
             precision: SystemClock.Minutes
-        }
-
-        FontLoader {
-            id: uiFont
-            source: "file:assets/fonts/itc-serif-gothic/itc-serif-gothic-extra-bold-588cef7e1f5d9.otf"
-
-            property string color: "#F28B2C"
         }
 
         Image {
@@ -83,11 +77,8 @@ WlSessionLock {
                 Layout.bottomMargin: -50
 
                 text: Qt.formatTime(clock.date, "hh:mm")
-                color: uiFont.color
-                font.family: uiFont.font.family
-                font.weight: uiFont.font.weight
-                font.styleName: uiFont.font.styleName
-                font.pointSize: 140
+                color: OuterWildsUIFont.defaultColor
+                font: OuterWildsUIFont.withSize(140)
 
                 renderType: Text.CurveRendering
                 renderTypeQuality: Text.VeryHighRenderTypeQuality
@@ -99,11 +90,8 @@ WlSessionLock {
                 Layout.alignment: Qt.AlignRight
 
                 text: Qt.formatDate(clock.date, "dddd, MMMM d")
-                color: uiFont.color
-                font.family: uiFont.font.family
-                font.weight: uiFont.font.weight
-                font.styleName: uiFont.font.styleName
-                font.pointSize: 50
+                color: OuterWildsUIFont.defaultColor
+                font: OuterWildsUIFont.withSize(50)
 
                 renderType: Text.CurveRendering
                 renderTypeQuality: Text.VeryHighRenderTypeQuality
@@ -117,20 +105,16 @@ WlSessionLock {
 
                 background: Rectangle {
                     anchors.fill: parent
-                    border.color: uiFont.color
+                    border.color: OuterWildsUIFont.defaultColor
                     border.width: 4
 
                     color: "#00000000"
                     radius: 16
                 }
 
-                font.family: uiFont.font.family
-                font.weight: uiFont.font.weight
-                font.styleName: uiFont.font.styleName
-                font.letterSpacing: 6
-                font.pointSize: 30
+                font: OuterWildsUIFont.withSize(30)
                 padding: 16
-                color: uiFont.color
+                color: OuterWildsUIFont.defaultColor
                 horizontalAlignment: Text.AlignLeft
 
                 echoMode: TextInput.Password
