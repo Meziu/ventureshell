@@ -6,8 +6,8 @@ import "../../assetloaders"
 import "../../shapes"
 
 CurvyBox {
-    implicitWidth: 100
-    implicitHeight: 40
+    width: 100
+    height: 40
 
     attached: Attach {
         top: true
@@ -28,6 +28,4 @@ CurvyBox {
         font: OuterWildsUIFont.withSize(14)
         color: OuterWildsUIFont.defaultColor
     }
-
-    color: "#FFFFFF"
 }

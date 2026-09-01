@@ -7,12 +7,12 @@ import "../../assetloaders"
 import "../../shapes"
 
 CurvyBox {
-    implicitWidth: 100
-    implicitHeight: 40
+    width: 100
+    height: 40
 
     anchors {
-        right: parent.right
         top: parent.top
+        right: parent.right
     }
 
     attached: Attach {
@@ -29,6 +29,4 @@ CurvyBox {
         font: OuterWildsUIFont.withSize(14)
         color: OuterWildsUIFont.defaultColor
     }
-
-    color: "#FFFFFF"
 }

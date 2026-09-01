@@ -1,177 +1,123 @@
 import QtQuick
 import QtQuick.Shapes
 
-Rectangle {
+Shape {
     id: box
 
     required property Attach attached
-    property real cornerRadius: 18
+    property real cornerRadius: 14
     property bool showFeet: true // haha, feet
 
-    readonly property color gradStart: Qt.rgba(250/255, 179/255, 135/255, 0.16)
-    readonly property color gradEnd:   Qt.rgba(250/255, 179/255, 135/255, 0.05)
-    readonly property color borderCol: Qt.rgba(250/255, 179/255, 135/255, 0.28)
+    readonly property color gradStart: Qt.rgba(250 / 255, 179 / 255, 135 / 255, 0.16)
+    readonly property color gradEnd: Qt.rgba(250 / 255, 179 / 255, 135 / 255, 0.05)
+    readonly property color borderCol: Qt.rgba(250 / 255, 179 / 255, 135 / 255, 0.28)
 
-    color: "transparent"
-    gradient: Gradient {
-        orientation: Gradient.Horizontal // closest built-in approximation of the 135deg diagonal
-        GradientStop {
-            position: 0.0
-            color: gradStart
+    preferredRendererType: Shape.CurveRenderer
+
+    // Walks the outline clockwise (top -> right -> bottom -> left). At each
+    // of the four corners there are only ever three possible treatments,
+    // decided purely from `attached`:
+    //  - both adjacent sides attached   -> a plain sharp corner
+    //  - neither adjacent side attached -> an ordinary rounded corner
+    //  - exactly one side attached      -> the attached edge overshoots the
+    //    corner by cornerRadius, the other edge stops cornerRadius short of
+    //    it, and a quarter-circle centered on the original corner joins the
+    //    two - the box "flares" outward instead of meeting the flat
+    //    attached edge with a hard corner (this is what used to be a
+    //    separate CurvyFoot). Falls back to a sharp corner when showFeet is
+    //    false.
+    function outlinePath() {
+        const w = width;
+        const h = height;
+        const r = cornerRadius;
+        const a = attached;
+
+        // cx,cy: the corner's own coordinate.
+        // beforeOffset/afterOffset: [dx,dy] offset from the corner of the
+        // ordinary rounded-corner touch points on the incoming ("before")
+        // and outgoing ("after") edge, walking clockwise.
+        // beforeAttached/afterAttached: whether each of those edges is attached.
+        function corner(cx, cy, beforeOffset, afterOffset, beforeAttached, afterAttached) {
+            if (beforeAttached && afterAttached)
+                return {
+                    before: [cx, cy],
+                    after: [cx, cy],
+                    arc: false,
+                    foot: false
+                };
+
+            if (!beforeAttached && !afterAttached)
+                return {
+                    before: [cx + beforeOffset[0], cy + beforeOffset[1]],
+                    after: [cx + afterOffset[0], cy + afterOffset[1]],
+                    arc: true,
+                    foot: false
+                };
+
+            if (!showFeet)
+                return {
+                    before: [cx, cy],
+                    after: [cx, cy],
+                    arc: false,
+                    foot: false
+                };
+
+            const bOff = beforeAttached ? [-beforeOffset[0], -beforeOffset[1]] : beforeOffset;
+            const aOff = afterAttached ? [-afterOffset[0], -afterOffset[1]] : afterOffset;
+            return {
+                before: [cx + bOff[0], cy + bOff[1]],
+                after: [cx + aOff[0], cy + aOff[1]],
+                arc: true,
+                foot: true
+            };
         }
-        GradientStop {
-            position: 1.0
-            color: gradEnd
+
+        const corners = [corner(0, 0, [0, r], [r, 0], a.left, a.top) // top-left
+            , corner(w, 0, [-r, 0], [0, r], a.top, a.right) // top-right
+            , corner(w, h, [0, -r], [-r, 0], a.right, a.bottom) // bottom-right
+            , corner(0, h, [r, 0], [0, -r], a.bottom, a.left) // bottom-left
+        ];
+
+        const pt = p => `${p[0]} ${p[1]}`;
+        // Plain rounded corners: sweep 1 (concave, hugs the corner).
+        // Foot corners: sweep 0 (convex, flares outward) — the opposite solution
+        // of the same two-point/radius pair.
+        const arcTo = (p, foot) => `A ${r} ${r} 0 0 ${foot ? 0 : 1} ${pt(p)}`;
+
+        let d = `M ${pt(corners[0].after)} `;
+        for (let i = 0; i < corners.length; i++) {
+            const next = corners[(i + 1) % corners.length];
+            d += `L ${pt(next.before)} `;
+            if (next.arc)
+                d += `${arcTo(next.after, next.foot)} `;
         }
-    }
-    border.color: borderCol
-    border.width: 1
+        d += "Z";
 
-
-    // There can be 8 different feet, of which only a max of 4
-    // may be visible at once depending on how the box is attached.
-    // Here they are categorised by the side they stick and the direction they look from.
-
-    readonly property real leftBothX: -cornerRadius
-    readonly property real rightBothX: box.width
-    readonly property real bothLeftX: 0
-    readonly property real bothRightX: box.width - cornerRadius
-
-    readonly property real topBothY: -cornerRadius
-    readonly property real bottomBothY: box.height
-    readonly property real bothTopY: 0
-    readonly property real bothBottomY: box.height - cornerRadius
-
-    topLeftRadius: attached.top || attached.left ? 0 : cornerRadius
-    bottomLeftRadius: attached.bottom || attached.left ? 0 : cornerRadius
-    topRightRadius: attached.top || attached.right ? 0 : cornerRadius
-    bottomRightRadius: attached.bottom || attached.right ? 0 : cornerRadius
-
-    CurvyFoot {
-        id: leftBottom
-
-        x: box.leftBothX
-        y: box.bothBottomY
-        rotation: 90
-
-        gradientStart: box.gradStart
-        gradientEnd: box.gradEnd
-        borderColor: box.borderCol
-
-        radius: box.cornerRadius
-        bg: box.color
-        visible: box.showFeet && !box.attached.left && box.attached.bottom
+        return d;
     }
 
-    CurvyFoot {
-        id: leftTop
+    ShapePath {
+        strokeColor: box.borderCol
+        strokeWidth: 1
 
-        x: box.leftBothX
-        y: box.bothTopY
-        rotation: 0
+        fillGradient: LinearGradient {
+            x1: 0
+            y1: 0
+            x2: box.width
+            y2: box.height
 
-        gradientStart: box.gradStart
-        gradientEnd: box.gradEnd
-        borderColor: box.borderCol
+            GradientStop {
+                position: 0.0
+                color: box.gradStart
+            }
+            GradientStop {
+                position: 1.0
+                color: box.gradEnd
+            }
+        }
 
-        radius: box.cornerRadius
-        bg: box.color
-        visible: box.showFeet && !box.attached.left && box.attached.top
-    }
-
-    CurvyFoot {
-        id: topLeft
-
-        x: box.bothLeftX
-        y: box.topBothY
-        rotation: 180
-
-        gradientStart: box.gradStart
-        gradientEnd: box.gradEnd
-        borderColor: box.borderCol
-
-        radius: box.cornerRadius
-        bg: box.color
-        visible: box.showFeet && !box.attached.top && box.attached.left
-    }
-
-    CurvyFoot {
-        id: topRight
-
-        x: box.bothRightX
-        y: box.topBothY
-        rotation: 90
-
-        gradientStart: box.gradStart
-        gradientEnd: box.gradEnd
-        borderColor: box.borderCol
-
-        radius: box.cornerRadius
-        bg: box.color
-        visible: box.showFeet && !box.attached.top && box.attached.right
-    }
-
-    CurvyFoot {
-        id: rightTop
-
-        x: box.rightBothX
-        y: box.bothTopY
-        rotation: -90
-
-        gradientStart: box.gradStart
-        gradientEnd: box.gradEnd
-        borderColor: box.borderCol
-
-        radius: box.cornerRadius
-        bg: box.color
-        visible: box.showFeet && !box.attached.right && box.attached.top
-    }
-
-    CurvyFoot {
-        id: rightBottom
-
-        x: box.rightBothX
-        y: box.bothBottomY
-        rotation: 180
-
-        gradientStart: box.gradStart
-        gradientEnd: box.gradEnd
-        borderColor: box.borderCol
-
-        radius: box.cornerRadius
-        bg: box.color
-        visible: box.showFeet && !box.attached.right && box.attached.bottom
-    }
-
-    CurvyFoot {
-        id: bottomRight
-
-        x: box.bothRightX
-        y: box.bottomBothY
-        rotation: 0
-
-        gradientStart: box.gradStart
-        gradientEnd: box.gradEnd
-        borderColor: box.borderCol
-
-        radius: box.cornerRadius
-        bg: box.color
-        visible: box.showFeet && !box.attached.bottom && box.attached.right
-    }
-
-    CurvyFoot {
-        id: bottomLeft
-
-        x: box.bothLeftX
-        y: box.bottomBothY
-        rotation: -90
-
-        gradientStart: box.gradStart
-        gradientEnd: box.gradEnd
-        borderColor: box.borderCol
-
-        radius: box.cornerRadius
-        bg: box.color
-        visible: box.showFeet && !box.attached.bottom && box.attached.left
+        PathSvg {
+            path: box.outlinePath()
+        }
     }
 }
