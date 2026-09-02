@@ -1,6 +1,6 @@
 import QtQuick
 
-import "../../shapes"
+import "../../../shapes"
 
 CurvyBox {
     id: root

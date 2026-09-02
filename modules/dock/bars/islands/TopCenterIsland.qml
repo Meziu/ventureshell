@@ -2,7 +2,7 @@ import Quickshell
 import Quickshell.Wayland
 import QtQuick
 
-import "../../shapes"
+import "../../../shapes"
 import "../widgets"
 
 Island {

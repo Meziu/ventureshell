@@ -3,7 +3,7 @@ import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
 
-import "../../shapes"
+import "../../../shapes"
 import "../widgets"
 
 Island {
@@ -27,6 +27,6 @@ Island {
         anchors.fill: parent
         anchors.rightMargin: root.cornerRadius
 
-        text: "LMAO3"
+        text: "I'm at the top left? No wait, right, top right"
     }
 }

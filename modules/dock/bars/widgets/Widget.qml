@@ -1,6 +1,6 @@
 import QtQuick
 
-import "../../behaviours"
+import "../../../behaviours"
 
 Item {
     anchors {

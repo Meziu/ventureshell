@@ -2,7 +2,7 @@ import Quickshell
 import Quickshell.Io
 import QtQuick
 
-import "modules/bars"
+import "modules/dock"
 import "modules/sessioncontrol"
 import "modules/lockscreen"
 
@@ -25,9 +25,7 @@ ShellRoot {
         }
     }
 
-    HorizontalBar {
-
-    }
+    Dock {}
 
     IpcHandler {
         target: "sessionctl"

@@ -1,7 +1,7 @@
 import Quickshell
 import QtQuick
 
-import "../../shapes"
+import "../../../shapes"
 import "../widgets"
 
 Island {

@@ -1,6 +1,6 @@
 import QtQuick
 
-import "../../assetloaders"
+import "../../../assetloaders"
 
 Widget {
     id: root
