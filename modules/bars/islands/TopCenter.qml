@@ -20,8 +20,9 @@ CurvyBox {
         top: parent.top
     }
 
-    Clock {
-        anchors.centerIn: parent
+    ClockWidget {
         id: clock
+        dateAndTime: true
+        anchors.fill: parent
     }
 }

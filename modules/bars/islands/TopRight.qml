@@ -5,8 +5,12 @@ import QtQuick.Layouts
 
 import "../../assetloaders"
 import "../../shapes"
+import "../widgets"
 
 CurvyBox {
+    id: root
+    width: textWidget.requestedWidth + cornerRadius * 2
+
     anchors {
         top: parent.top
         right: parent.right
@@ -19,11 +23,14 @@ CurvyBox {
         bottom: false
     }
 
-    Text {
-        anchors.centerIn: parent
-        text: "LMAO3"
+    TextWidget {
+        id: textWidget
 
-        font: OuterWildsUIFont.withSize(14)
-        color: OuterWildsUIFont.defaultColor
+        anchors.fill: parent
+        anchors.rightMargin: root.cornerRadius
+
+        horizontalAlignment: Text.AlignRight
+
+        text: "LMAO3"
     }
 }

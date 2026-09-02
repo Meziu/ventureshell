@@ -11,8 +11,7 @@ CurvyBox {
     property real minWidth: 0
     property real maxWidth: 850
 
-    property string titleText: ToplevelManager.activeToplevel ? ToplevelManager.activeToplevel.title : ""
-    visible: titleText !== "" ? true : false
+    visible: windowName.text !== "" ? true : false
 
     width: Math.max(minWidth, Math.min(windowName.requestedWidth + cornerRadius * 2, maxWidth))
 
@@ -35,8 +34,9 @@ CurvyBox {
         top: parent.top
     }
 
-    WindowName {
+    WindowNameWidget {
         id: windowName
+        anchors.leftMargin: root.cornerRadius
         anchors.fill: parent
     }
 }

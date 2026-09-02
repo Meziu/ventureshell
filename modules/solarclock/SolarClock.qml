@@ -123,19 +123,12 @@ Item {
                 opacity: sliceRepeater.isHovered ? 0.3 : 0
                 scale: sliceRepeater.isHovered ? 1 : 0.95
 
-                Behavior on opacity {
-                    NumberAnimation {
-                        duration: sliceRepeater.isHovered ? 120 : 200
-                        easing.type: sliceRepeater.isHovered ? Easing.OutQuad : Easing.InQuad
-                    }
+                SmoothHoverOpacity on opacity {
+                    isHovered: sliceRepeater.isHovered
                 }
 
-                Behavior on scale {
-                    NumberAnimation {
-                        duration: sliceRepeater.isHovered ? 120 : 200
-                        easing.type: sliceRepeater.isHovered ? Easing.OutBack : Easing.InQuad
-                        easing.overshoot: 1.1
-                    }
+                SmoothHoverScale on scale {
+                    isHovered: sliceRepeater.isHovered
                 }
             }
         }

@@ -11,12 +11,20 @@ Shape {
     required property Attach attached
     property real cornerRadius: 14
     property bool showFeet: true // haha, feet
+    // True to apply the corner margin horizontally
+    // false to do so vertically
+    property bool avoidCornersHorizontally: true
 
     default property list<QtObject> data
 
     Item {
-        anchors.fill: parent
-        anchors.margins: box.cornerRadius
+        anchors {
+            fill: parent
+            topMargin: !avoidCornersHorizontally && !attached.top ? box.cornerRadius : 0
+            bottomMargin: !avoidCornersHorizontally && !attached.bottom ? box.cornerRadius : 0
+            leftMargin: avoidCornersHorizontally && !attached.left ? box.cornerRadius : 0
+            rightMargin: avoidCornersHorizontally && !attached.right ? box.cornerRadius : 0
+        }
 
         data: box.data
     }

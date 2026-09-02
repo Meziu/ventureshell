@@ -24,7 +24,7 @@ PanelWindow {
     }
 
     property real barHeight: 40
-    property real barCornerRadius: 18
+    property real barCornerRadius: 16
 
     anchors {
         left: true
