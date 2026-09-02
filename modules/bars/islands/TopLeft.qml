@@ -8,8 +8,9 @@ import "../widgets"
 CurvyBox {
     id: root
 
+    property real centerIslandWidth: 0
     property real minWidth: 0
-    property real maxWidth: 850
+    property real maxWidth: (parent.width - centerIslandWidth) / 2 - cornerRadius * 2
 
     visible: windowName.text !== "" ? true : false
 

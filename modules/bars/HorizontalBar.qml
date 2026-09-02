@@ -41,6 +41,7 @@ PanelWindow {
         id: topLeftIsland
         cornerRadius: barCornerRadius
         height: barHeight
+        centerIslandWidth: topCenterIsland.width
     }
 
     TopCenter {

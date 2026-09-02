@@ -22,7 +22,7 @@ CurvyBox {
 
     ClockWidget {
         id: clock
-        dateAndTime: false
+        dateAndTime: true
         anchors.fill: parent
     }
 }
