@@ -29,8 +29,6 @@ CurvyBox {
         anchors.fill: parent
         anchors.rightMargin: root.cornerRadius
 
-        horizontalAlignment: Text.AlignRight
-
         text: "LMAO3"
     }
 }

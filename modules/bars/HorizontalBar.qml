@@ -40,18 +40,18 @@ PanelWindow {
     TopLeft {
         id: topLeftIsland
         cornerRadius: barCornerRadius
-        implicitHeight: barHeight
+        height: barHeight
     }
 
     TopCenter {
         id: topCenterIsland
         cornerRadius: barCornerRadius
-        implicitHeight: barHeight
+        height: barHeight
     }
 
     TopRight {
         id: topRightIsland
         cornerRadius: barCornerRadius
-        implicitHeight: barHeight
+        height: barHeight
     }
 }
