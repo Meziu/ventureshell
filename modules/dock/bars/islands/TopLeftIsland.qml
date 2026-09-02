@@ -23,5 +23,6 @@ Island {
         id: windowName
         anchors.leftMargin: root.cornerRadius
         anchors.fill: parent
+        horizontalAlignment: Text.AlignLeft // so it doesn't jump when resizing
     }
 }

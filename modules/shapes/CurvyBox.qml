@@ -25,10 +25,10 @@ Shape {
 
         anchors {
             fill: parent
-            topMargin: !avoidCornersHorizontally && !attached.top ? box.cornerRadius : 0
-            bottomMargin: !avoidCornersHorizontally && !attached.bottom ? box.cornerRadius : 0
-            leftMargin: avoidCornersHorizontally && !attached.left ? box.cornerRadius : 0
-            rightMargin: avoidCornersHorizontally && !attached.right ? box.cornerRadius : 0
+            topMargin: !avoidCornersHorizontally && !attached.top ? box.cornerRadius/2 : 0
+            bottomMargin: !avoidCornersHorizontally && !attached.bottom ? box.cornerRadius/2 : 0
+            leftMargin: avoidCornersHorizontally && !attached.left ? box.cornerRadius/2 : 0
+            rightMargin: avoidCornersHorizontally && !attached.right ? box.cornerRadius/2 : 0
         }
 
         data: box.data

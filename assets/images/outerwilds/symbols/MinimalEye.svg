@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   id="NOM_Symbol_Eye"
+   version="1.1"
+   viewBox="0 0 1024 1024"
+   sodipodi:docname="MinimalEye.svg"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="0.81054687"
+     inkscape:cx="536.05783"
+     inkscape:cy="400.96386"
+     inkscape:window-width="1856"
+     inkscape:window-height="958"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer2" />
+  <!-- Generator: Adobe Illustrator 29.5.1, SVG Export Plug-In . SVG Version: 2.1.0 Build 141)  -->
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Layer 2">
+    <path
+       id="path2"
+       style="fill:#000000;stroke-width:1.26085"
+       d="M 875.77734 100 L 577.80859 332.84961 L 485.33398 124.88867 L 401.6543 329.20312 L 246.84961 286.07617 L 276.99609 441.41797 L 0 537.11133 L 272.86523 608.55859 L 141.55469 823.33398 L 379.60938 746.46875 L 482.49023 905.93945 L 562.30664 777.47266 L 798.21484 993.58789 L 707.45703 704.84375 L 831.04297 686.76562 L 772.30664 572.24609 L 1022 499.77734 L 708.20703 431.38672 L 875.77734 100 z M 488.44531 441 A 100 100 0 0 1 588.44531 541 A 100 100 0 0 1 488.44531 641 A 100 100 0 0 1 388.44531 541 A 100 100 0 0 1 488.44531 441 z " />
+  </g>
+</svg>

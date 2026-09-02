@@ -5,7 +5,9 @@ import QtQuick
 import QtQuick.VectorImage
 import QtQuick.Controls
 import QtQuick.Effects
+
 import "../shapes"
+import "../effects"
 
 PanelWindow {
     id: root
@@ -16,7 +18,6 @@ PanelWindow {
         bottom: true
     }
 
-    property string eyeColor: "#6A7DFE"
     property real centerRadius: 260
     property real eyeScalePerHundredRadius: 0.2
     property real sliceLength: 200
@@ -163,20 +164,7 @@ PanelWindow {
 
         layer.enabled: true
         layer.textureSize: Qt.size(width * 4, height * 4) // render at 4x for svg scaling
-        layer.effect: MultiEffect {
-            brightness: 1.0
-            colorization: 1.0
-            colorizationColor: root.eyeColor
-
-            // glow
-            shadowEnabled: true
-            shadowColor: root.eyeColor
-            shadowBlur: 1.0
-            shadowScale: 1.02
-            shadowHorizontalOffset: 0
-            shadowVerticalOffset: 0
-            shadowOpacity: 0.8
-        }
+        layer.effect: NomaiEyeGlow {}
 
         RotationAnimation on rotation {
             from: 0

@@ -7,6 +7,7 @@ Widget {
     required property string text
     property int horizontalAlignment: Text.AlignHCenter
     property int verticalAlignment: Text.AlignVCenter
+    property real padding: 4
 
     // sometimes the text is wrongly assumed to be smaller and elides
     requestedLength: textMetrics.width + 6
@@ -25,6 +26,7 @@ Widget {
         horizontalAlignment: root.horizontalAlignment
         verticalAlignment: root.verticalAlignment
         elide: Text.ElideRight
+        padding: root.padding
         clip: true
 
         font: textMetrics.font

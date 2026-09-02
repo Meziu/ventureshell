@@ -7,7 +7,6 @@ CurvyBox {
 
     required property real thickness
     property bool horizontal: true
-    property real centerIslandWidth: 0
     property real minLength: 0
     property real maxLength: 600
 
