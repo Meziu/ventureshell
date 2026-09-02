@@ -91,7 +91,7 @@ WlSessionLock {
 
                 text: Qt.formatDate(clock.date, "dddd, MMMM d")
                 color: OuterWildsUIFont.defaultColor
-                font: OuterWildsUIFont.withSize(50)
+                font: OuterWildsUIFont.withSize(40)
 
                 renderType: Text.CurveRendering
                 renderTypeQuality: Text.VeryHighRenderTypeQuality
@@ -101,7 +101,7 @@ WlSessionLock {
                 id: passwordField
 
                 Layout.preferredWidth: date.width + 100
-                Layout.topMargin: 50
+                Layout.topMargin: 40
 
                 background: Rectangle {
                     anchors.fill: parent

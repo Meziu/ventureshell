@@ -120,7 +120,6 @@ Item {
                     font.bold: true
                 }
 
-                visible: opacity > 0
                 opacity: sliceRepeater.isHovered ? 0.3 : 0
                 scale: sliceRepeater.isHovered ? 1 : 0.95
 
