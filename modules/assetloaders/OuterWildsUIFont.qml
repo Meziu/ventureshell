@@ -30,6 +30,6 @@ Singleton {
 
     FontLoader {
         id: loader
-        source: "file:assets/fonts/itc-serif-gothic/itc-serif-gothic-extra-bold-588cef7e1f5d9.otf"
+        source: "file:assets/fonts/itc-serif-gothic/itc-serif-gothic-extra-bold.otf"
     }
 }
