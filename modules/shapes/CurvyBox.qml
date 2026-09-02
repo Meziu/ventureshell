@@ -17,9 +17,12 @@ Shape {
     // false to do so vertically
     property bool avoidCornersHorizontally: true
 
-    default property list<QtObject> data
+    default property alias content: contentItem.data
+    readonly property alias contentChildren: contentItem.children
 
     Item {
+        id: contentItem
+
         anchors {
             fill: parent
             topMargin: !avoidCornersHorizontally && !attached.top ? box.cornerRadius : 0

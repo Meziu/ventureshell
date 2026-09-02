@@ -9,7 +9,7 @@ Widget {
     property int verticalAlignment: Text.AlignVCenter
 
     // sometimes the text is wrongly assumed to be smaller and elides
-    requestedWidth: textMetrics.width + 6
+    requestedLength: textMetrics.width + 6
 
     // To avoid binding loops
     TextMetrics {

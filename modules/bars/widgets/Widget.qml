@@ -8,7 +8,8 @@ Item {
         bottom: parent.bottom
     }
 
-    property real requestedWidth: childrenRect.width
+    property bool horizontal: true
+    property real requestedLength: horizontal ? childrenRect.width : childrenRect.height
 
     Rectangle {
         id: background

@@ -5,9 +5,7 @@ import QtQuick
 import "../../shapes"
 import "../widgets"
 
-CurvyBox {
-    width: clock.requestedWidth + cornerRadius * 2
-
+Island {
     attached: Attach {
         top: true
         left: false

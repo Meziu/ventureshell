@@ -3,13 +3,11 @@ import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
 
-import "../../assetloaders"
 import "../../shapes"
 import "../widgets"
 
-CurvyBox {
+Island {
     id: root
-    width: textWidget.requestedWidth + cornerRadius * 2
 
     anchors {
         top: parent.top

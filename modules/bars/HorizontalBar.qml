@@ -37,22 +37,22 @@ PanelWindow {
 
     color: "#00000000"
 
-    TopLeft {
+    TopLeftIsland {
         id: topLeftIsland
         cornerRadius: barCornerRadius
-        height: barHeight
+        thickness: barHeight
         centerIslandWidth: topCenterIsland.width
     }
 
-    TopCenter {
+    TopCenterIsland {
         id: topCenterIsland
         cornerRadius: barCornerRadius
-        height: barHeight
+        thickness: barHeight
     }
 
-    TopRight {
+    TopRightIsland {
         id: topRightIsland
         cornerRadius: barCornerRadius
-        height: barHeight
+        thickness: barHeight
     }
 }
