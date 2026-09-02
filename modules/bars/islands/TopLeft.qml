@@ -6,8 +6,22 @@ import "../../assetloaders"
 import "../../shapes"
 
 CurvyBox {
-    width: 700
-    height: 40
+    id: root
+
+    property real minWidth: 0
+    property real maxWidth: 850
+
+    property string titleText: ToplevelManager.activeToplevel ? ToplevelManager.activeToplevel.title : ""
+    visible: titleText !== "" ? true : false
+
+    width: Math.max(minWidth, Math.min(textMetrics.width + cornerRadius * 2, maxWidth))
+
+    Behavior on width {
+        NumberAnimation {
+            duration: 100
+            easing.type: Easing.OutCubic
+        }
+    }
 
     attached: Attach {
         top: true
@@ -21,14 +35,23 @@ CurvyBox {
         top: parent.top
     }
 
+    // To avoid binding loops
+    TextMetrics {
+        id: textMetrics
+        font: OuterWildsUIFont.withSize(14)
+        text: root.titleText
+    }
+
     Text {
+        id: windowName
         anchors.fill: parent
 
-        text: ToplevelManager.activeToplevel ? ToplevelManager.activeToplevel.title : ""
+        text: root.titleText
         horizontalAlignment: Text.AlignLeft
         verticalAlignment: Text.AlignVCenter
+        elide: Text.ElideRight
 
-        font: OuterWildsUIFont.withSize(14)
+        font: textMetrics.font
         color: OuterWildsUIFont.defaultColor
     }
 }

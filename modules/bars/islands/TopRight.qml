@@ -7,9 +7,6 @@ import "../../assetloaders"
 import "../../shapes"
 
 CurvyBox {
-    width: 100
-    height: 40
-
     anchors {
         top: parent.top
         right: parent.right

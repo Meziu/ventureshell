@@ -6,8 +6,9 @@ import "../../assetloaders"
 import "../../shapes"
 
 CurvyBox {
-    width: 100
-    height: 40
+    property bool dateAndTime: true
+
+    width: clockText.contentWidth + cornerRadius * 2
 
     attached: Attach {
         top: true
@@ -21,9 +22,15 @@ CurvyBox {
         top: parent.top
     }
 
+    SystemClock {
+        id: clock
+    }
+
     Text {
+        id: clockText
+
         anchors.centerIn: parent
-        text: "LMAO2"
+        text: Qt.formatDateTime(clock.date, dateAndTime ? "dddd, d MMMM hh:mm" : "hh:mm")
 
         font: OuterWildsUIFont.withSize(14)
         color: OuterWildsUIFont.defaultColor

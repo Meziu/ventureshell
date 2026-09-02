@@ -4,9 +4,22 @@ import QtQuick.Shapes
 Shape {
     id: box
 
+    // To avoid a binding loop we set some default dimensions to override
+    width: 100
+    height: 40
+
     required property Attach attached
     property real cornerRadius: 14
     property bool showFeet: true // haha, feet
+
+    default property list<QtObject> data
+
+    Item {
+        anchors.fill: parent
+        anchors.margins: box.cornerRadius
+
+        data: box.data
+    }
 
     readonly property color gradStart: Qt.rgba(250 / 255, 179 / 255, 135 / 255, 0.16)
     readonly property color gradEnd: Qt.rgba(250 / 255, 179 / 255, 135 / 255, 0.05)

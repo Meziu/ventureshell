@@ -23,26 +23,35 @@ PanelWindow {
         }
     }
 
+    property real barHeight: 40
+    property real barCornerRadius: 18
+
     anchors {
         left: true
         right: true
         top: true
     }
 
-    exclusiveZone: Math.max(topLeftIsland.implicitHeight, topCenterIsland.implicitHeight, topRightIsland.implicitHeight)
+    exclusiveZone: Math.max(topLeftIsland.implicitHeight, topCenterIsland.implicitHeight, topRightIsland.implicitHeight) - barCornerRadius
     exclusionMode: ExclusionMode.Normal
 
     color: "#00000000"
 
     TopLeft {
         id: topLeftIsland
+        cornerRadius: barCornerRadius
+        implicitHeight: barHeight
     }
 
     TopCenter {
         id: topCenterIsland
+        cornerRadius: barCornerRadius
+        implicitHeight: barHeight
     }
 
     TopRight {
         id: topRightIsland
+        cornerRadius: barCornerRadius
+        implicitHeight: barHeight
     }
 }
