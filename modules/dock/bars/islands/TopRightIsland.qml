@@ -24,8 +24,9 @@ Island {
     TextWidget {
         id: textWidget
 
-        anchors.fill: parent
-        anchors.rightMargin: root.cornerRadius
+        Layout.fillWidth: true
+        Layout.fillHeight: true
+        Layout.rightMargin: root.cornerRadius
 
         text: "I'm at the top left? No wait, right, top right"
     }

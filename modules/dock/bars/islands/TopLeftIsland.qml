@@ -1,5 +1,6 @@
 import Quickshell
 import QtQuick
+import QtQuick.Layouts
 
 import "../../../shapes"
 import "../widgets"
@@ -21,8 +22,9 @@ Island {
 
     WindowNameWidget {
         id: windowName
-        anchors.leftMargin: root.cornerRadius
-        anchors.fill: parent
+        Layout.leftMargin: root.cornerRadius
+        Layout.fillWidth: true
+        Layout.fillHeight: true
         horizontalAlignment: Text.AlignLeft // so it doesn't jump when resizing
     }
 }

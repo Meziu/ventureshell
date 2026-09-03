@@ -5,6 +5,8 @@ import QtQuick
 
 Singleton {
     readonly property string defaultColor: "#F28B2C"
+    readonly property string lightColor: "#F5EAD9"
+    readonly property string darkColor: "#2A1B12"
     readonly property font font: loader.font
 
     function withSize(pointSize) {

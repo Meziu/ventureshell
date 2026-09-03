@@ -3,7 +3,9 @@ import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
 
+import "../../../config"
 import "../../../shapes"
+import "../../../effects"
 import "../widgets"
 
 Island {
@@ -19,35 +21,29 @@ Island {
         top: parent.top
     }
 
-    RowLayout {
-        anchors.fill: parent
+    IconWidget {
+        id: appWidget
+        source: "file:assets/images/outerwilds/symbols/OuterWildsVentures.png"
 
-        property real requestedLength: {
-            let sum = spacing;
+        Layout.preferredWidth: 40
+        Layout.fillHeight: true
+    }
 
-            for (let i = 0; i < children.length; i++) {
-                if (children[i].requestedLength) {
-                    sum += children[i].requestedLength
-                }
-            }
+    ClockWidget {
+        id: clock
+        dateAndTime: true
 
-            return sum
-        }
+        Layout.fillWidth: true
+        Layout.fillHeight: true
+    }
 
-        ClockWidget {
-            id: clock
-            dateAndTime: true
+    IconWidget {
+        id: shutdownWidget
+        source: "file:assets/images/outerwilds/symbols/MinimalEye.svg"
 
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-        }
+        Layout.preferredWidth: 40
+        Layout.fillHeight: true
 
-        IconWidget {
-            id: shutdownWidget
-            source: "file:assets/images/outerwilds/symbols/MinimalEye.svg"
-
-            Layout.preferredWidth: 40
-            Layout.fillHeight: true
-        }
+        effect: NomaiEyeGlow {}
     }
 }

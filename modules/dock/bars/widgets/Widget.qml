@@ -4,8 +4,11 @@ import QtQuick.Layouts
 import "../../../behaviours"
 
 Item {
+    id: root
+
     property bool horizontal: true
     property real requestedLength: horizontal ? childrenRect.width : childrenRect.height
+    signal clicked()
 
     Rectangle {
         id: background
@@ -20,6 +23,8 @@ Item {
             hoverEnabled: true
             anchors.fill: parent
             cursorShape: Qt.PointingHandCursor
+
+            onClicked: root.clicked()
         }
 
         SmoothHoverOpacity on opacity {

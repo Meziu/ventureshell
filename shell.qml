@@ -2,6 +2,7 @@ import Quickshell
 import Quickshell.Io
 import QtQuick
 
+import "modules/config"
 import "modules/dock"
 import "modules/sessioncontrol"
 import "modules/lockscreen"
@@ -9,6 +10,7 @@ import "modules/lockscreen"
 ShellRoot {
     LazyLoader {
         id: sessionControlLoader
+        active: Config.ready
         loading: true
 
         SessionControl {
@@ -18,6 +20,7 @@ ShellRoot {
 
     LazyLoader {
         id: lockScreenLoader
+        active: Config.ready
         loading: true
 
         LockScreen {
@@ -25,13 +28,18 @@ ShellRoot {
         }
     }
 
-    Dock {}
+    LazyLoader {
+        id: dockLoader
+        active: Config.ready
+        loading: true
+
+        Dock {}
+    }
 
     IpcHandler {
         target: "sessionctl"
 
         function toggle(): void {
-            sessionControlLoader.active = true;
             sessionControlLoader.item.visible = !sessionControlLoader.item.visible;
         }
     }
@@ -40,7 +48,6 @@ ShellRoot {
         target: "lockscreen"
 
         function lock(): void {
-            lockScreenLoader.active = true;
             lockScreenLoader.item.locked = true;
         }
     }

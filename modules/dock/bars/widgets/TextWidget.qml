@@ -30,6 +30,6 @@ Widget {
         clip: true
 
         font: textMetrics.font
-        color: OuterWildsUIFont.defaultColor
+        color: OuterWildsUIFont.lightColor
     }
 }

@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.VectorImage
 import QtQuick.Effects
 
 import "../../../effects"
@@ -9,17 +8,17 @@ Widget {
     id: root
 
     required property url source
-    readonly property string eyeColor: "#6A7DFE"
+    property Component effect: null
 
-    VectorImage {
+    Image {
         id: image
         anchors.fill: parent
         source: root.source
         fillMode: Image.PreserveAspectFit
-        preferredRendererType: VectorImage.CurveRenderer
+        mipmap: true
 
-        layer.enabled: true
-        layer.textureSize: Qt.size(width * 4, height * 4) // render at 4x for svg scaling
-        layer.effect: NomaiEyeGlow {}
+        layer.enabled: root.effect ? true : false
+        layer.textureSize: Qt.size(width * 4, height * 4)
+        layer.effect: root.effect
     }
 }

@@ -1,10 +1,12 @@
 import QtQuick
 
 import "../../../shapes"
+import "../widgets"
 
 CurvyBox {
     id: root
 
+    default property list<Widget> widgets
     required property real thickness
     property bool horizontal: true
     property real minLength: 0
@@ -12,22 +14,16 @@ CurvyBox {
 
     property real transitionTime: 100
 
-    function totalRequestedLength() {
-        let sum = 0;
-
-        for (let i = 0; i < contentChildren.length; i++) {
-            if (contentChildren[i].requestedLength) {
-                sum += contentChildren[i].requestedLength
-            }
-        }
-
-        return sum
-    }
-
-    readonly property real length: Math.max(minLength, Math.min(totalRequestedLength() + cornerRadius * 2, maxLength))
+    readonly property real length: Math.max(minLength, Math.min(widgetContainer.requestedLength + cornerRadius * 2, maxLength))
 
     width: horizontal ? length : thickness
     height: !horizontal ? length : thickness
+
+    WidgetContainer {
+        id: widgetContainer
+
+        data: widgets
+    }
 
     Behavior on width {
         NumberAnimation {

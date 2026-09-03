@@ -34,9 +34,10 @@ Shape {
         data: box.data
     }
 
-    readonly property color borderCol: Qt.rgba(250 / 255, 179 / 255, 135 / 255, 0.28)
+    readonly property color fillColor: "#9C4A1C"
+    readonly property color borderColor: Qt.rgba(250 / 255, 179 / 255, 135 / 255, 0.28)
 
-    readonly property ShapeGradient gradient: RustyMetal {}
+    readonly property ShapeGradient gradient: null // RustyMetal {}
 
     preferredRendererType: Shape.CurveRenderer
 
@@ -123,7 +124,8 @@ Shape {
     }
 
     ShapePath {
-        strokeColor: box.borderCol
+        strokeColor: box.borderColor
+        fillColor: box.fillColor
         strokeWidth: 1
 
         fillGradient: box.gradient
