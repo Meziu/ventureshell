@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 
 import "../../../config"
+import "../../../assetloaders"
 import "../../../shapes"
 import "../../../effects"
 import "../widgets"
@@ -21,11 +22,13 @@ Island {
         top: parent.top
     }
 
-    IconWidget {
+    TextWidget {
         id: appWidget
-        source: "file:assets/images/outerwilds/symbols/OuterWildsVentures.png"
+        text: "O"
 
-        Layout.preferredWidth: 40
+        font: OuterWildsFont.logoWithSize(24)
+
+        Layout.preferredWidth: 30
         Layout.fillHeight: true
     }
 

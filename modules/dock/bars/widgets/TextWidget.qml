@@ -8,6 +8,7 @@ Widget {
     property int horizontalAlignment: Text.AlignHCenter
     property int verticalAlignment: Text.AlignVCenter
     property real padding: 4
+    property font font: OuterWildsFont.uiWithSize(14)
 
     // sometimes the text is wrongly assumed to be smaller and elides
     requestedLength: textMetrics.width + 6
@@ -15,7 +16,7 @@ Widget {
     // To avoid binding loops
     TextMetrics {
         id: textMetrics
-        font: OuterWildsUIFont.withSize(14)
+        font: root.font
         text: root.text
     }
 
@@ -30,6 +31,6 @@ Widget {
         clip: true
 
         font: textMetrics.font
-        color: OuterWildsUIFont.lightColor
+        color: OuterWildsFont.lightColor
     }
 }

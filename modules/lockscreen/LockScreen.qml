@@ -77,8 +77,8 @@ WlSessionLock {
                 Layout.bottomMargin: -50
 
                 text: Qt.formatTime(clock.date, "hh:mm")
-                color: OuterWildsUIFont.defaultColor
-                font: OuterWildsUIFont.withSize(140)
+                color: OuterWildsFont.defaultColor
+                font: OuterWildsFont.uiWithSize(140)
 
                 renderType: Text.CurveRendering
                 renderTypeQuality: Text.VeryHighRenderTypeQuality
@@ -90,8 +90,8 @@ WlSessionLock {
                 Layout.alignment: Qt.AlignRight
 
                 text: Qt.formatDate(clock.date, "dddd, MMMM d")
-                color: OuterWildsUIFont.defaultColor
-                font: OuterWildsUIFont.withSize(40)
+                color: OuterWildsFont.defaultColor
+                font: OuterWildsFont.uiWithSize(40)
 
                 renderType: Text.CurveRendering
                 renderTypeQuality: Text.VeryHighRenderTypeQuality
@@ -105,16 +105,16 @@ WlSessionLock {
 
                 background: Rectangle {
                     anchors.fill: parent
-                    border.color: OuterWildsUIFont.defaultColor
+                    border.color: OuterWildsFont.defaultColor
                     border.width: 4
 
                     color: "#00000000"
                     radius: 16
                 }
 
-                font: OuterWildsUIFont.withSize(30)
+                font: OuterWildsFont.uiWithSize(30)
                 padding: 16
-                color: OuterWildsUIFont.defaultColor
+                color: OuterWildsFont.defaultColor
                 horizontalAlignment: Text.AlignLeft
 
                 echoMode: TextInput.Password
