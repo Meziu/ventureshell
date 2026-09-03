@@ -4,9 +4,13 @@ import QtQuick.Layouts
 GridLayout {
     id: root
     anchors.fill: parent
+    anchors.margins: 4
 
     property bool horizontal: true
     property real spacing: 10
+
+    rowSpacing: spacing
+    columnSpacing: spacing
 
     rows: horizontal ? 1 : -1
     columns: horizontal ? -1 : 1

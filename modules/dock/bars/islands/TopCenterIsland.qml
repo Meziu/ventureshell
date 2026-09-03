@@ -44,7 +44,7 @@ Island {
         id: shutdownWidget
         source: "file:assets/images/outerwilds/symbols/MinimalEye.svg"
 
-        Layout.preferredWidth: 40
+        Layout.preferredWidth: 30
         Layout.fillHeight: true
 
         effect: NomaiEyeGlow {}

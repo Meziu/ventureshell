@@ -13,8 +13,6 @@ Item {
     Rectangle {
         id: background
         anchors.fill: parent
-        anchors.topMargin: 5
-        anchors.bottomMargin: 5
         opacity: mouseArea.containsMouse ? 0.2 : 0
         radius: 12
 

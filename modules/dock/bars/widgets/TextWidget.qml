@@ -11,7 +11,7 @@ Widget {
     property font font: OuterWildsFont.uiWithSize(14)
 
     // sometimes the text is wrongly assumed to be smaller and elides
-    requestedLength: textMetrics.width + 6
+    requestedLength: textMetrics.width + padding * 2
 
     // To avoid binding loops
     TextMetrics {

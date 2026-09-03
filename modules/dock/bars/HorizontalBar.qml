@@ -5,6 +5,7 @@ import QtQuick.Layouts
 
 import "islands"
 
+// TODO: Extrapolate a generic "Bar" object
 PanelWindow {
     id: root
 
@@ -43,21 +44,21 @@ PanelWindow {
     TopLeftIsland {
         id: topLeftIsland
         cornerRadius: barCornerRadius
-        thickness: barSize
+        size: barSize
         maxLength: distanceFromCenterIsland
     }
 
     TopCenterIsland {
         id: topCenterIsland
         cornerRadius: barCornerRadius
-        thickness: barSize
+        size: barSize
         z: 1
     }
 
     TopRightIsland {
         id: topRightIsland
         cornerRadius: barCornerRadius
-        thickness: barSize
+        size: barSize
         maxLength: distanceFromCenterIsland
     }
 }

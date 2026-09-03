@@ -30,8 +30,6 @@ Shape {
             leftMargin: avoidCornersHorizontally && !attached.left ? box.cornerRadius/2 : 0
             rightMargin: avoidCornersHorizontally && !attached.right ? box.cornerRadius/2 : 0
         }
-
-        data: box.data
     }
 
     readonly property color fillColor: "#9C4A1C"
