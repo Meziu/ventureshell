@@ -7,6 +7,7 @@ import "../../../config"
 import "../../../assetloaders"
 import "../../../shapes"
 import "../../../effects"
+import "../../../sessioncontrol"
 import "../widgets"
 
 Island {
@@ -43,5 +44,7 @@ Island {
         Layout.preferredWidth: 30
 
         effect: NomaiEyeGlow {}
+
+        onClicked: SessionControlService.show()
     }
 }

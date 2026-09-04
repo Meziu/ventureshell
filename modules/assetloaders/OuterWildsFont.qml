@@ -33,17 +33,29 @@ Singleton {
         });
     }
 
-    /*function withOverrides(overrides) {
+    function uiWithOverrides(overrides) {
         let base = {
-            family: font.family,
-            weight: font.weight,
-            styleName: font.styleName,
-            pointSize: font.pointSize
+            family: fontUI.family,
+            weight: fontUI.weight,
+            styleName: fontUI.styleName,
+            pointSize: fontUI.pointSize
         };
         for (let key in overrides)
             base[key] = overrides[key];
         return Qt.font(base);
-    }*/
+    }
+
+    function logoWithOverrides(overrides) {
+        let base = {
+            family: fontLogo.family,
+            weight: fontLogo.weight,
+            styleName: fontLogo.styleName,
+            pointSize: fontLogo.pointSize
+        };
+        for (let key in overrides)
+            base[key] = overrides[key];
+        return Qt.font(base);
+    }
 
     FontLoader {
         id: loaderUI

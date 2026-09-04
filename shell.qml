@@ -13,9 +13,7 @@ ShellRoot {
         active: Config.ready
         loading: true
 
-        SessionControl {
-            visible: false
-        }
+        SessionControl {}
     }
 
     LazyLoader {
@@ -34,14 +32,6 @@ ShellRoot {
         loading: true
 
         Dock {}
-    }
-
-    IpcHandler {
-        target: "sessionctl"
-
-        function toggle(): void {
-            sessionControlLoader.item.visible = !sessionControlLoader.item.visible;
-        }
     }
 
     IpcHandler {

@@ -47,6 +47,7 @@ Widget {
                 id: workspaceLabel
                 required property HyprlandWorkspace modelData
                 property bool focused: modelData === activeWorkspace
+                property real letterSpacing: -4
 
                 Layout.preferredWidth: layout.cellSize
                 Layout.preferredHeight: layout.cellSize
@@ -56,7 +57,11 @@ Widget {
                 verticalAlignment: Text.AlignVCenter
 
                 color: OuterWildsFont.lightColor
-                font: OuterWildsFont.logoWithSize(14)
+                font: OuterWildsFont.logoWithOverrides({
+                    pointSize: 18,
+                    letterSpacing: letterSpacing
+                })
+                leftPadding: letterSpacing
 
                 Rectangle {
                     anchors.fill: parent
@@ -65,9 +70,9 @@ Widget {
 
                     opacity: {
                         if (workspaceLabel.focused) {
-                            return 0.3
-                        } else if (mouseArea.containsMouse) {
                             return 0.2
+                        } else if (mouseArea.containsMouse) {
+                            return 0.1
                         } else {
                             return 0
                         }
