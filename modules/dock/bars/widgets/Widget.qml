@@ -1,32 +1,14 @@
 import QtQuick
 import QtQuick.Layouts
 
-import "../../../behaviours"
-
 Item {
     id: root
 
     property bool horizontal: true
-    property real requestedLength: horizontal ? childrenRect.width : childrenRect.height
-    signal clicked()
+    property real requestedLength: horizontal
+        ? (Layout.preferredWidth >= 0 ? Layout.preferredWidth : implicitWidth)
+        : (Layout.preferredHeight >= 0 ? Layout.preferredHeight : implicitHeight)
 
-    Rectangle {
-        id: background
-        anchors.fill: parent
-        opacity: mouseArea.containsMouse ? 0.2 : 0
-        radius: 12
-
-        MouseArea {
-            id: mouseArea
-            hoverEnabled: true
-            anchors.fill: parent
-            cursorShape: Qt.PointingHandCursor
-
-            onClicked: root.clicked()
-        }
-
-        SmoothHoverOpacity on opacity {
-            isHovered: mouseArea.containsMouse
-        }
-    }
+    Layout.fillHeight: true
+    Layout.fillWidth: true
 }

@@ -12,6 +12,8 @@ Bar {
 
     LeftCenterIsland {
         id: leftCenterIsland
+
+        screen: root.screen
         cornerRadius: barCornerRadius
         position: root.position
         size: barSize

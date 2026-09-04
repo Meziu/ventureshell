@@ -29,15 +29,11 @@ Island {
         font: OuterWildsFont.logoWithSize(24)
 
         Layout.preferredWidth: 30
-        Layout.fillHeight: true
     }
 
     ClockWidget {
         id: clock
         dateAndTime: false
-
-        Layout.fillWidth: true
-        Layout.fillHeight: true
     }
 
     IconWidget {
@@ -45,7 +41,6 @@ Island {
         source: "file:assets/images/outerwilds/symbols/MinimalEye.svg"
 
         Layout.preferredWidth: 30
-        Layout.fillHeight: true
 
         effect: NomaiEyeGlow {}
     }

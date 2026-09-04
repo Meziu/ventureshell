@@ -23,8 +23,6 @@ Island {
     WindowNameWidget {
         id: windowName
         Layout.leftMargin: root.cornerRadius
-        Layout.fillWidth: true
-        Layout.fillHeight: true
         horizontalAlignment: Text.AlignLeft // so it doesn't jump when resizing
     }
 }

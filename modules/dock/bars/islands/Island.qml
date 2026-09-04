@@ -1,4 +1,5 @@
 import QtQuick
+import Quickshell
 
 import "../../../shapes"
 import "../widgets"
@@ -9,6 +10,7 @@ CurvyBox {
 
     default property list<Widget> widgets
     required property real size
+    required property ShellScreen screen
     property int position: Bar.Top
     property bool horizontal: position === Bar.Top || position === Bar.Bottom
     property real minLength: 0

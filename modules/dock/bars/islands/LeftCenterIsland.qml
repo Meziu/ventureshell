@@ -4,12 +4,13 @@ import QtQuick
 import QtQuick.Layouts
 
 import "../../../config"
-import "../../../assetloaders"
 import "../../../shapes"
 import "../../../effects"
 import "../widgets"
 
 Island {
+    id: root
+
     attached: Attach {
         top: false
         left: true
@@ -22,23 +23,9 @@ Island {
         left: parent.left
     }
 
-    TextWidget {
-        id: appWidget
-        text: "O"
+    WorkspaceWidget {
+        id: workspaceWidget
 
-        font: OuterWildsFont.logoWithSize(24)
-
-        Layout.preferredHeight: 30
-        Layout.fillWidth: true
-    }
-
-    IconWidget {
-        id: shutdownWidget
-        source: "file:assets/images/outerwilds/symbols/MinimalEye.svg"
-
-        Layout.preferredHeight: 30
-        Layout.fillWidth: true
-
-        effect: NomaiEyeGlow {}
+        horizontal: false
     }
 }

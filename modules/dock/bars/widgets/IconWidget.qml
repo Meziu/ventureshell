@@ -4,7 +4,7 @@ import QtQuick.Effects
 
 import "../../../effects"
 
-Widget {
+ClickableWidget {
     id: root
 
     required property url source

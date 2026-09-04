@@ -5,6 +5,7 @@ GridLayout {
     id: root
     anchors.fill: parent
     anchors.margins: 4
+    clip: true
 
     property bool horizontal: true
     property real spacing: 10
@@ -16,11 +17,11 @@ GridLayout {
     columns: horizontal ? -1 : 1
 
     property real requestedLength: {
-        let sum = spacing;
+        let sum = 0;
 
         for (let i = 0; i < children.length; i++) {
             if (children[i].requestedLength) {
-                sum += children[i].requestedLength;
+                sum += children[i].requestedLength + spacing;
             }
         }
 

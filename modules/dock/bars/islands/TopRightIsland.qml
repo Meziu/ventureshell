@@ -24,8 +24,6 @@ Island {
     TextWidget {
         id: textWidget
 
-        Layout.fillWidth: true
-        Layout.fillHeight: true
         Layout.rightMargin: root.cornerRadius
 
         text: "I'm at the top left? No wait, right, top right"

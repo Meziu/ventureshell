@@ -1,8 +1,9 @@
 import QtQuick
+import QtQuick.Layouts
 
 import "../../../assetloaders"
 
-Widget {
+ClickableWidget {
     id: root
     required property string text
     property int horizontalAlignment: Text.AlignHCenter
@@ -11,7 +12,9 @@ Widget {
     property font font: OuterWildsFont.uiWithSize(14)
 
     // sometimes the text is wrongly assumed to be smaller and elides
+    // This wrongly supercedes the usual requestedLength made with content size, causing visual bugs
     requestedLength: textMetrics.width + padding * 2
+    Layout.preferredWidth: textMetrics.width + padding * 2
 
     // To avoid binding loops
     TextMetrics {

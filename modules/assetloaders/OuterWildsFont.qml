@@ -6,9 +6,10 @@ import QtQuick
 Singleton {
     id: root
 
-    readonly property string defaultColor: "#F28B2C"
-    readonly property string lightColor: "#F5EAD9"
-    readonly property string darkColor: "#2A1B12"
+    readonly property color defaultColor: "#F28B2C"
+    readonly property color lightColor: "#F5EAD9"
+    readonly property color darkColor: "#2A1B12"
+    readonly property color backgroundColor: "#9C4A1C"
     readonly property url sourceLogo: "file:assets/fonts/ow-logo/OUTERwilds-Normal.otf"
     readonly property url sourceUI: "file:assets/fonts/itc-serif-gothic/itc-serif-gothic-extra-bold.otf"
     readonly property font fontUI: loaderUI.font

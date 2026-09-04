@@ -13,6 +13,7 @@ Item {
             screen: modelData
         }
     }
+
     Variants {
         model: Quickshell.screens
 

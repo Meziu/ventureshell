@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Shapes
 
+import "../assetloaders"
 import "../gradients"
 
 Shape {
@@ -32,7 +33,7 @@ Shape {
         }
     }
 
-    readonly property color fillColor: "#9C4A1C"
+    readonly property color fillColor: OuterWildsFont.backgroundColor
     readonly property color borderColor: Qt.rgba(250 / 255, 179 / 255, 135 / 255, 0.28)
 
     readonly property ShapeGradient gradient: null // RustyMetal {}

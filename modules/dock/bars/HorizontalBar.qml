@@ -16,6 +16,7 @@ Bar {
     TopLeftIsland {
         id: topLeftIsland
 
+        screen: root.screen
         cornerRadius: barCornerRadius
         size: barSize
         maxLength: distanceFromCenterIsland
@@ -25,6 +26,7 @@ Bar {
     TopCenterIsland {
         id: topCenterIsland
 
+        screen: root.screen
         cornerRadius: barCornerRadius
         size: barSize
         position: root.position
@@ -34,6 +36,7 @@ Bar {
     TopRightIsland {
         id: topRightIsland
 
+        screen: root.screen
         cornerRadius: barCornerRadius
         size: barSize
         maxLength: distanceFromCenterIsland
