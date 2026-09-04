@@ -5,44 +5,17 @@ import QtQuick.Layouts
 
 import "islands"
 
-// TODO: Extrapolate a generic "Bar" object
-PanelWindow {
+Bar {
     id: root
 
-    WlrLayershell.layer: WlrLayer.Top
-    mask: Region {
-        Region {
-            item: topLeftIsland
-        }
-
-        Region {
-            item: topCenterIsland
-        }
-
-        Region {
-            item: topRightIsland
-        }
-    }
-
-    property real barSize: 40
-    property real barCornerRadius: 16
-
-    anchors {
-        left: true
-        right: true
-        top: true
-    }
-
-    exclusiveZone: barSize
-    exclusionMode: ExclusionMode.Normal
-
-    color: "#00000000"
+    position: Bar.Top
 
     // The center island has size priority
     readonly property real distanceFromCenterIsland: (width - topCenterIsland.width) / 2
 
     TopLeftIsland {
         id: topLeftIsland
+
         cornerRadius: barCornerRadius
         size: barSize
         maxLength: distanceFromCenterIsland
@@ -50,6 +23,7 @@ PanelWindow {
 
     TopCenterIsland {
         id: topCenterIsland
+
         cornerRadius: barCornerRadius
         size: barSize
         z: 1
@@ -57,6 +31,7 @@ PanelWindow {
 
     TopRightIsland {
         id: topRightIsland
+
         cornerRadius: barCornerRadius
         size: barSize
         maxLength: distanceFromCenterIsland
