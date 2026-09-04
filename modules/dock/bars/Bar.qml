@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 
 import "islands"
+import "../../config"
 
 PanelWindow {
     id: root
@@ -16,8 +17,8 @@ PanelWindow {
     }
 
     required property int position
-    property real barSize: 40
-    property real barCornerRadius: 16
+    property real barSize: Config.options.bar.size
+    property real barCornerRadius: Config.options.bar.cornerRadius
     default property alias data: content.data
 
     WlrLayershell.layer: WlrLayer.Top

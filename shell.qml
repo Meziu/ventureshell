@@ -21,9 +21,7 @@ ShellRoot {
         active: Config.ready
         loading: true
 
-        LockScreen {
-            locked: false
-        }
+        LockScreen {}
     }
 
     LazyLoader {
@@ -32,13 +30,5 @@ ShellRoot {
         loading: true
 
         Dock {}
-    }
-
-    IpcHandler {
-        target: "lockscreen"
-
-        function lock(): void {
-            lockScreenLoader.item.locked = true;
-        }
     }
 }

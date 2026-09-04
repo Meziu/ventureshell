@@ -6,6 +6,7 @@ import QtQuick.VectorImage
 import QtQuick.Controls
 import QtQuick.Effects
 
+import "../config"
 import "../shapes"
 import "../effects"
 
@@ -20,31 +21,32 @@ PanelWindow {
 
     visible: SessionControlService.visible
 
-    property real centerRadius: 260
-    property real eyeScalePerHundredRadius: 0.2
-    property real sliceLength: 200
-    property real sliceLengthIncrease: 60
-    property real centerDeadZone: root.centerRadius / 2
-    property real outerDeadZone: centerRadius + sliceLength + sliceLengthIncrease + 100
+    property real centerRadius: Config.options.sessionctl.centerRadius
+    property real eyeScalePerHundredRadius: Config.options.sessionctl.eyeScalePerHundredRadius
+    property real sliceLength: Config.options.sessionctl.slice.length
+    property real sliceLengthIncrease: Config.options.sessionctl.slice.lengthIncrease
+    property real innerDeadZone: centerRadius - Config.options.sessionctl.innerMouseOvershoot
+    property real outerDeadZone: centerRadius + sliceLength + sliceLengthIncrease + Config.options.sessionctl.outerMouseOvershoot
 
     color: "#00000000"
 
     WlrLayershell.layer: WlrLayer.Overlay
     exclusionMode: ExclusionMode.Ignore
 
-    property list<string> shutdownCommand: ["hyprshutdown", "-p", "systemctl poweroff"]
-    property list<string> rebootCommand: ["hyprshutdown", "-p", "systemctl reboot"]
-    property list<string> lockCommand: ["qylock-lock"]
-    property list<string> suspendCommand: ["systemctl", "sleep"]
-    property list<string> logoutCommand: ["hyprshutdown"]
-    property list<string> hibernateCommand: ["systemctl", "hibernate"]
+    property var fnList: {
+        "lock": SessionControlService.lock,
+        "logout": SessionControlService.logout,
+        "suspend": SessionControlService.suspend,
+        "shutdown": SessionControlService.shutdown,
+        "reboot": SessionControlService.reboot,
+        "hibernate": SessionControlService.hibernate,
+    }
 
-    readonly property var _commandList: [shutdownCommand, rebootCommand, lockCommand, suspendCommand, logoutCommand, hibernateCommand]
-
-    function executeSessionControl(type: int) {
-        const cmd = _commandList[type];
-        if (cmd && cmd.length > 0) {
-            Quickshell.execDetached(cmd);
+    function executeSessionControl(type: string) {
+        const fn = fnList[type];
+        if (fn) {
+            SessionControlService.hide()
+            fn()
         } else {
             console.warn("No command configured for session control:", type);
         }
@@ -104,7 +106,7 @@ PanelWindow {
             let dist = Math.sqrt(dx * dx + dy * dy);
 
             // Set all as non hovered if pointing the dead center
-            if (dist >= root.centerDeadZone && dist <= root.outerDeadZone) {
+            if (dist >= root.innerDeadZone && dist <= root.outerDeadZone) {
                 let angle = Math.atan2(dx, dy);
 
                 // We add back the offset of the first slice, which is half in the positive side and half in the negative
@@ -135,7 +137,7 @@ PanelWindow {
                 SessionControlService.hide();
             }
             if (region >= 0) {
-                root.executeSessionControl(region);
+                root.executeSessionControl(sliceRepeater.itemAt(region).modelData);
             }
         }
     }

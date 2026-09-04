@@ -10,7 +10,7 @@ import "../assetloaders"
 
 WlSessionLock {
     id: lock
-    locked: true
+    locked: LockScreenService.locked
 
     WlSessionLockSurface {
         id: root
