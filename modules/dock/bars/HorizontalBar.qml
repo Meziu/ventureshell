@@ -19,6 +19,7 @@ Bar {
         cornerRadius: barCornerRadius
         size: barSize
         maxLength: distanceFromCenterIsland
+        position: root.position
     }
 
     TopCenterIsland {
@@ -26,6 +27,7 @@ Bar {
 
         cornerRadius: barCornerRadius
         size: barSize
+        position: root.position
         z: 1
     }
 
@@ -35,5 +37,6 @@ Bar {
         cornerRadius: barCornerRadius
         size: barSize
         maxLength: distanceFromCenterIsland
+        position: root.position
     }
 }

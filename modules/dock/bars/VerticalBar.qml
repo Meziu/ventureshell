@@ -10,13 +10,10 @@ Bar {
 
     position: Bar.Left
 
-    // The center island has size priority
-    readonly property real distanceFromCenterIsland: (height - leftCenterIsland.height) / 2
-
     LeftCenterIsland {
         id: leftCenterIsland
         cornerRadius: barCornerRadius
+        position: root.position
         size: barSize
-        horizontal: false
     }
 }

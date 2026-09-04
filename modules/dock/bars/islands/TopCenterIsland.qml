@@ -34,7 +34,7 @@ Island {
 
     ClockWidget {
         id: clock
-        dateAndTime: true
+        dateAndTime: false
 
         Layout.fillWidth: true
         Layout.fillHeight: true

@@ -2,13 +2,15 @@ import QtQuick
 
 import "../../../shapes"
 import "../widgets"
+import ".."
 
 CurvyBox {
     id: root
 
     default property list<Widget> widgets
     required property real size
-    property bool horizontal: true
+    property int position: Bar.Top
+    property bool horizontal: position === Bar.Top || position === Bar.Bottom
     property real minLength: 0
     property real maxLength: 600
 
