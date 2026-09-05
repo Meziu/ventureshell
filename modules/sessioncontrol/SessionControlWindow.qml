@@ -98,6 +98,7 @@ PanelWindow {
         anchors.centerIn: parent
         hoverEnabled: true
         property int region: 0
+        cursorShape: region >= 0 ? Qt.PointingHandCursor : Qt.ArrowCursor
 
         // Prevent layout feedback by checking polar coordinates relative to origin
         onPositionChanged: mouse => {

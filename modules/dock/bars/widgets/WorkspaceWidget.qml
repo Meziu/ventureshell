@@ -37,8 +37,8 @@ Widget {
         columns: root.horizontal ? -1 : 1
         uniformCellHeights: true
         uniformCellWidths: true
-        rowSpacing: -6
-        columnSpacing: -6
+        rowSpacing: -2
+        columnSpacing: -2
 
         Repeater {
             model: monitorWorkspaces
@@ -69,13 +69,14 @@ Widget {
                     color: OuterWildsFont.lightColor
 
                     opacity: {
+                        let opacity = 0
                         if (workspaceLabel.focused) {
-                            return 0.2
-                        } else if (mouseArea.containsMouse) {
-                            return 0.1
-                        } else {
-                            return 0
+                            opacity += 0.2
                         }
+                        if (mouseArea.containsMouse) {
+                            opacity += 0.1
+                        }
+                        return opacity
                     }
                     radius: width / 2
                     visible: true
