@@ -153,9 +153,12 @@ PanelWindow {
         transformOrigin: Item.Center
         scale: root.eyeScalePerHundredRadius * (root.centerRadius / 100)
 
+        preferredRendererType: VectorImage.CurveRenderer
+
         layer.enabled: true
-        layer.textureSize: Qt.size(width * 4, height * 4) // render at 4x for svg scaling
         layer.effect: NomaiEyeGlow {}
+        layer.smooth: true
+        layer.samples: 4
 
         RotationAnimation on rotation {
             from: 0

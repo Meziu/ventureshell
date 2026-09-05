@@ -11,10 +11,13 @@ ClickableWidget {
     property real padding: 4
     property font font: OuterWildsFont.uiWithSize(14)
 
+    // Length is AT MINIMUM a square (done for single character text as logos)
+    readonly property real length: Math.max(height, textMetrics.width + padding * 2)
+
     // sometimes the text is wrongly assumed to be smaller and elides
     // This wrongly supercedes the usual requestedLength made with content size, causing visual bugs
-    requestedLength: textMetrics.width + padding * 2
-    Layout.preferredWidth: textMetrics.width + padding * 2
+    requestedLength: root.length
+    Layout.preferredWidth: root.length
 
     // To avoid binding loops
     TextMetrics {

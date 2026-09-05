@@ -21,11 +21,13 @@ Island {
         bottom: false
     }
 
-    TextWidget {
-        id: textWidget
+    IdleInhibitorWidget {}
 
+    PowerWidget {}
+
+    NetworkWidget {}
+
+    NotificationsWidget {
         Layout.rightMargin: root.cornerRadius
-
-        text: "I'm at the top left? No wait, right, top right"
     }
 }
