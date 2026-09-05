@@ -14,6 +14,8 @@ Island {
         right: parent.right
     }
 
+    widgetContainer.anchors.rightMargin: root.cornerRadius
+
     attached: Attach {
         top: true
         left: false
@@ -27,7 +29,5 @@ Island {
 
     NetworkWidget {}
 
-    NotificationsWidget {
-        Layout.rightMargin: root.cornerRadius
-    }
+    NotificationsWidget {}
 }

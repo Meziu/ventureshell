@@ -24,12 +24,12 @@ CurvyBox {
     height: !horizontal ? length : size
     avoidCornersHorizontally: horizontal
 
-    WidgetContainer {
-        id: widgetContainer
+    property WidgetContainer widgetContainer: WidgetContainer {
         horizontal: root.horizontal
 
         data: widgets
     }
+    contentChildren: widgetContainer
 
     Behavior on width {
         NumberAnimation {

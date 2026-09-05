@@ -13,8 +13,8 @@ GridLayout {
     rowSpacing: spacing
     columnSpacing: spacing
 
-    rows: horizontal ? 1 : -1
-    columns: horizontal ? -1 : 1
+    rows: horizontal ? 2 : -1
+    columns: horizontal ? -1 : 2
 
     property real requestedLength: {
         let sum = 0;

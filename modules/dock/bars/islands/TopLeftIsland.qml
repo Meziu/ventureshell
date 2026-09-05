@@ -13,6 +13,8 @@ Island {
         top: parent.top
     }
 
+    widgetContainer.anchors.leftMargin: root.cornerRadius
+
     attached: Attach {
         top: true
         left: true
@@ -22,7 +24,6 @@ Island {
 
     WindowNameWidget {
         id: windowName
-        Layout.leftMargin: root.cornerRadius
         horizontalAlignment: Text.AlignLeft // so it doesn't jump when resizing
     }
 }
