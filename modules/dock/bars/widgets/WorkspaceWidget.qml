@@ -10,6 +10,7 @@ import "../../../behaviours"
 Widget {
     id: root
 
+    Layout.preferredWidth: layout.implicitWidth
     Layout.preferredHeight: layout.implicitHeight
 
     property HyprlandMonitor monitor: Hyprland.monitorFor(screen)
