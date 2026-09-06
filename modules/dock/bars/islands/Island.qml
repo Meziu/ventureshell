@@ -3,12 +3,14 @@ import Quickshell
 
 import "../../../shapes"
 import "../widgets"
+import "../panels"
 import ".."
 
 CurvyBox {
     id: root
 
     default property list<Widget> widgets
+
     required property real size
     required property ShellScreen screen
     property int position: Bar.Top
@@ -27,7 +29,7 @@ CurvyBox {
     property WidgetContainer widgetContainer: WidgetContainer {
         horizontal: root.horizontal
 
-        data: widgets
+        widgets: root.widgets
     }
     contentChildren: widgetContainer
 

@@ -1,8 +1,12 @@
 import QtQuick
 import QtQuick.Layouts
 
+import "../panels"
+
 Item {
     id: root
+
+    signal panelRequested(Panel panel)
 
     property bool horizontal: true
     property real requestedLength: horizontal
