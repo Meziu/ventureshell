@@ -16,14 +16,14 @@ CurvyBox {
     property int position: Bar.Top
     property bool horizontal: position === Bar.Top || position === Bar.Bottom
     property real minLength: 0
-    property real maxLength: 600
+    property real maxLength: 1000
 
-    property real transitionTime: 100
+    property real transitionTime: 300
 
     readonly property real length: Math.max(minLength, Math.min(widgetContainer.requestedLength + cornerRadius * 2, maxLength))
 
-    width: horizontal ? length : size
-    height: !horizontal ? length : size
+    width: horizontal ? length : size + widgetContainer.requestedAdditionalSize
+    height: !horizontal ? length : size + widgetContainer.requestedAdditionalSize
     avoidCornersHorizontally: horizontal
 
     property WidgetContainer widgetContainer: WidgetContainer {

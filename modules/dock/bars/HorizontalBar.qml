@@ -9,9 +9,10 @@ Bar {
     id: root
 
     position: Bar.Top
+    implicitHeight: 1000
 
     // The center island has size priority
-    readonly property real distanceFromCenterIsland: (width - topCenterIsland.width) / 2
+    readonly property real distanceFromCenterIsland: (width - topCenterIsland.length) / 2
 
     TopLeftIsland {
         id: topLeftIsland

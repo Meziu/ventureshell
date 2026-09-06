@@ -80,7 +80,6 @@ Widget {
                         return opacity
                     }
                     radius: width / 2
-                    visible: true
 
                     MouseArea {
                         id: mouseArea
