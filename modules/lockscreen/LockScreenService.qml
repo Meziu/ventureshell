@@ -12,6 +12,10 @@ Singleton {
         locked = true;
     }
 
+    function unlock() {
+        locked = false;
+    }
+
     IpcHandler {
         target: "lockscreen"
 

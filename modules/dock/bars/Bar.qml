@@ -9,6 +9,7 @@ import "../../config"
 PanelWindow {
     id: root
 
+    // TODO: make it impossible to have opposite sides true at once
     enum Bar {
         Top = 1,
         Bottom = 2,

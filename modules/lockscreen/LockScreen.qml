@@ -50,7 +50,7 @@ WlSessionLock {
 
             onCompleted: result => {
                 if (result === PamResult.Success) {
-                    lock.locked = false;
+                    LockScreenService.unlock()
                 } else {
                     passwordField.text = "";
                     passwordField.placeholderText = "Incorrect password"

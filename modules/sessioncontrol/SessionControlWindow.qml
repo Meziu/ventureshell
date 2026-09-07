@@ -28,6 +28,8 @@ PanelWindow {
     property real innerDeadZone: centerRadius - Config.options.sessionctl.innerMouseOvershoot
     property real outerDeadZone: centerRadius + sliceLength + sliceLengthIncrease + Config.options.sessionctl.outerMouseOvershoot
 
+    property int region: 0
+
     color: "#00000000"
 
     WlrLayershell.layer: WlrLayer.Overlay
@@ -67,7 +69,7 @@ PanelWindow {
             required property int index
             required property string modelData
 
-            property bool isHovered: false
+            property bool isHovered: region == index
 
             fractions: sliceRepeater.count
             length: isHovered ? root.sliceLength + root.sliceLengthIncrease : root.sliceLength
@@ -97,7 +99,6 @@ PanelWindow {
         anchors.fill: parent
         anchors.centerIn: parent
         hoverEnabled: true
-        property int region: 0
         cursorShape: region >= 0 ? Qt.PointingHandCursor : Qt.ArrowCursor
 
         // Prevent layout feedback by checking polar coordinates relative to origin
@@ -119,18 +120,6 @@ PanelWindow {
             } else {
                 region = -1;
             }
-
-            for (let i = 0; i < sliceRepeater.count; i++) {
-                let item = sliceRepeater.itemAt(i);
-                if (item == null) {
-                    break;
-                }
-                if (i != region) {
-                    item.isHovered = false;
-                } else {
-                    item.isHovered = true;
-                }
-            }
         }
 
         onClicked: mouse => {
@@ -138,7 +127,9 @@ PanelWindow {
                 SessionControlService.hide();
             }
             if (region >= 0) {
-                root.executeSessionControl(sliceRepeater.itemAt(region).modelData);
+                let tempRegion = region
+                region = -1
+                root.executeSessionControl(sliceRepeater.itemAt(tempRegion).modelData);
             }
         }
     }
