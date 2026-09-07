@@ -30,10 +30,7 @@ GridLayout {
 
     rowSpacing: spacing
     columnSpacing: spacing
-
     children: widgets
-
-    onWidgetsChanged: syncWidgets()
 
     function syncWidgets() {
         for (let i = 0; i < widgets.length; i++) {
@@ -43,4 +40,6 @@ GridLayout {
             w.panelRequested.connect(pc => panelRequested(w, pc))
         }
     }
+
+    onWidgetsChanged: syncWidgets()
 }

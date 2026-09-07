@@ -25,59 +25,46 @@ CurvyBox {
 
     WidgetContainer {
         id: widgetContainer
-        anchors {
-            top: parent.top
-            bottom: parent.bottom
-            left: parent.left
-            right: parent.right
-        }
         anchors.margins: 4
+        anchors.fill: parent
 
-        states: State {
-            name: "halfSize"
-            AnchorChanges {
-                target: widgetContainer
-
-                anchors.top: (!horizontal || root.position & Bar.Top) ? parent.top : undefined
-                anchors.bottom: (!horizontal || root.position & Bar.Bottom) ? parent.bottom : undefined
-                anchors.left: (root.position & Bar.Left) ? parent.left : undefined
-                anchors.right: (root.position & Bar.Right) ? parent.right : undefined
-                anchors.horizontalCenter: horizontal ? parent.horizontalCenter : undefined
-            }
-        }
-        function setAnchoring() {
-            if (widgetContainer.parent) {
-                widgetContainer.state = "halfSize"
-            }
-        }
+        /*anchors.top: root.horizontal ? (isBottom ? parent.top : widgetContainer.bottom) : ((fillSpace || isTop) ? parent.top : undefined)
+        anchors.bottom: root.horizontal ? (isTop ? parent.bottom : widgetContainer.top) : ((fillSpace || isBottom) ? parent.bottom : undefined)
+        anchors.left: !root.horizontal ? (isRight ? parent.left : widgetContainer.right) : ((fillSpace || isLeft) ? parent.left : undefined)
+        anchors.right: !root.horizontal ? (isLeft ? parent.right : widgetContainer.left) : ((fillSpace || isRight) ? parent.right : undefined)*/
 
         horizontal: root.horizontal
-
         widgets: root.widgets
 
         onPanelRequested: (widget, panelComponent) => {
             root.showPanel(widget, panelComponent);
         }
 
-        Component.onCompleted: setAnchoring()
+        Component.onCompleted: {
+            width = parent.width - (anchors.margins * 2);
+            height = parent.height - (anchors.margins * 2);
+        }
     }
     property alias widgetContainer: widgetContainer
 
     Loader {
         id: panelLoader
 
-        anchors.margins: 4
+        readonly property bool isTop: (root.position & Bar.Top) !== 0
+        readonly property bool isBottom: (root.position & Bar.Bottom) !== 0
+        readonly property bool isLeft: (root.position & Bar.Left) !== 0
+        readonly property bool isRight: (root.position & Bar.Right) !== 0
 
-        anchors.top: root.position & Bar.Bottom ? parent.top : (root.position & Bar.Top ? widgetContainer.bottom : undefined);
-        anchors.bottom: root.position & Bar.Top ? parent.bottom : (root.position & Bar.Bottom ? widgetContainer.top : undefined);
-        anchors.left: item && item.fillSpace || root.position & Bar.Left ? parent.left : undefined;
-        anchors.right: item && item.fillSpace || root.position & Bar.Right ? parent.right : undefined;
+        readonly property bool fillSpace: item && item.fillSpace
 
-        // vertical
-        // anchors.top = panel.fillSpace || root.position & Bar.Top ? panel.parent.top : undefined;
-        // anchors.bottom = panel.fillSpace || root.position & Bar.Bottom ? panel.parent.bottom : undefined;
-        // anchors.left = root.position & Bar.Right ? panel.parent.left : (root.position & Bar.Left ? widgetContainer.right : undefined);
-        // anchors.right = root.position & Bar.Left ? panel.parent.right : (root.position & Bar.Right ? widgetContainer.left : undefined);
+        anchors {
+            margins: 4
+
+            top: root.horizontal ? (isBottom ? parent.top : widgetContainer.bottom) : ((fillSpace || isTop) ? parent.top : undefined)
+            bottom: root.horizontal ? (isTop ? parent.bottom : widgetContainer.top) : ((fillSpace || isBottom) ? parent.bottom : undefined)
+            left: !root.horizontal ? (isRight ? parent.left : widgetContainer.right) : ((fillSpace || isLeft) ? parent.left : undefined)
+            right: !root.horizontal ? (isLeft ? parent.right : widgetContainer.left) : ((fillSpace || isRight) ? parent.right : undefined)
+        }
     }
 
     function showPanel(widget: Widget, panelComponent: Component) {
