@@ -13,8 +13,13 @@ TextWidget {
     font: OuterWildsFont.logoWithSize(24)
     Layout.preferredWidth: 30
 
-    property LauncherPanel seachBar: LauncherPanel {}
+
+    Component {
+        id: launcherPanelComponent
+        LauncherPanel {}
+    }
+
     onClicked: {
-        root.panelRequested(seachBar)
+        root.panelRequested(launcherPanelComponent)
     }
 }

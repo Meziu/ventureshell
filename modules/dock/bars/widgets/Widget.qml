@@ -6,7 +6,7 @@ import "../panels"
 Item {
     id: root
 
-    signal panelRequested(Panel panel)
+    signal panelRequested(Component panelComponent)
 
     property bool horizontal: true
     property real requestedLength: horizontal

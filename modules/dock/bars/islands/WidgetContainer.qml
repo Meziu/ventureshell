@@ -23,7 +23,7 @@ GridLayout {
         return sum
     }
 
-    signal panelRequested(widget: Widget, panel: Panel)
+    signal panelRequested(widget: Widget, panel: Component)
 
     rows: root.horizontal ? 1 : widgets.length
     columns: root.horizontal ? widgets.length : 1
@@ -40,7 +40,7 @@ GridLayout {
             const w = widgets[i]
             w.Layout.row = Qt.binding(() => root.horizontal ? 0 : i)
             w.Layout.column = Qt.binding(() => root.horizontal ? i : 0)
-            w.panelRequested.connect(p => panelRequested(w, p))
+            w.panelRequested.connect(pc => panelRequested(w, pc))
         }
     }
 }
