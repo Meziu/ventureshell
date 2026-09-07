@@ -17,5 +17,6 @@ Bar {
         cornerRadius: barCornerRadius
         position: root.position
         size: barSize
+        horizontal: false
     }
 }

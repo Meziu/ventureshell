@@ -10,10 +10,10 @@ PanelWindow {
     id: root
 
     enum Bar {
-        Top,
-        Bottom,
-        Left,
-        Right
+        Top = 1,
+        Bottom = 2,
+        Left = 4,
+        Right = 8
     }
 
     required property int position

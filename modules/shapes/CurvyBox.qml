@@ -24,6 +24,8 @@ Shape {
     Item {
         id: contentItem
 
+        property string log: "LoG?"
+
         anchors {
             fill: parent
             topMargin: !avoidCornersHorizontally && !attached.top ? box.cornerRadius/2 : 0
