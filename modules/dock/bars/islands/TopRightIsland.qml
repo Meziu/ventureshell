@@ -23,6 +23,8 @@ Island {
         bottom: false
     }
 
+    LauncherWidget {}
+
     IdleInhibitorWidget {}
 
     PowerWidget {}

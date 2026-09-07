@@ -23,7 +23,8 @@ CurvyBox {
     readonly property real length: Math.max(minLength, Math.min(Math.max(widgetContainer.requestedLength, currentPanel ? currentPanel.requestedLength : 0) + cornerRadius * 2, maxLength))
     readonly property real additionalSize: currentPanel ? currentPanel.requestedSize : 0
 
-    property WidgetContainer widgetContainer: WidgetContainer {
+    WidgetContainer {
+        id: widgetContainer
         anchors {
             top: parent.top
             bottom: parent.bottom
@@ -37,11 +38,11 @@ CurvyBox {
             AnchorChanges {
                 target: widgetContainer
 
-                anchors.top: parent && (!horizontal || root.position & Bar.Top) ? parent.top : undefined
-                anchors.bottom: parent && (!horizontal || root.position & Bar.Bottom) ? parent.bottom : undefined
-                anchors.left: parent && (root.position & Bar.Left) ? parent.left : undefined
-                anchors.right: parent && (root.position & Bar.Right) ? parent.right : undefined
-                anchors.horizontalCenter: parent && horizontal ? parent.horizontalCenter : undefined
+                anchors.top: (!horizontal || root.position & Bar.Top) ? parent.top : undefined
+                anchors.bottom: (!horizontal || root.position & Bar.Bottom) ? parent.bottom : undefined
+                anchors.left: (root.position & Bar.Left) ? parent.left : undefined
+                anchors.right: (root.position & Bar.Right) ? parent.right : undefined
+                anchors.horizontalCenter: horizontal ? parent.horizontalCenter : undefined
             }
         }
         function setAnchoring() {
@@ -54,52 +55,57 @@ CurvyBox {
 
         widgets: root.widgets
 
-        onPanelRequested: (panel, widget) => {
-            root.showPanel(panel, widget);
+        onPanelRequested: (widget, panel) => {
+            root.showPanel(widget, panel);
         }
 
         Component.onCompleted: setAnchoring()
     }
+    property alias widgetContainer: widgetContainer
     property Panel currentPanel: null
 
     function placePanel(panel, widget) {
+        panel.anchors.margins = 4
+
         if (root.horizontal) {
             // extend to the top if the bar is on the bottom
-            // TODO: set anchors based on the widgetContainer
-            panel.anchors.top = root.position & Bar.Bottom ? panel.parent.top : undefined;
-            panel.anchors.bottom = root.position & Bar.Top ? panel.parent.bottom : undefined;
+            panel.anchors.top = root.position & Bar.Bottom ? panel.parent.top : (root.position & Bar.Top ? widgetContainer.bottom : undefined);
+            panel.anchors.bottom = root.position & Bar.Top ? panel.parent.bottom : (root.position & Bar.Bottom ? widgetContainer.top : undefined);
             panel.anchors.left = panel.fillSpace || root.position & Bar.Left ? panel.parent.left : undefined;
             panel.anchors.right = panel.fillSpace || root.position & Bar.Right ? panel.parent.right : undefined;
-            panel.anchors.margins = 4
         } else {
             panel.anchors.top = panel.fillSpace || root.position & Bar.Top ? panel.parent.top : undefined;
             panel.anchors.bottom = panel.fillSpace || root.position & Bar.Bottom ? panel.parent.bottom : undefined;
-            panel.anchors.left = root.position & Bar.Right ? panel.parent.left : undefined;
-            panel.anchors.right = root.position & Bar.Left ? panel.parent.right : undefined;
-            panel.anchors.margins = 4
+            panel.anchors.left = root.position & Bar.Right ? panel.parent.left : (root.position & Bar.Left ? widgetContainer.right : undefined);
+            panel.anchors.right = root.position & Bar.Left ? panel.parent.right : (root.position & Bar.Right ? widgetContainer.left : undefined);
         }
     }
 
     function showPanel(widget: Widget, panel: Panel) {
         if (!panel)
             return;
+
         if (currentPanel === panel) {
             hidePanel();
             return;
         }
+
         currentPanel = panel;
+
+        currentPanel.parent = root.contentItem
 
         placePanel(currentPanel, widget);
     }
 
     function hidePanel() {
+        currentPanel.parent = null
         currentPanel = null;
     }
 
     width: horizontal ? length : size + additionalSize
     height: !horizontal ? length : size + additionalSize
     avoidCornersHorizontally: horizontal
-    contentChildren: [widgetContainer, currentPanel]
+
 
     Behavior on width {
         NumberAnimation {

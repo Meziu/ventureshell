@@ -9,18 +9,8 @@ GridLayout {
     clip: true
 
     default property list<Widget> widgets
-
     property bool horizontal: true
     property real spacing: 10
-
-    rows: root.horizontal ? 1 : widgets.length
-    columns: root.horizontal ? widgets.length : 1
-
-    rowSpacing: spacing
-    columnSpacing: spacing
-
-    children: widgets
-
     property real requestedLength: {
         let sum = 0;
 
@@ -34,6 +24,14 @@ GridLayout {
     }
 
     signal panelRequested(widget: Widget, panel: Panel)
+
+    rows: root.horizontal ? 1 : widgets.length
+    columns: root.horizontal ? widgets.length : 1
+
+    rowSpacing: spacing
+    columnSpacing: spacing
+
+    children: widgets
 
     onWidgetsChanged: syncWidgets()
 

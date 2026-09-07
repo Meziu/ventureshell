@@ -22,6 +22,8 @@ Island {
         bottom: false
     }
 
+    LauncherWidget {}
+
     WindowNameWidget {
         id: windowName
         horizontalAlignment: Text.AlignLeft // so it doesn't jump when resizing

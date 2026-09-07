@@ -7,10 +7,6 @@ import "../gradients"
 Shape {
     id: box
 
-    // To avoid a binding loop we set some default dimensions to override
-    width: 100
-    height: 40
-
     required property Attach attached
     property real cornerRadius: 14
     property bool showFeet: true // haha, feet
@@ -24,16 +20,15 @@ Shape {
     Item {
         id: contentItem
 
-        property string log: "LoG?"
-
         anchors {
             fill: parent
-            topMargin: !avoidCornersHorizontally && !attached.top ? box.cornerRadius/2 : 0
-            bottomMargin: !avoidCornersHorizontally && !attached.bottom ? box.cornerRadius/2 : 0
-            leftMargin: avoidCornersHorizontally && !attached.left ? box.cornerRadius/2 : 0
-            rightMargin: avoidCornersHorizontally && !attached.right ? box.cornerRadius/2 : 0
+            topMargin: !avoidCornersHorizontally && !attached.top ? box.cornerRadius/8 : 0
+            bottomMargin: !avoidCornersHorizontally && !attached.bottom ? box.cornerRadius/8 : 0
+            leftMargin: avoidCornersHorizontally && !attached.left ? box.cornerRadius/8 : 0
+            rightMargin: avoidCornersHorizontally && !attached.right ? box.cornerRadius/8 : 0
         }
     }
+    readonly property alias contentItem: contentItem
 
     readonly property color fillColor: OuterWildsFont.backgroundColor
     readonly property color borderColor: Qt.rgba(250 / 255, 179 / 255, 135 / 255, 0.28)
