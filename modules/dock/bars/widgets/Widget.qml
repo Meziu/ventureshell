@@ -9,10 +9,11 @@ Item {
     signal panelRequested(Component panelComponent)
 
     property bool horizontal: true
-    property real requestedLength: horizontal
-        ? (Layout.preferredWidth >= 0 ? Layout.preferredWidth : implicitWidth)
-        : (Layout.preferredHeight >= 0 ? Layout.preferredHeight : implicitHeight)
+    required property real requestedLength
 
-    Layout.fillHeight: true
-    Layout.fillWidth: true
+    Layout.preferredWidth: horizontal ? requestedLength : -1
+    Layout.preferredHeight: !horizontal ? requestedLength : -1
+
+    Layout.fillWidth: !horizontal
+    Layout.fillHeight: horizontal
 }

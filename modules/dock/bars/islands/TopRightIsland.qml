@@ -9,6 +9,8 @@ import "../widgets"
 Island {
     id: root
 
+    widgetsFillIsland: false
+
     anchors {
         top: parent.top
         right: parent.right

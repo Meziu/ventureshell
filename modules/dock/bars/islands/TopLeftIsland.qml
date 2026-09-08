@@ -8,6 +8,8 @@ import "../widgets"
 Island {
     id: root
 
+    widgetsFillIsland: false
+
     anchors {
         left: parent.left
         top: parent.top
@@ -26,6 +28,7 @@ Island {
 
     WindowNameWidget {
         id: windowName
+        Layout.fillWidth: true
         horizontalAlignment: Text.AlignLeft // so it doesn't jump when resizing
     }
 }

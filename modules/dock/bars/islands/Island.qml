@@ -15,8 +15,16 @@ CurvyBox {
     required property ShellScreen screen
     required property int position
     required property bool horizontal
+    required property bool widgetsFillIsland
     property real minLength: 0
     property real maxLength: 1000
+
+    readonly property bool isTop: (root.position & Bar.Top) !== 0
+    readonly property bool isBottom: (root.position & Bar.Bottom) !== 0
+    readonly property bool isLeft: (root.position & Bar.Left) !== 0
+    readonly property bool isRight: (root.position & Bar.Right) !== 0
+    readonly property bool isHCenter: !(root.position & Bar.Left) && !(root.position & Bar.Right)
+    readonly property bool isVCenter: !(root.position & Bar.Top) && !(root.position & Bar.Bottom)
 
     property real transitionTime: 300
 
@@ -25,13 +33,13 @@ CurvyBox {
 
     WidgetContainer {
         id: widgetContainer
-        anchors.margins: 4
-        anchors.fill: parent
 
-        /*anchors.top: root.horizontal ? (isBottom ? parent.top : widgetContainer.bottom) : ((fillSpace || isTop) ? parent.top : undefined)
-        anchors.bottom: root.horizontal ? (isTop ? parent.bottom : widgetContainer.top) : ((fillSpace || isBottom) ? parent.bottom : undefined)
-        anchors.left: !root.horizontal ? (isRight ? parent.left : widgetContainer.right) : ((fillSpace || isLeft) ? parent.left : undefined)
-        anchors.right: !root.horizontal ? (isLeft ? parent.right : widgetContainer.left) : ((fillSpace || isRight) ? parent.right : undefined)*/
+        anchors {
+            top: parent.top
+            bottom: parent.bottom
+            left: parent.left
+            right: parent.right
+        }
 
         horizontal: root.horizontal
         widgets: root.widgets
@@ -40,20 +48,34 @@ CurvyBox {
             root.showPanel(widget, panelComponent);
         }
 
+        states: State {
+            name: "locked"
+            AnchorChanges {
+                target: widgetContainer
+
+                anchors.top: isTop || (!horizontal && widgetsFillIsland) ? parent.top : undefined
+                anchors.bottom: isBottom || (!horizontal && widgetsFillIsland) ? parent.bottom : undefined
+                anchors.left: isLeft || (horizontal && widgetsFillIsland) ? parent.left : undefined
+                anchors.right: isRight || (horizontal && widgetsFillIsland) ? parent.right : undefined
+                anchors.horizontalCenter: horizontal && isHCenter && (!widgetsFillIsland) ? parent.horizontalCenter : undefined
+                anchors.verticalCenter: !horizontal && isVCenter && (!widgetsFillIsland) ? parent.verticalCenter : undefined
+            }
+        }
+
         Component.onCompleted: {
-            width = parent.width - (anchors.margins * 2);
-            height = parent.height - (anchors.margins * 2);
+            //state = "locked";
         }
     }
     property alias widgetContainer: widgetContainer
 
+    Rectangle {
+        anchors.fill: widgetContainer
+
+        opacity: 0.1
+    }
+
     Loader {
         id: panelLoader
-
-        readonly property bool isTop: (root.position & Bar.Top) !== 0
-        readonly property bool isBottom: (root.position & Bar.Bottom) !== 0
-        readonly property bool isLeft: (root.position & Bar.Left) !== 0
-        readonly property bool isRight: (root.position & Bar.Right) !== 0
 
         readonly property bool fillSpace: item && item.fillSpace
 

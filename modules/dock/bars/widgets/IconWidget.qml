@@ -10,10 +10,15 @@ ClickableWidget {
     required property url source
     property Component effect: null
 
+    // TODO: smarter than this please
+    requestedLength: horizontal ? height : width
+
     Image {
         id: image
         anchors.fill: parent
         source: root.source
+        sourceSize.width: 128
+        sourceSize.height: 128
         fillMode: Image.PreserveAspectFit
         mipmap: true
 

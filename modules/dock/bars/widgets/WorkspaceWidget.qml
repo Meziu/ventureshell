@@ -10,9 +10,6 @@ import "../../../behaviours"
 Widget {
     id: root
 
-    Layout.preferredWidth: layout.implicitWidth
-    Layout.preferredHeight: layout.implicitHeight
-
     property HyprlandMonitor monitor: Hyprland.monitorFor(screen)
     property list<HyprlandWorkspace> monitorWorkspaces: {
         let ws = [];
@@ -26,6 +23,8 @@ Widget {
         return ws;
     }
     property HyprlandWorkspace activeWorkspace: monitor?.activeWorkspace
+
+    requestedLength: horizontal ? layout.implicitWidth : layout.implicitHeight
 
     GridLayout {
         id: layout

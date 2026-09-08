@@ -11,8 +11,6 @@ TextWidget {
     text: "O"
 
     font: OuterWildsFont.logoWithSize(24)
-    Layout.preferredWidth: 30
-
 
     Component {
         id: launcherPanelComponent

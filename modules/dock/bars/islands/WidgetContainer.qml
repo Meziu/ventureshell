@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Layouts 1.3
+import QtQuick.Layouts
 
 import "../widgets"
 import "../panels"
@@ -8,20 +8,13 @@ GridLayout {
     id: root
     clip: true
 
+    anchors.margins: 4
+
     default property list<Widget> widgets
     property bool horizontal: true
     property real spacing: 10
-    property real requestedLength: {
-        let sum = 0;
 
-        for (let i = 0; i < widgets.length; i++) {
-            if (widgets[i].requestedLength) {
-                sum += widgets[i].requestedLength + spacing;
-            }
-        }
-
-        return sum
-    }
+    property real requestedLength: horizontal ? implicitWidth : implicitHeight
 
     signal panelRequested(widget: Widget, panel: Component)
 
@@ -31,6 +24,9 @@ GridLayout {
     rowSpacing: spacing
     columnSpacing: spacing
     children: widgets
+
+    uniformCellHeights: horizontal
+    uniformCellWidths: !horizontal
 
     function syncWidgets() {
         for (let i = 0; i < widgets.length; i++) {
