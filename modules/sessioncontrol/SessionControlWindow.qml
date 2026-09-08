@@ -28,7 +28,7 @@ PanelWindow {
     property real innerDeadZone: centerRadius - Config.options.sessionctl.innerMouseOvershoot
     property real outerDeadZone: centerRadius + sliceLength + sliceLengthIncrease + Config.options.sessionctl.outerMouseOvershoot
 
-    property int region: 0
+    property int region: -1
 
     color: "#00000000"
 
