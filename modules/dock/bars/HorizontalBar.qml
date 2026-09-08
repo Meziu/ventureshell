@@ -12,7 +12,7 @@ Bar {
     implicitHeight: 1000
 
     // The center island has size priority
-    readonly property real distanceFromCenterIsland: (width - topCenterIsland.length) / 2
+    readonly property real distanceFromCenterIsland: (width - topCenterIsland.length) / 2 - barCornerRadius * 2
 
     TopLeftIsland {
         id: topLeftIsland

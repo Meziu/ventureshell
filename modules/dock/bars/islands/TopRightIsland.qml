@@ -38,8 +38,8 @@ Island {
     property bool activeWidgetHasMenu: true
     protrusionActive: activeWidgetHasMenu
     protrusionEdge: "bottom"
-    protrusionPosition: 60
-    protrusionLength: 140
+    protrusionPosition: 0
+    protrusionLength: 110
     protrusionDepth: activeWidgetHasMenu ? 60 : 0
 
     // Populate the protrusion slot
