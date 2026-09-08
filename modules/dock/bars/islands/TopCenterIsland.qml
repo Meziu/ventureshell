@@ -26,6 +26,8 @@ Island {
     ClockWidget {
         id: clock
         dateAndTime: false
+
+        Layout.fillWidth: true
     }
 
     SessionControlWidget {}

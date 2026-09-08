@@ -48,31 +48,43 @@ CurvyBox {
             root.showPanel(widget, panelComponent);
         }
 
-        states: State {
-            name: "locked"
-            AnchorChanges {
-                target: widgetContainer
+        states: [
+            State {
+                name: "filled"
+                AnchorChanges {
+                    target: widgetContainer
 
-                anchors.top: isTop || (!horizontal && widgetsFillIsland) ? parent.top : undefined
-                anchors.bottom: isBottom || (!horizontal && widgetsFillIsland) ? parent.bottom : undefined
-                anchors.left: isLeft || (horizontal && widgetsFillIsland) ? parent.left : undefined
-                anchors.right: isRight || (horizontal && widgetsFillIsland) ? parent.right : undefined
-                anchors.horizontalCenter: horizontal && isHCenter && (!widgetsFillIsland) ? parent.horizontalCenter : undefined
-                anchors.verticalCenter: !horizontal && isVCenter && (!widgetsFillIsland) ? parent.verticalCenter : undefined
+                    anchors {
+                        top: parent.top
+                        bottom: parent.bottom
+                        left: parent.left
+                        right: parent.right
+                    }
+                }
+            },
+            State {
+                name: "locked"
+                AnchorChanges {
+                    target: widgetContainer
+
+                    anchors.top: isTop || (!horizontal && widgetsFillIsland) ? parent.top : undefined
+                    anchors.bottom: isBottom || (!horizontal && widgetsFillIsland) ? parent.bottom : undefined
+                    anchors.left: isLeft || (horizontal && widgetsFillIsland) ? parent.left : undefined
+                    anchors.right: isRight || (horizontal && widgetsFillIsland) ? parent.right : undefined
+                    anchors.horizontalCenter: horizontal && isHCenter && (!widgetsFillIsland) ? parent.horizontalCenter : undefined
+                    anchors.verticalCenter: !horizontal && isVCenter && (!widgetsFillIsland) ? parent.verticalCenter : undefined
+                }
             }
-        }
-
-        Component.onCompleted: {
-            //state = "locked";
-        }
+        ]
     }
     property alias widgetContainer: widgetContainer
 
+    /* Debug Rectangle
     Rectangle {
         anchors.fill: widgetContainer
 
         opacity: 0.1
-    }
+    }*/
 
     Loader {
         id: panelLoader
@@ -97,6 +109,8 @@ CurvyBox {
             hidePanel();
             return;
         }
+
+        widgetContainer.state = "locked"
 
         panelLoader.sourceComponent = panelComponent;
     }

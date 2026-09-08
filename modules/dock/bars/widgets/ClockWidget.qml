@@ -15,6 +15,4 @@ TextWidget {
 
     text: Qt.formatDateTime(clock.date, dateAndTime ? "dddd, d MMMM hh:mm" : "hh:mm")
     font: OuterWildsFont.uiWithSize(20)
-
-    Layout.fillWidth: true
 }
