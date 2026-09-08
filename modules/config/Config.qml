@@ -27,14 +27,14 @@ Singleton {
             }
 
             property JsonObject sessionctl: JsonObject {
-                property real centerRadius: 260
+                property real centerRadius: 180
                 property real eyeScalePerHundredRadius: 0.2
 
-                property real innerMouseOvershoot: 75
-                property real outerMouseOvershoot: 75
+                property real innerMouseOvershoot: 70
+                property real outerMouseOvershoot: 20
 
                 property JsonObject slice: JsonObject {
-                    property real length: 200
+                    property real length: 180
                     property real lengthIncrease: 60
                 }
 
