@@ -16,7 +16,7 @@ Bar {
     // The center island has size priority
     readonly property real distanceFromCenterIsland: (width - topCenterIsland.length) / 2 - barCornerRadius * 2
 
-    TopLeftIsland {
+    HLeftIsland {
         id: topLeftIsland
 
         screen: root.screen
@@ -27,7 +27,7 @@ Bar {
         horizontal: true
     }
 
-    TopCenterIsland {
+    HCenterIsland {
         id: topCenterIsland
 
         screen: root.screen
@@ -39,7 +39,7 @@ Bar {
         z: 1
     }
 
-    TopRightIsland {
+    HRightIsland {
         id: topRightIsland
 
         screen: root.screen

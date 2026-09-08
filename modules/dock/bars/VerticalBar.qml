@@ -12,7 +12,7 @@ Bar {
 
     position: Position.Left
 
-    LeftCenterIsland {
+    VCenterIsland {
         id: leftCenterIsland
 
         screen: root.screen
