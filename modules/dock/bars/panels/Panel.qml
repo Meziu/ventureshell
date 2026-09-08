@@ -5,8 +5,13 @@ Item {
     id: root
 
     required property bool fillSpace
+    required property real requestedLength
+    required property real requestedSize
 
     property bool horizontal: true
-    property real requestedLength: horizontal ? (Layout.preferredWidth >= 0 ? Layout.preferredWidth : implicitWidth) : (Layout.preferredHeight >= 0 ? Layout.preferredHeight : implicitHeight)
-    property real requestedSize: horizontal ? (Layout.preferredHeight >= 0 ? Layout.preferredHeight : implicitHeight) : (Layout.preferredWidth >= 0 ? Layout.preferredWidth : implicitWidth)
+
+    implicitWidth: horizontal ? requestedLength : requestedSize
+    implicitHeight: horizontal ? requestedSize : requestedLength
+
+    signal exited()
 }

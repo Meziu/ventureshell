@@ -1,28 +1,44 @@
 import QtQuick
-import QtQuick.Layouts
+import QtQuick.Controls
 
 import "../../../assetloaders"
 import "../widgets"
 
 Panel {
     fillSpace: true
-    implicitWidth: 500
-    implicitHeight: 60
+    requestedLength: 500
+    requestedSize: 60
 
-    Text {
+    TextField {
+        id: passwordField
+
         anchors.fill: parent
-        horizontalAlignment: Text.AlignHCenter
+
+        background: Rectangle {
+            anchors.fill: parent
+
+            color: OuterWildsFont.darkColor
+            radius: 16
+        }
+
+        font: OuterWildsFont.uiWithSize(18)
+        padding: 10
+        color: OuterWildsFont.lightColor
         verticalAlignment: Text.AlignVCenter
+        horizontalAlignment: Text.AlignLeft
 
-        text: "LMAO"
+        placeholderText: "Search..."
+        placeholderTextColor: "gray"
 
-        font: OuterWildsFont.uiWithSize(26)
-        clip: true
-    }
+        selectByMouse: true
+        cursorVisible: false
 
-    Rectangle {
-        anchors.fill: parent
-        opacity: 0.2
-        radius: 16
+        focus: true
+
+        Component.onCompleted: {
+            forceActiveFocus();
+        }
+
+        onAccepted: exited()
     }
 }

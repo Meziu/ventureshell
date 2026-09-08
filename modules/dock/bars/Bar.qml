@@ -23,6 +23,7 @@ PanelWindow {
     default property alias data: content.data
 
     WlrLayershell.layer: WlrLayer.Top
+    WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
     mask: Region {
         id: maskRegion
     }

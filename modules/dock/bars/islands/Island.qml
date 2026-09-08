@@ -99,6 +99,12 @@ CurvyBox {
             left: !root.horizontal ? (isRight ? parent.left : widgetContainer.right) : ((fillSpace || isLeft) ? parent.left : undefined)
             right: !root.horizontal ? (isLeft ? parent.right : widgetContainer.left) : ((fillSpace || isRight) ? parent.right : undefined)
         }
+
+        onLoaded: {
+            panelLoader.item.exited.connect(() => {
+                root.hidePanel()
+            })
+        }
     }
 
     function showPanel(widget: Widget, panelComponent: Component) {
