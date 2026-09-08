@@ -25,8 +25,6 @@ Island {
         bottom: false
     }
 
-    LauncherWidget {}
-
     IdleInhibitorWidget {}
 
     PowerWidget {}
@@ -35,25 +33,28 @@ Island {
 
     NotificationsWidget {}
 
-    property bool activeWidgetHasMenu: true
-    protrusionActive: activeWidgetHasMenu
-    protrusionEdge: "bottom"
-    protrusionPosition: 0
-    protrusionLength: 110
-    protrusionDepth: activeWidgetHasMenu ? 60 : 0
+    protrusionPosition: 30
 
     // Populate the protrusion slot
-    protrusionContent: Column {
+    protrusionContent: Item {
         anchors.fill: parent
-        spacing: 8
+        implicitWidth: 110
+        implicitHeight: 60
 
-        Text {
-            text: "Menu Option 1"
-            color: "white"
+        Column {
+            spacing: 10
+            Text {
+                text: "Menu option 1"
+            }
+            Text {
+                text: "Menu option 2"
+            }
         }
-        Text {
-            text: "Menu Option 2"
-            color: "white"
+
+        Rectangle {
+            anchors.fill: parent
+
+            opacity: 0.1
         }
     }
 }

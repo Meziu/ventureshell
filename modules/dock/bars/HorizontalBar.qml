@@ -5,10 +5,12 @@ import QtQuick.Layouts
 
 import "islands"
 
+import "../../shapes"
+
 Bar {
     id: root
 
-    position: Bar.Top
+    position: Position.Top
     implicitHeight: 1000
 
     // The center island has size priority
@@ -21,7 +23,7 @@ Bar {
         cornerRadius: barCornerRadius
         size: barSize
         maxLength: distanceFromCenterIsland
-        position: root.position | Bar.Left
+        position: root.position | Position.Left
         horizontal: true
     }
 
@@ -44,7 +46,7 @@ Bar {
         cornerRadius: barCornerRadius
         size: barSize
         maxLength: distanceFromCenterIsland
-        position: root.position | Bar.Right
+        position: root.position | Position.Right
         horizontal: true
     }
 }

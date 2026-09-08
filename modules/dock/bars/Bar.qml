@@ -5,17 +5,10 @@ import QtQuick.Layouts
 
 import "islands"
 import "../../config"
+import "../../shapes"
 
 PanelWindow {
     id: root
-
-    // TODO: make it impossible to have opposite sides true at once
-    enum Bar {
-        Top = 1,
-        Bottom = 2,
-        Left = 4,
-        Right = 8
-    }
 
     required property int position
     property real barSize: Config.options.bar.size
@@ -61,10 +54,10 @@ PanelWindow {
     }
 
     anchors {
-        top: position != Bar.Bottom
-        bottom: position != Bar.Top
-        left: position != Bar.Right
-        right: position != Bar.Left
+        top: position != Position.Bottom
+        bottom: position != Position.Top
+        left: position != Position.Right
+        right: position != Position.Left
     }
 
     exclusiveZone: barSize

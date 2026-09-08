@@ -18,6 +18,7 @@ Panel {
             anchors.fill: parent
 
             color: OuterWildsFont.darkColor
+            opacity: 0.7
             radius: 16
         }
 

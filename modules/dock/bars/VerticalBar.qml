@@ -5,10 +5,12 @@ import QtQuick.Layouts
 
 import "islands"
 
+import "../../shapes"
+
 Bar {
     id: root
 
-    position: Bar.Left
+    position: Position.Left
 
     LeftCenterIsland {
         id: leftCenterIsland

@@ -19,17 +19,22 @@ CurvyBox {
     property real minLength: 0
     property real maxLength: 1000
 
-    readonly property bool isTop: (root.position & Bar.Top) !== 0
-    readonly property bool isBottom: (root.position & Bar.Bottom) !== 0
-    readonly property bool isLeft: (root.position & Bar.Left) !== 0
-    readonly property bool isRight: (root.position & Bar.Right) !== 0
-    readonly property bool isHCenter: !(root.position & Bar.Left) && !(root.position & Bar.Right)
-    readonly property bool isVCenter: !(root.position & Bar.Top) && !(root.position & Bar.Bottom)
+    readonly property bool isTop: (root.position & Position.Top) !== 0
+    readonly property bool isBottom: (root.position & Position.Bottom) !== 0
+    readonly property bool isLeft: (root.position & Position.Left) !== 0
+    readonly property bool isRight: (root.position & Position.Right) !== 0
+    readonly property bool isHCenter: !(root.position & Position.Left) && !(root.position & Position.Right)
+    readonly property bool isVCenter: !(root.position & Position.Top) && !(root.position & Position.Bottom)
 
     property real transitionTime: 300
 
-    readonly property real length: Math.max(minLength, Math.min(Math.max(widgetContainer.requestedLength, panelLoader.item ? panelLoader.item.requestedLength : 0) + cornerRadius * 2, maxLength))
+    // TODO: Make protrusions work or something
+    protrusionSide: Position.Bottom
+    property real additionalLength: 0
+    protrusionPosition: 0
+
     readonly property real additionalSize: panelLoader.item ? panelLoader.item.requestedSize : 0
+    readonly property real length: Math.max(minLength, Math.min(Math.max(widgetContainer.requestedLength, panelLoader.item ? panelLoader.item.requestedLength : 0) + additionalLength + cornerRadius * 2, maxLength))
 
     WidgetContainer {
         id: widgetContainer
@@ -102,8 +107,8 @@ CurvyBox {
 
         onLoaded: {
             panelLoader.item.exited.connect(() => {
-                root.hidePanel()
-            })
+                root.hidePanel();
+            });
         }
     }
 
@@ -116,7 +121,7 @@ CurvyBox {
             return;
         }
 
-        widgetContainer.state = "locked"
+        widgetContainer.state = "locked";
 
         panelLoader.sourceComponent = panelComponent;
     }
@@ -127,7 +132,7 @@ CurvyBox {
 
     width: horizontal ? length : size + additionalSize
     height: !horizontal ? length : size + additionalSize
-    avoidCornersHorizontally: horizontal
+    cornerMarginsHorizontal: horizontal
 
     Behavior on width {
         NumberAnimation {
@@ -137,6 +142,25 @@ CurvyBox {
     }
 
     Behavior on height {
+        NumberAnimation {
+            duration: transitionTime
+            easing.type: Easing.OutCubic
+        }
+    }
+
+    Behavior on protrusionPosition {
+        NumberAnimation {
+            duration: transitionTime
+            easing.type: Easing.OutCubic
+        }
+    }
+    Behavior on protrusionLength {
+        NumberAnimation {
+            duration: transitionTime
+            easing.type: Easing.OutCubic
+        }
+    }
+    Behavior on protrusionDepth {
         NumberAnimation {
             duration: transitionTime
             easing.type: Easing.OutCubic
