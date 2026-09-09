@@ -24,11 +24,24 @@ QtObject {
         return !verticalConflict && !horizontalConflict;
     }
 
+    // Extracts the main cardinal position from the position and whether the item positioned is horizontal or not
+    function cardinal(pos: int, horizontal: bool): int {
+        if (isValid(pos)) {
+            if (horizontal) {
+                return (pos & Position.Top) | (pos & Position.Bottom)
+            } else {
+                return (pos & Position.Left) | (pos & Position.Right)
+            }
+        } else {
+            console.warn(Error().stack, "Invalid position specified");
+        }
+    }
+
     function opposite(pos: int): int {
         if (isValid(pos)) {
             return ((pos & Position.Top) ? Position.Bottom : ((pos & Position.Bottom) ? Position.Top : Position.None)) | ((pos & Position.Left) ? Position.Right : ((pos & Position.Right) ? Position.Left : Position.None));
         } else {
-            console.warn("Invalid position specified");
+            console.warn(Error().stack, "Invalid position specified");
         }
     }
 
@@ -37,7 +50,7 @@ QtObject {
         if (isValid(pos)) {
             return pos === Position.Top || pos === Position.Bottom || pos === Position.Left || pos === Position.Right;
         } else {
-            console.warn("Invalid position specified");
+            console.warn(Error().stack, "Invalid position specified");
         }
     }
 
@@ -53,7 +66,7 @@ QtObject {
                 return "right"
             }
         } else {
-            console.warn("Invalid position specified");
+            console.warn(Error().stack, "Invalid position specified");
         }
     }
 
@@ -61,7 +74,7 @@ QtObject {
         if (isValid(pos) && isSingle(pos)) {
             return pos === Position.Top || pos === Position.Bottom
         } else {
-            console.warn("Invalid position specified");
+            console.warn(Error().stack, "Invalid position specified");
         }
     }
 }

@@ -7,6 +7,7 @@ Item {
     id: root
 
     signal panelRequested(Component panelComponent)
+    signal menuRequested(Component menuComponent)
 
     property bool horizontal: true
     required property real requestedLength

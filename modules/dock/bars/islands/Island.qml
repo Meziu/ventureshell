@@ -28,8 +28,7 @@ CurvyBox {
 
     property real transitionTime: 300
 
-    // TODO: Make protrusions work or something
-    protrusionSide: Position.Bottom
+    protrusionSide: Position.opposite(Position.cardinal(position, horizontal))
     property real additionalLength: 0
     protrusionPosition: 0
 
@@ -51,6 +50,10 @@ CurvyBox {
 
         onPanelRequested: (widget, panelComponent) => {
             root.showPanel(widget, panelComponent);
+        }
+
+        onMenuRequested: (widget, menuComponent) => {
+            root.showMenu(widget, menuComponent);
         }
 
         states: [
@@ -130,6 +133,43 @@ CurvyBox {
         panelLoader.sourceComponent = undefined;
     }
 
+    protrusionContent: Loader {
+        id: menuLoader
+
+        anchors.fill: parent
+        property real requestedLength: menuLoader.item ? menuLoader.item.implicitWidth : 0
+        property real requestedSize: menuLoader.item ? menuLoader.item.implicitHeight : 0
+
+        onLoaded: {
+            menuLoader.item.exited.connect(() => {
+                root.hidePanel();
+            });
+        }
+    }
+
+    function showMenu(widget: Widget, menuComponent: Component) {
+        if (!menuComponent)
+            return;
+
+        if (menuLoader.sourceComponent === menuComponent) {
+            hideMenu();
+            return;
+        }
+
+        widgetContainer.state = "locked";
+
+        menuLoader.sourceComponent = menuComponent;
+    }
+
+    function hideMenu() {
+        menuLoader.sourceComponent = undefined;
+    }
+
+    function hideAdditionalContent() {
+        hidePanel()
+        hideMenu()
+    }
+
     width: horizontal ? length : size + additionalSize
     height: !horizontal ? length : size + additionalSize
     cornerMarginsHorizontal: horizontal
@@ -140,14 +180,12 @@ CurvyBox {
             easing.type: Easing.OutCubic
         }
     }
-
     Behavior on height {
         NumberAnimation {
             duration: transitionTime
             easing.type: Easing.OutCubic
         }
     }
-
     Behavior on protrusionPosition {
         NumberAnimation {
             duration: transitionTime

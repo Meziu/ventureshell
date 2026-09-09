@@ -5,6 +5,7 @@ import QtQuick.Layouts
 
 import "../../../shapes"
 import "../widgets"
+import "../menus"
 
 Island {
     id: root
@@ -32,29 +33,4 @@ Island {
     NetworkWidget {}
 
     NotificationsWidget {}
-
-    protrusionPosition: 30
-
-    // Populate the protrusion slot
-    protrusionContent: Item {
-        anchors.fill: parent
-        implicitWidth: 110
-        implicitHeight: 60
-
-        Column {
-            spacing: 10
-            Text {
-                text: "Menu option 1"
-            }
-            Text {
-                text: "Menu option 2"
-            }
-        }
-
-        Rectangle {
-            anchors.fill: parent
-
-            opacity: 0.1
-        }
-    }
 }

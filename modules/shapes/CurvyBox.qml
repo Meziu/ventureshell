@@ -16,8 +16,8 @@ Shape {
     property bool protrusionActive: protrusionContent !== null
     property int protrusionSide: Position.Bottom
     property real protrusionPosition: 0
-    property real protrusionLength: protrusionActive ? (Position.isYAxis(protrusionSide) ?  protrusionContent.implicitWidth : protrusionContent.implicitHeight) : 0
-    property real protrusionDepth: protrusionActive ? (Position.isYAxis(protrusionSide) ?  protrusionContent.implicitHeight : protrusionContent.implicitWidth) : 0
+    property real protrusionLength: protrusionActive ? (Position.isYAxis(protrusionSide) ?  protrusionContent.requestedLength : protrusionContent.requestedSize) : 0
+    property real protrusionDepth: protrusionActive ? (Position.isYAxis(protrusionSide) ?  protrusionContent.requestedSize : protrusionContent.requestedLength) : 0
 
     default property alias content: contentItem.data
     readonly property alias contentChildren: contentItem.children
@@ -81,7 +81,6 @@ Shape {
             data: protrusionContent
         }
     }
-    readonly property alias protrusionContentItem: protrusionContentItem
 
     readonly property color fillColor: OuterWildsFont.backgroundColor
     readonly property color borderColor: Qt.rgba(250 / 255, 179 / 255, 135 / 255, 0.28)

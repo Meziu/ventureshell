@@ -17,6 +17,7 @@ GridLayout {
     property real requestedLength: horizontal ? implicitWidth : implicitHeight
 
     signal panelRequested(widget: Widget, panel: Component)
+    signal menuRequested(widget: Widget, menu: Component)
 
     rows: root.horizontal ? 1 : widgets.length
     columns: root.horizontal ? widgets.length : 1
@@ -34,6 +35,7 @@ GridLayout {
             w.Layout.row = Qt.binding(() => root.horizontal ? 0 : i)
             w.Layout.column = Qt.binding(() => root.horizontal ? i : 0)
             w.panelRequested.connect(pc => panelRequested(w, pc))
+            w.menuRequested.connect(mc => menuRequested(w, mc))
         }
     }
 

@@ -11,9 +11,9 @@ PanelWindow {
     id: root
 
     required property int position
-    property real barSize: Config.options.bar.size
-    property real barCornerRadius: Config.options.bar.cornerRadius
-    default property alias data: content.data
+    property real size: Config.options.bar.size
+    property real cornerRadius: Config.options.bar.cornerRadius
+    default property list<Island> islands
 
     WlrLayershell.layer: WlrLayer.Top
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
@@ -24,14 +24,21 @@ PanelWindow {
     Item {
         id: content
         anchors.fill: parent
+
+        data: root.islands
     }
 
     Instantiator {
         id: maskInst
-        model: content.children
+        model: root.islands
         delegate: Region {
-            required property QtObject modelData
+            required property Island modelData
             item: modelData
+
+            Region {
+                // TODO: Swap out for the Loader of the protrusion content in Island
+                item: modelData.protrusionContent
+            }
         }
 
         property var created: []
@@ -44,11 +51,11 @@ PanelWindow {
             const i = created.indexOf(object);
             if (i !== -1)
                 created.splice(i, 1);
-            // regions only reliably supports append/truncate,
-            // so rebuild rather than trying to splice out the middle
+
             maskRegion.regions.length = 0;
-            for (const obj of created)
+            for (const obj of created) {
                 maskRegion.regions.push(obj);
+            }
             object.destroy();
         }
     }
@@ -60,7 +67,7 @@ PanelWindow {
         right: position != Position.Left
     }
 
-    exclusiveZone: barSize
+    exclusiveZone: size
     exclusionMode: ExclusionMode.Normal
 
     color: "#00000000"

@@ -16,9 +16,9 @@ Bar {
         id: leftCenterIsland
 
         screen: root.screen
-        cornerRadius: barCornerRadius
+        cornerRadius: root.cornerRadius
         position: root.position
-        size: barSize
+        size: root.size
         horizontal: false
     }
 }
