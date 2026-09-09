@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 
+import "../menus"
 import "../../../assetloaders"
 
 TextWidget {
@@ -15,4 +16,13 @@ TextWidget {
 
     text: Qt.formatDateTime(clock.date, dateAndTime ? "dddd, d MMMM hh:mm" : "hh:mm")
     font: OuterWildsFont.uiWithSize(20)
+
+    Component {
+        id: menuComponent
+        Menu {}
+    }
+
+    onClicked: {
+        menuRequested(menuComponent)
+    }
 }

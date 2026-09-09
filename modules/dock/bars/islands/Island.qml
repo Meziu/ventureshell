@@ -26,13 +26,67 @@ CurvyBox {
     readonly property bool isHCenter: !(root.position & Position.Left) && !(root.position & Position.Right)
     readonly property bool isVCenter: !(root.position & Position.Top) && !(root.position & Position.Bottom)
 
-    property real transitionTime: 300
+    property real transitionTime: 200
 
     protrusionSide: Position.opposite(Position.cardinal(position, horizontal))
-    property real additionalLength: menuLoader.requestedPosition < 0 ? -menuLoader.requestedPosition  : 0
 
-    readonly property real additionalSize: panelLoader.item ? panelLoader.item.requestedSize : 0
-    readonly property real length: Math.max(minLength, Math.min(Math.max(widgetContainer.requestedLength, panelLoader.item ? panelLoader.item.requestedLength : 0) + additionalLength + cornerRadius * 2, maxLength))
+    // Active widget requesting the menu & target center tracking
+    property Widget currentMenuWidget: null
+    property real lastTargetCenter: 0
+
+    // Enables position behavior ONLY during menu-to-menu switching
+    property bool animateProtrusionPosition: false
+
+    // Orientation-aware dimension mapping for Panel and Menu
+    readonly property real panelMainLength: panelLoader.item ? (horizontal ? panelLoader.item.requestedLength : panelLoader.item.requestedSize) : 0
+    readonly property real panelCrossSize: panelLoader.item ? (horizontal ? panelLoader.item.requestedSize : panelLoader.item.requestedLength) : 0
+
+    readonly property real menuMainLength: menuLoader.item ? (horizontal ? menuLoader.requestedLength : menuLoader.requestedSize) : 0
+    readonly property real menuCrossSize: menuLoader.item ? (horizontal ? menuLoader.requestedSize : menuLoader.requestedLength) : 0
+
+    // Calculates ideal menu center point constrained within island bounds
+    readonly property real currentTargetCenter: {
+        if (!currentMenuWidget) return lastTargetCenter;
+
+        const wPos = root.horizontal
+            ? (widgetContainer.x + currentMenuWidget.x + currentMenuWidget.width / 2)
+            : (widgetContainer.y + currentMenuWidget.y + currentMenuWidget.height / 2);
+
+        const halfLen = root.menuMainLength / 2;
+        return Math.max(halfLen, Math.min(wPos, root.length - halfLen));
+    }
+
+    onCurrentTargetCenterChanged: {
+        if (currentMenuWidget) {
+            lastTargetCenter = currentTargetCenter;
+        }
+    }
+
+    // Calculates start-edge deficit to expand island length without causing binding loops
+    readonly property real additionalLength: {
+        if (!menuLoader.item || !currentMenuWidget) return 0;
+
+        const wPos = root.horizontal
+            ? (currentMenuWidget.x + currentMenuWidget.width / 2)
+            : (currentMenuWidget.y + currentMenuWidget.height / 2);
+
+        const startDeficit = (menuMainLength / 2) - wPos;
+        return Math.max(0, startDeficit);
+    }
+
+    readonly property real additionalSize: panelCrossSize
+
+    readonly property real length: Math.max(
+        minLength,
+        Math.min(
+            Math.max(
+                widgetContainer.requestedLength,
+                panelMainLength,
+                menuMainLength
+            ) + additionalLength + cornerRadius * 2,
+            maxLength
+        )
+    )
 
     WidgetContainer {
         id: widgetContainer
@@ -86,13 +140,6 @@ CurvyBox {
     }
     property alias widgetContainer: widgetContainer
 
-    /* Debug Rectangle
-    Rectangle {
-        anchors.fill: widgetContainer
-
-        opacity: 0.1
-    }*/
-
     Loader {
         id: panelLoader
 
@@ -136,13 +183,21 @@ CurvyBox {
         id: menuLoader
 
         anchors.fill: parent
-        property real requestedPosition: 0
+
+        // Dynamically anchors the start coordinate relative to the currently animating length L(t)
+        property real requestedPosition: {
+            const currentLen = root.protrusionLength;
+            const center = root.currentTargetCenter;
+
+            return center - (currentLen / 2);
+        }
+
         property real requestedLength: menuLoader.item ? menuLoader.item.implicitWidth : 0
         property real requestedSize: menuLoader.item ? menuLoader.item.implicitHeight : 0
 
         onLoaded: {
             menuLoader.item.exited.connect(() => {
-                root.hidePanel();
+                root.hideMenu();
             });
         }
     }
@@ -158,19 +213,22 @@ CurvyBox {
 
         widgetContainer.state = "locked";
 
-        menuLoader.requestedPosition = Qt.binding(() => {
-            return cornerRadius * 2 + (root.horizontal ? (widgetContainer.x + widget.x + widget.width / 2 - menuLoader.requestedLength) : (widgetContainer.y + widget.y + widget.height / 2 - menuLoader.requestedSize))
-        })
+        // Animate position along edge only when switching between already open menus
+        animateProtrusionPosition = (menuLoader.item !== null);
+
+        currentMenuWidget = widget;
         menuLoader.sourceComponent = menuComponent;
     }
 
     function hideMenu() {
+        animateProtrusionPosition = false;
         menuLoader.sourceComponent = undefined;
+        currentMenuWidget = null;
     }
 
     function hideAdditionalContent() {
-        hidePanel()
-        hideMenu()
+        hidePanel();
+        hideMenu();
     }
 
     width: horizontal ? length : size + additionalSize
@@ -190,6 +248,7 @@ CurvyBox {
         }
     }
     Behavior on protrusionPosition {
+        enabled: root.animateProtrusionPosition
         NumberAnimation {
             duration: transitionTime
             easing.type: Easing.OutCubic

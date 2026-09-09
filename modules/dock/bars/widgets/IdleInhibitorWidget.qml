@@ -3,8 +3,6 @@ import QtQuick
 import "../menus"
 
 TextWidget {
-    id: root
-
     property string uninhibitedIcon: ""
     property string inhibitedIcon: ""
 
@@ -16,6 +14,6 @@ TextWidget {
     }
 
     onClicked: {
-        root.menuRequested(menuComponent)
+        menuRequested(menuComponent)
     }
 }

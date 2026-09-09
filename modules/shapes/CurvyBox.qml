@@ -38,7 +38,7 @@ Shape {
     readonly property var _protrusionBounds: {
         const edge = box.protrusionSide;
         const w = box.width, h = box.height;
-        const r = box.cornerRadius;
+        const r = Math.max(0, Math.min(box.cornerRadius, w / 2, h / 2));
         const L = Position.isYAxis(edge) ? w : h;
 
         const active = box.protrusionActive && box.protrusionLength > 0 && box.protrusionDepth > 0;
@@ -59,7 +59,7 @@ Shape {
             case Position.Bottom: return { x: sEff, y: h,      w: lenEff, h: depth };
             case Position.Left:   return { x: -depth, y: sEff, w: depth,  h: lenEff };
             case Position.Right:  return { x: w,      y: sEff, w: depth,  h: lenEff };
-            default:       return { x: 0, y: 0, w: 0, h: 0 };
+            default:              return { x: 0, y: 0, w: 0, h: 0 };
         }
     }
 
@@ -75,7 +75,7 @@ Shape {
             id: protrusionContentItem
             anchors {
                 fill: parent
-                margins: box.cornerRadius / 2
+                margins: Math.max(0, Math.min(box.cornerRadius, box.width / 2, box.height / 2)) / 2
             }
 
             data: protrusionContent
@@ -89,8 +89,10 @@ Shape {
     preferredRendererType: Shape.CurveRenderer
 
     function outlinePath() {
-        const w = width, h = height, r = cornerRadius, a = attached;
+        const w = width, h = height, a = attached;
         const pt = p => `${p[0]} ${p[1]}`;
+
+        const r = Math.max(0, Math.min(box.cornerRadius, w / 2, h / 2));
         const arcTo = (p, foot) => `A ${r} ${r} 0 0 ${foot ? 0 : 1} ${pt(p)}`;
 
         function corner(cx, cy, beforeOffset, afterOffset, beforeAttached, afterAttached) {
@@ -118,7 +120,7 @@ Shape {
 
         const corners = [
             corner(0, 0, [0, r], [r, 0], a.left, a.top),       // 0: TL
-            corner(w, 0, [-r, 0], [0, r], a.top, a.right),     // 1: TR
+            corner(w, 0, [-r, 0], [0, r], a.top, a.right),      // 1: TR
             corner(w, h, [0, -r], [-r, 0], a.right, a.bottom), // 2: BR
             corner(0, h, [r, 0], [0, -r], a.bottom, a.left)    // 3: BL
         ];
@@ -138,6 +140,7 @@ Shape {
         let suppressCorner = [false, false, false, false];
         let expandStart = false;
         let expandEnd = false;
+        let rProt = r;
 
         if (activeIdx !== -1) {
             const e = edges[activeIdx];
@@ -150,7 +153,13 @@ Shape {
             expandStart = (sRaw < margin);
             expandEnd = (eRaw > L - margin);
 
-            // Map screen-space expansion to clockwise suppressed corners
+            const sEff = expandStart ? 0 : sRaw;
+            const eEff = expandEnd ? L : eRaw;
+            const lenEff = Math.max(0, eEff - sEff);
+            const depth = box.protrusionDepth;
+
+            rProt = Math.max(0, Math.min(r, depth, lenEff / 2));
+
             if (expandStart) {
                 const startCornerIdx = (activeIdx === 2) ? 3 : activeIdx;
                 suppressCorner[startCornerIdx] = true;
@@ -161,12 +170,11 @@ Shape {
             }
         }
 
-        // Determine path start point
         let startPt = corners[0].after;
         if (activeIdx === 0 && expandStart) {
-            startPt = [0, -box.protrusionDepth + r];
+            startPt = [0, -box.protrusionDepth + rProt];
         } else if (activeIdx === 3 && expandEnd) {
-            startPt = [-box.protrusionDepth + r, 0];
+            startPt = [-box.protrusionDepth + rProt, 0];
         }
 
         let d = `M ${pt(startPt)} `;
@@ -178,7 +186,6 @@ Shape {
 
             if (i === activeIdx) {
                 const depth = box.protrusionDepth;
-                const margin = r * 2;
 
                 const sRaw = box.protrusionPosition;
                 const eRaw = box.protrusionPosition + box.protrusionLength;
@@ -186,38 +193,33 @@ Shape {
                 const sEff = expandStart ? 0 : sRaw;
                 const eEff = expandEnd ? L : eRaw;
 
-                // Clockwise parametric mapping (u)
                 const u0 = (i >= 2) ? (L - eEff) : sEff;
                 const u1 = (i >= 2) ? (L - sEff) : eEff;
 
                 const uStartExpand = (i >= 2) ? expandEnd : expandStart;
                 const uEndExpand = (i >= 2) ? expandStart : expandEnd;
 
-                // --- 1. START OF PROTRUSION ---
                 if (uStartExpand) {
-                    d += `A ${r} ${r} 0 0 1 ${pt(e.map(R_offset(u0, r), depth))} `;
+                    d += `A ${rProt} ${rProt} 0 0 1 ${pt(e.map(u0 + rProt, depth))} `;
                 } else {
-                    d += `L ${pt(e.map(u0 - r, 0))} `;
-                    d += `A ${r} ${r} 0 0 0 ${pt(e.map(u0, r))} `;
-                    d += `L ${pt(e.map(u0, depth - r))} `;
-                    d += `A ${r} ${r} 0 0 1 ${pt(e.map(u0 + r, depth))} `;
+                    d += `L ${pt(e.map(u0 - rProt, 0))} `;
+                    d += `A ${rProt} ${rProt} 0 0 0 ${pt(e.map(u0, rProt))} `;
+                    d += `L ${pt(e.map(u0, depth - rProt))} `;
+                    d += `A ${rProt} ${rProt} 0 0 1 ${pt(e.map(u0 + rProt, depth))} `;
                 }
 
-                // --- 2. FRONT FACE ---
-                d += `L ${pt(e.map(u1 - r, depth))} `;
+                d += `L ${pt(e.map(u1 - rProt, depth))} `;
 
-                // --- 3. END OF PROTRUSION ---
                 if (uEndExpand) {
-                    d += `A ${r} ${r} 0 0 1 ${pt(e.map(u1, depth - r))} `;
+                    d += `A ${rProt} ${rProt} 0 0 1 ${pt(e.map(u1, depth - rProt))} `;
                     d += `L ${pt(e.map(u1, 0))} `;
                 } else {
-                    d += `A ${r} ${r} 0 0 1 ${pt(e.map(u1, depth - r))} `;
-                    d += `L ${pt(e.map(u1, r))} `;
-                    d += `A ${r} ${r} 0 0 0 ${pt(e.map(u1 + r, 0))} `;
+                    d += `A ${rProt} ${rProt} 0 0 1 ${pt(e.map(u1, depth - rProt))} `;
+                    d += `L ${pt(e.map(u1, rProt))} `;
+                    d += `A ${rProt} ${rProt} 0 0 0 ${pt(e.map(u1 + rProt, 0))} `;
                     d += `L ${pt(nextCorner.before)} `;
                 }
             } else {
-                // Non-protruding edge: continue straight down wall if next corner is suppressed
                 if (suppressCorner[nextCornerIdx]) {
                     d += `L ${pt(e.map(L, 0))} `;
                 } else {
@@ -225,7 +227,6 @@ Shape {
                 }
             }
 
-            // --- 4. CORNER RENDERING ---
             if (!suppressCorner[nextCornerIdx] && nextCorner.arc) {
                 d += `${arcTo(nextCorner.after, nextCorner.foot)} `;
             }
@@ -233,10 +234,6 @@ Shape {
 
         d += "Z";
         return d;
-
-        function R_offset(val, radius) {
-            return val + radius;
-        }
     }
 
     ShapePath {
