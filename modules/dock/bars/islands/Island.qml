@@ -29,8 +29,7 @@ CurvyBox {
     property real transitionTime: 300
 
     protrusionSide: Position.opposite(Position.cardinal(position, horizontal))
-    property real additionalLength: 0
-    protrusionPosition: 0
+    property real additionalLength: menuLoader.requestedPosition < 0 ? -menuLoader.requestedPosition  : 0
 
     readonly property real additionalSize: panelLoader.item ? panelLoader.item.requestedSize : 0
     readonly property real length: Math.max(minLength, Math.min(Math.max(widgetContainer.requestedLength, panelLoader.item ? panelLoader.item.requestedLength : 0) + additionalLength + cornerRadius * 2, maxLength))
@@ -137,6 +136,7 @@ CurvyBox {
         id: menuLoader
 
         anchors.fill: parent
+        property real requestedPosition: 0
         property real requestedLength: menuLoader.item ? menuLoader.item.implicitWidth : 0
         property real requestedSize: menuLoader.item ? menuLoader.item.implicitHeight : 0
 
@@ -158,6 +158,9 @@ CurvyBox {
 
         widgetContainer.state = "locked";
 
+        menuLoader.requestedPosition = Qt.binding(() => {
+            return cornerRadius * 2 + (root.horizontal ? (widgetContainer.x + widget.x + widget.width / 2 - menuLoader.requestedLength) : (widgetContainer.y + widget.y + widget.height / 2 - menuLoader.requestedSize))
+        })
         menuLoader.sourceComponent = menuComponent;
     }
 

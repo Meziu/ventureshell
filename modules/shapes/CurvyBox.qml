@@ -15,9 +15,9 @@ Shape {
 
     property bool protrusionActive: protrusionContent !== null
     property int protrusionSide: Position.Bottom
-    property real protrusionPosition: 0
-    property real protrusionLength: protrusionActive ? (Position.isYAxis(protrusionSide) ?  protrusionContent.requestedLength : protrusionContent.requestedSize) : 0
-    property real protrusionDepth: protrusionActive ? (Position.isYAxis(protrusionSide) ?  protrusionContent.requestedSize : protrusionContent.requestedLength) : 0
+    property real protrusionPosition: protrusionActive ? Math.max(protrusionContent.requestedPosition, 0) : 0
+    property real protrusionLength: protrusionActive ? (Position.isYAxis(protrusionSide) ? protrusionContent.requestedLength : protrusionContent.requestedSize) : 0
+    property real protrusionDepth: protrusionActive ? (Position.isYAxis(protrusionSide) ? protrusionContent.requestedSize : protrusionContent.requestedLength) : 0
 
     default property alias content: contentItem.data
     readonly property alias contentChildren: contentItem.children
