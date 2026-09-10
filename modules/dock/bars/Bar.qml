@@ -1,5 +1,6 @@
 import Quickshell
 import Quickshell.Wayland
+import Quickshell.Hyprland
 import QtQuick
 import QtQuick.Layouts
 
@@ -19,6 +20,25 @@ PanelWindow {
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
     mask: Region {
         id: maskRegion
+    }
+
+    property bool popupOpen: {
+        for (let i = 0; i < islands.length; i++) {
+            if (islands[i].popupOpen) return true
+        }
+        return false
+    }
+
+    HyprlandFocusGrab {
+        id: grab
+        active: root.popupOpen
+        windows: [root]
+
+        onCleared: {
+            for (let i = 0; i < islands.length; i++) {
+                islands[i].hideAdditionalContent()
+            }
+        }
     }
 
     Item {

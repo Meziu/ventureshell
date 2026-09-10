@@ -234,7 +234,7 @@ CurvyBox {
     }
 
     function hidePanel() {
-        panelLoader.sourceComponent = undefined;
+        panelLoader.sourceComponent = undefined
     }
 
     function hideMenu() {
@@ -246,6 +246,8 @@ CurvyBox {
         hidePanel();
         hideMenu();
     }
+
+    property bool popupOpen: menuLoader.sourceComponent || panelLoader.sourceComponent
 
     width: horizontal ? length : size + additionalSize
     height: !horizontal ? length : size + additionalSize

@@ -19,6 +19,9 @@ ClickableWidget {
     // This wrongly supercedes the usual requestedLength made with content size, causing visual bugs
     requestedLength: Math.max(Layout.preferredHeight, textMetrics.width + padding * 2)
 
+    implicitWidth: requestedLength
+    implicitHeight: textMetrics.height + padding * 2
+
     // To avoid binding loops
     TextMetrics {
         id: textMetrics

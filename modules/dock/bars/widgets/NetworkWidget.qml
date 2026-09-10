@@ -10,7 +10,7 @@ TextWidget {
 
     Component {
         id: menuComponent
-        Menu {}
+        NetworkMenu {}
     }
 
     onClicked: {

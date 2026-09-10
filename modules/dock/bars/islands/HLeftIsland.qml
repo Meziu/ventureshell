@@ -24,8 +24,6 @@ Island {
         bottom: false
     }
 
-    LauncherWidget {}
-
     WindowNameWidget {
         id: windowName
         Layout.fillWidth: true

@@ -7,13 +7,4 @@ TextWidget {
     property string inhibitedIcon: ""
 
     text: uninhibitedIcon
-
-    Component {
-        id: menuComponent
-        Menu {}
-    }
-
-    onClicked: {
-        menuRequested(menuComponent)
-    }
 }

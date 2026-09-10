@@ -9,13 +9,4 @@ TextWidget {
     property string dndIcon: ""
 
     text: notificationIcon
-
-    Component {
-        id: menuComponent
-        Menu {}
-    }
-
-    onClicked: {
-        menuRequested(menuComponent)
-    }
 }
