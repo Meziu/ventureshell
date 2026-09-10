@@ -26,7 +26,7 @@ CurvyBox {
     readonly property bool isHCenter: !(root.position & Position.Left) && !(root.position & Position.Right)
     readonly property bool isVCenter: !(root.position & Position.Top) && !(root.position & Position.Bottom)
 
-    property real transitionTime: 200
+    property real transitionTime: 150
 
     protrusionSide: Position.opposite(Position.cardinal(position, horizontal))
 
@@ -133,19 +133,6 @@ CurvyBox {
 
         states: [
             State {
-                name: "filled"
-                AnchorChanges {
-                    target: widgetContainer
-
-                    anchors {
-                        top: parent.top
-                        bottom: parent.bottom
-                        left: parent.left
-                        right: parent.right
-                    }
-                }
-            },
-            State {
                 name: "locked"
                 AnchorChanges {
                     target: widgetContainer
@@ -183,24 +170,6 @@ CurvyBox {
         }
     }
 
-    function showPanel(widget: Widget, panelComponent: Component) {
-        if (!panelComponent)
-            return;
-
-        if (panelLoader.sourceComponent === panelComponent) {
-            hidePanel();
-            return;
-        }
-
-        widgetContainer.state = "locked";
-
-        panelLoader.sourceComponent = panelComponent;
-    }
-
-    function hidePanel() {
-        panelLoader.sourceComponent = undefined;
-    }
-
     protrusionContent: Loader {
         id: menuLoader
 
@@ -223,22 +192,49 @@ CurvyBox {
         }
     }
 
-    function showMenu(widget: Widget, menuComponent: Component) {
-        if (!menuComponent)
-            return;
+    // Common preparation helper enforcing mutual exclusivity
+    function prepareContent(targetLoader: Loader, component: Component): bool {
+        if (!component)
+            return false;
 
-        if (menuLoader.sourceComponent === menuComponent) {
+        // Toggle off if requesting the component currently visible in this loader
+        if (targetLoader.sourceComponent === component) {
+            hideAdditionalContent();
+            return false;
+        }
+
+        // Close the opposing content type
+        if (targetLoader === panelLoader) {
             hideMenu();
-            return;
+        } else {
+            hidePanel();
         }
 
         widgetContainer.state = "locked";
+        return true;
+    }
 
+    function showPanel(widget: Widget, panelComponent: Component) {
+        if (!prepareContent(panelLoader, panelComponent))
+            return;
+
+        panelLoader.sourceComponent = panelComponent;
+    }
+
+    function showMenu(widget: Widget, menuComponent: Component) {
+        if (!prepareContent(menuLoader, menuComponent))
+            return;
+
+        // Animate position only if transitioning from another menu
         animateProtrusionPosition = (menuLoader.item !== null);
 
         currentTargetCenter = Qt.binding(() => calculateTargetCenter(widget));
         additionalLength = Qt.binding(() => calculateAdditionalLength(widget));
         menuLoader.sourceComponent = menuComponent;
+    }
+
+    function hidePanel() {
+        panelLoader.sourceComponent = undefined;
     }
 
     function hideMenu() {
