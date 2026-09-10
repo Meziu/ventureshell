@@ -11,7 +11,7 @@ MultiEffect {
     // glow
     shadowEnabled: true
     shadowColor: eyeColor
-    shadowBlur: 1.0
+    shadowBlur: 0.2
     shadowScale: 1.02
     shadowHorizontalOffset: 0
     shadowVerticalOffset: 0
