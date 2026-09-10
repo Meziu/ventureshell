@@ -30,10 +30,6 @@ CurvyBox {
 
     protrusionSide: Position.opposite(Position.cardinal(position, horizontal))
 
-    // Active widget requesting the menu & target center tracking
-    property Widget currentMenuWidget: null
-    property real lastTargetCenter: 0
-
     // Enables position behavior ONLY during menu-to-menu switching
     property bool animateProtrusionPosition: false
 
@@ -44,10 +40,11 @@ CurvyBox {
     readonly property real menuMainLength: menuLoader.item ? (horizontal ? menuLoader.requestedLength : menuLoader.requestedSize) : 0
     readonly property real menuCrossSize: menuLoader.item ? (horizontal ? menuLoader.requestedSize : menuLoader.requestedLength) : 0
 
-    // Calculates ideal menu center point constrained within island bounds
-    readonly property real currentTargetCenter: {
-        if (!currentMenuWidget) return lastTargetCenter;
+    property real currentTargetCenter: 0
+    property real additionalLength: 0
 
+    // Calculates ideal menu center point constrained within island bounds
+    function calculateTargetCenter(currentMenuWidget: Widget): real {
         const wPos = root.horizontal
             ? (widgetContainer.x + currentMenuWidget.x + currentMenuWidget.width / 2)
             : (widgetContainer.y + currentMenuWidget.y + currentMenuWidget.height / 2);
@@ -56,14 +53,8 @@ CurvyBox {
         return Math.max(halfLen, Math.min(wPos, root.length - halfLen));
     }
 
-    onCurrentTargetCenterChanged: {
-        if (currentMenuWidget) {
-            lastTargetCenter = currentTargetCenter;
-        }
-    }
-
     // Calculates start-edge deficit to expand island length without causing binding loops
-    readonly property real additionalLength: {
+    function calculateAdditionalLength(currentMenuWidget: Widget): real {
         if (!menuLoader.item || !currentMenuWidget) return 0;
 
         const wPos = root.horizontal
@@ -216,14 +207,14 @@ CurvyBox {
         // Animate position along edge only when switching between already open menus
         animateProtrusionPosition = (menuLoader.item !== null);
 
-        currentMenuWidget = widget;
+        currentTargetCenter = Qt.binding(() => calculateTargetCenter(widget))
+        additionalLength = Qt.binding(() => calculateAdditionalLength(widget))
         menuLoader.sourceComponent = menuComponent;
     }
 
     function hideMenu() {
         animateProtrusionPosition = false;
         menuLoader.sourceComponent = undefined;
-        currentMenuWidget = null;
     }
 
     function hideAdditionalContent() {
