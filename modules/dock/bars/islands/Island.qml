@@ -53,28 +53,44 @@ CurvyBox {
         return Math.max(halfLen, Math.min(wPos, root.length - halfLen));
     }
 
-    // Calculates start-edge deficit to expand island length without causing binding loops
+    // Calculates baseline deficit to expand island length symmetrically without binding loops
     function calculateAdditionalLength(currentMenuWidget: Widget): real {
         if (!menuLoader.item || !currentMenuWidget) return 0;
 
-        const wPos = root.horizontal
+        const baseLen = Math.max(widgetContainer.requestedLength, panelMainLength);
+
+        let containerOffset = 0;
+        if (root.horizontal) {
+            if (root.isRight) containerOffset = baseLen - widgetContainer.width;
+            else if (root.isHCenter) containerOffset = (baseLen - widgetContainer.width) / 2;
+        } else {
+            if (root.isBottom) containerOffset = baseLen - widgetContainer.height;
+            else if (root.isVCenter) containerOffset = (baseLen - widgetContainer.height) / 2;
+        }
+
+        const localWPos = root.horizontal
             ? (currentMenuWidget.x + currentMenuWidget.width / 2)
             : (currentMenuWidget.y + currentMenuWidget.height / 2);
+        const wPos = containerOffset + localWPos;
 
-        const startDeficit = (menuMainLength / 2) - wPos;
-        return Math.max(0, startDeficit);
+        const halfMenu = menuMainLength / 2;
+        const startDeficit = Math.max(0, halfMenu - wPos);
+        const endDeficit = Math.max(0, (wPos + halfMenu) - baseLen);
+
+        return startDeficit + endDeficit;
     }
 
     readonly property real additionalSize: panelCrossSize
 
+    readonly property real baseMainLength: Math.max(
+        widgetContainer.requestedLength,
+        panelMainLength
+    )
+
     readonly property real length: Math.max(
         minLength,
         Math.min(
-            Math.max(
-                widgetContainer.requestedLength,
-                panelMainLength,
-                menuMainLength
-            ) + additionalLength + cornerRadius * 2,
+            baseMainLength + additionalLength + cornerRadius * 2,
             maxLength
         )
     )
