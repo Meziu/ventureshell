@@ -6,7 +6,7 @@ import "../widgets"
 Item {
     anchors.fill: parent
     implicitWidth: 240
-    implicitHeight: 60
+    implicitHeight: 80
 
     signal exited()
 

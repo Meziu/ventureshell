@@ -53,7 +53,7 @@ CurvyBox {
         return Math.max(halfLen, Math.min(wPos, root.length - halfLen));
     }
 
-    // Calculates baseline deficit to expand island length symmetrically without binding loops
+    // Calculates baseline deficit to expand island length symmetrically with corner clearance
     function calculateAdditionalLength(currentMenuWidget: Widget): real {
         if (!menuLoader.item || !currentMenuWidget) return 0;
 
@@ -74,8 +74,10 @@ CurvyBox {
         const wPos = containerOffset + localWPos;
 
         const halfMenu = menuMainLength / 2;
-        const startDeficit = Math.max(0, halfMenu - wPos);
-        const endDeficit = Math.max(0, (wPos + halfMenu) - baseLen);
+        const cornerMargin = cornerRadius * 1.5;
+
+        const startDeficit = Math.max(0, (halfMenu + cornerMargin) - wPos);
+        const endDeficit = Math.max(0, (wPos + halfMenu + cornerMargin) - baseLen);
 
         return startDeficit + endDeficit;
     }

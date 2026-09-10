@@ -46,9 +46,11 @@ Shape {
         const active = box.protrusionActive && box.protrusionLength > 0 && box.protrusionDepth > 0;
         if (!active) return { x: 0, y: 0, w: 0, h: 0 };
 
-        const snapThreshold = 2;
         const sRaw = box.protrusionPosition;
         const eRaw = box.protrusionPosition + box.protrusionLength;
+        const depth = box.protrusionDepth;
+        const rProt = Math.max(0, Math.min(r, depth, box.protrusionLength / 2));
+        const snapThreshold = r + rProt;
 
         const expandStart = box.snapProtrusionToEdges && (sRaw <= snapThreshold);
         const expandEnd = box.snapProtrusionToEdges && (eRaw >= L - snapThreshold);
@@ -56,7 +58,6 @@ Shape {
         const sEff = expandStart ? 0 : Math.max(0, Math.min(L, sRaw));
         const eEff = expandEnd ? L : Math.max(0, Math.min(L, eRaw));
         const lenEff = Math.max(0, eEff - sEff);
-        const depth = box.protrusionDepth;
 
         switch (edge) {
             case Position.Top:    return { x: sEff, y: -depth, w: lenEff, h: depth };
@@ -149,10 +150,13 @@ Shape {
         if (activeIdx !== -1) {
             const e = edges[activeIdx];
             const L = e.len;
-            const snapThreshold = 2;
+            const depth = box.protrusionDepth;
 
             const sRaw = box.protrusionPosition;
             const eRaw = box.protrusionPosition + box.protrusionLength;
+
+            rProt = Math.max(0, Math.min(r, depth, box.protrusionLength / 2));
+            const snapThreshold = r + rProt;
 
             expandStart = box.snapProtrusionToEdges && (sRaw <= snapThreshold);
             expandEnd = box.snapProtrusionToEdges && (eRaw >= L - snapThreshold);
@@ -160,7 +164,6 @@ Shape {
             const sEff = expandStart ? 0 : Math.max(0, Math.min(L, sRaw));
             const eEff = expandEnd ? L : Math.max(0, Math.min(L, eRaw));
             const lenEff = Math.max(0, eEff - sEff);
-            const depth = box.protrusionDepth;
 
             rProt = Math.max(0, Math.min(r, depth, lenEff / 2));
 
@@ -194,14 +197,15 @@ Shape {
                 const sRaw = box.protrusionPosition;
                 const eRaw = box.protrusionPosition + box.protrusionLength;
 
-                const sEff = expandStart ? 0 : Math.max(0, Math.min(L, sRaw));
-                const eEff = expandEnd ? L : Math.max(0, Math.min(L, eRaw));
+                const snapThreshold = r + rProt;
+                const uStartExpand = box.snapProtrusionToEdges && (i >= 2 ? (eRaw >= L - snapThreshold) : (sRaw <= snapThreshold));
+                const uEndExpand = box.snapProtrusionToEdges && (i >= 2 ? (sRaw <= snapThreshold) : (eRaw >= L - snapThreshold));
+
+                const sEff = (uStartExpand && i < 2) || (uEndExpand && i >= 2) ? 0 : Math.max(0, Math.min(L, sRaw));
+                const eEff = (uEndExpand && i < 2) || (uStartExpand && i >= 2) ? L : Math.max(0, Math.min(L, eRaw));
 
                 const u0 = (i >= 2) ? (L - eEff) : sEff;
                 const u1 = (i >= 2) ? (L - sEff) : eEff;
-
-                const uStartExpand = (i >= 2) ? expandEnd : expandStart;
-                const uEndExpand = (i >= 2) ? expandStart : expandEnd;
 
                 if (uStartExpand) {
                     d += `L ${pt(e.map(u0, depth - rProt))} `;
