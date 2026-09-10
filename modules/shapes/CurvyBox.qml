@@ -11,7 +11,7 @@ Shape {
     property real cornerRadius: 14
     property bool showFeet: true
     property bool cornerMarginsHorizontal: true
-    property real cornerMargins: cornerRadius/8
+    property real cornerMargins: cornerRadius / 8
 
     property bool protrusionActive: protrusionContent !== null
     property int protrusionSide: Position.Bottom
@@ -42,7 +42,13 @@ Shape {
         const L = Position.isYAxis(edge) ? w : h;
 
         const active = box.protrusionActive && box.protrusionLength > 0 && box.protrusionDepth > 0;
-        if (!active) return { x: 0, y: 0, w: 0, h: 0 };
+        if (!active)
+            return {
+                x: 0,
+                y: 0,
+                w: 0,
+                h: 0
+            };
 
         const margin = r * 2;
         const sRaw = box.protrusionPosition;
@@ -55,11 +61,41 @@ Shape {
         const depth = box.protrusionDepth;
 
         switch (edge) {
-            case Position.Top:    return { x: sEff, y: -depth, w: lenEff, h: depth };
-            case Position.Bottom: return { x: sEff, y: h,      w: lenEff, h: depth };
-            case Position.Left:   return { x: -depth, y: sEff, w: depth,  h: lenEff };
-            case Position.Right:  return { x: w,      y: sEff, w: depth,  h: lenEff };
-            default:              return { x: 0, y: 0, w: 0, h: 0 };
+        case Position.Top:
+            return {
+                x: sEff,
+                y: -depth,
+                w: lenEff,
+                h: depth
+            };
+        case Position.Bottom:
+            return {
+                x: sEff,
+                y: h,
+                w: lenEff,
+                h: depth
+            };
+        case Position.Left:
+            return {
+                x: -depth,
+                y: sEff,
+                w: depth,
+                h: lenEff
+            };
+        case Position.Right:
+            return {
+                x: w,
+                y: sEff,
+                w: depth,
+                h: lenEff
+            };
+        default:
+            return {
+                x: 0,
+                y: 0,
+                w: 0,
+                h: 0
+            };
         }
     }
 
@@ -97,45 +133,70 @@ Shape {
 
         function corner(cx, cy, beforeOffset, afterOffset, beforeAttached, afterAttached) {
             if (beforeAttached && afterAttached)
-                return { before: [cx, cy], after: [cx, cy], arc: false, foot: false };
+                return {
+                    before: [cx, cy],
+                    after: [cx, cy],
+                    arc: false,
+                    foot: false
+                };
 
             if (!beforeAttached && !afterAttached)
                 return {
                     before: [cx + beforeOffset[0], cy + beforeOffset[1]],
                     after: [cx + afterOffset[0], cy + afterOffset[1]],
-                    arc: true, foot: false
+                    arc: true,
+                    foot: false
                 };
 
             if (!showFeet)
-                return { before: [cx, cy], after: [cx, cy], arc: false, foot: false };
+                return {
+                    before: [cx, cy],
+                    after: [cx, cy],
+                    arc: false,
+                    foot: false
+                };
 
             const bOff = beforeAttached ? [-beforeOffset[0], -beforeOffset[1]] : beforeOffset;
             const aOff = afterAttached ? [-afterOffset[0], -afterOffset[1]] : afterOffset;
             return {
                 before: [cx + bOff[0], cy + bOff[1]],
                 after: [cx + aOff[0], cy + aOff[1]],
-                arc: true, foot: true
+                arc: true,
+                foot: true
             };
         }
 
-        const corners = [
-            corner(0, 0, [0, r], [r, 0], a.left, a.top),       // 0: TL
-            corner(w, 0, [-r, 0], [0, r], a.top, a.right),      // 1: TR
-            corner(w, h, [0, -r], [-r, 0], a.right, a.bottom), // 2: BR
-            corner(0, h, [r, 0], [0, -r], a.bottom, a.left)    // 3: BL
+        const corners = [corner(0, 0, [0, r], [r, 0], a.left, a.top)        // 0: TL
+            , corner(w, 0, [-r, 0], [0, r], a.top, a.right)      // 1: TR
+            , corner(w, h, [0, -r], [-r, 0], a.right, a.bottom) // 2: BR
+            , corner(0, h, [r, 0], [0, -r], a.bottom, a.left)    // 3: BL
         ];
 
         const edges = [
-            { name: "top",    map: (u, v) => [u, -v],        len: w },
-            { name: "right",  map: (u, v) => [w + v, u],     len: h },
-            { name: "bottom", map: (u, v) => [w - u, h + v], len: w },
-            { name: "left",   map: (u, v) => [-v, h - u],    len: h }
+            {
+                name: "top",
+                map: (u, v) => [u, -v],
+                len: w
+            },
+            {
+                name: "right",
+                map: (u, v) => [w + v, u],
+                len: h
+            },
+            {
+                name: "bottom",
+                map: (u, v) => [w - u, h + v],
+                len: w
+            },
+            {
+                name: "left",
+                map: (u, v) => [-v, h - u],
+                len: h
+            }
         ];
 
         const edgeNames = ["top", "right", "bottom", "left"];
-        const activeIdx = (box.protrusionActive && box.protrusionLength > 0 && box.protrusionDepth > 0)
-            ? edgeNames.indexOf(Position.name(box.protrusionSide))
-            : -1;
+        const activeIdx = (box.protrusionActive && box.protrusionLength > 0 && box.protrusionDepth > 0) ? edgeNames.indexOf(Position.name(box.protrusionSide)) : -1;
 
         let suppressCorner = [false, false, false, false];
         let expandStart = false;
@@ -170,13 +231,7 @@ Shape {
             }
         }
 
-        let startPt = corners[0].after;
-        if (activeIdx === 0 && expandStart) {
-            startPt = [0, -box.protrusionDepth + rProt];
-        } else if (activeIdx === 3 && expandEnd) {
-            startPt = [-box.protrusionDepth + rProt, 0];
-        }
-
+        const startPt = corners[0].after;
         let d = `M ${pt(startPt)} `;
 
         edges.forEach((e, i) => {
@@ -200,6 +255,7 @@ Shape {
                 const uEndExpand = (i >= 2) ? expandStart : expandEnd;
 
                 if (uStartExpand) {
+                    d += `L ${pt(e.map(u0, depth - rProt))} `;
                     d += `A ${rProt} ${rProt} 0 0 1 ${pt(e.map(u0 + rProt, depth))} `;
                 } else {
                     d += `L ${pt(e.map(u0 - rProt, 0))} `;
