@@ -53,7 +53,7 @@ CurvyBox {
         return Math.max(halfLen, Math.min(wPos, root.length - halfLen));
     }
 
-    // Calculates baseline deficit to expand island length symmetrically with corner clearance
+    // Calculates length expansion respecting attached/bounded edge constraints
     function calculateAdditionalLength(currentMenuWidget: Widget): real {
         if (!menuLoader.item || !currentMenuWidget) return 0;
 
@@ -76,10 +76,23 @@ CurvyBox {
         const halfMenu = menuMainLength / 2;
         const cornerMargin = cornerRadius * 1.5;
 
+        // Check edge attachment status
+        const startAttached = root.horizontal
+            ? (root.attached.left || root.isLeft)
+            : (root.attached.top || root.isTop);
+        const endAttached = root.horizontal
+            ? (root.attached.right || root.isRight)
+            : (root.attached.bottom || root.isBottom);
+
         const startDeficit = Math.max(0, (halfMenu + cornerMargin) - wPos);
         const endDeficit = Math.max(0, (wPos + halfMenu + cornerMargin) - baseLen);
 
-        return startDeficit + endDeficit;
+        let added = 0;
+        // Suppress expansion on attached/bounded sides; only accumulate overflow on unattached sides
+        if (!startAttached) added += startDeficit;
+        if (!endAttached) added += endDeficit;
+
+        return added;
     }
 
     readonly property real additionalSize: panelCrossSize
@@ -193,7 +206,6 @@ CurvyBox {
 
         anchors.fill: parent
 
-        // Dynamically anchors the start coordinate relative to the currently animating length L(t)
         property real requestedPosition: {
             const currentLen = root.protrusionLength;
             const center = root.currentTargetCenter;
@@ -222,11 +234,10 @@ CurvyBox {
 
         widgetContainer.state = "locked";
 
-        // Animate position along edge only when switching between already open menus
         animateProtrusionPosition = (menuLoader.item !== null);
 
-        currentTargetCenter = Qt.binding(() => calculateTargetCenter(widget))
-        additionalLength = Qt.binding(() => calculateAdditionalLength(widget))
+        currentTargetCenter = Qt.binding(() => calculateTargetCenter(widget));
+        additionalLength = Qt.binding(() => calculateAdditionalLength(widget));
         menuLoader.sourceComponent = menuComponent;
     }
 
