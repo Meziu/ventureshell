@@ -12,7 +12,7 @@ MultiEffect {
     shadowEnabled: true
     shadowColor: eyeColor
     shadowBlur: 0.2
-    shadowScale: 1.02
+    shadowScale: 1.0
     shadowHorizontalOffset: 0
     shadowVerticalOffset: 0
     shadowOpacity: 0.8

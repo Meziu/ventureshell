@@ -7,11 +7,12 @@ ClickableWidget {
     id: root
 
     required property string text
+    property real fontSize: 14
     property int horizontalAlignment: Text.AlignHCenter
     property int verticalAlignment: Text.AlignVCenter
     property real padding: 4
     property bool elide: true
-    property font font: OuterWildsFont.uiWithSize(14)
+    property font font: OuterWildsFont.uiWithSize(fontSize)
 
     // Length is AT MINIMUM a square (done for single character text as logos)
     //
