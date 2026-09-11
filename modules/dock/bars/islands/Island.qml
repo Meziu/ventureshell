@@ -104,10 +104,12 @@ CurvyBox {
         id: widgetContainer
 
         anchors {
-            top: parent.top
-            bottom: parent.bottom
-            left: parent.left
-            right: parent.right
+            top: isTop || (!horizontal && widgetsFillIsland) ? parent.top : undefined
+            bottom: isBottom || (!horizontal && widgetsFillIsland) ? parent.bottom : undefined
+            left: isLeft || (horizontal && widgetsFillIsland) ? parent.left : undefined
+            right: isRight || (horizontal && widgetsFillIsland) ? parent.right : undefined
+            horizontalCenter: horizontal && isHCenter && (!widgetsFillIsland) ? parent.horizontalCenter : undefined
+            verticalCenter: !horizontal && isVCenter && (!widgetsFillIsland) ? parent.verticalCenter : undefined
         }
 
         horizontal: root.horizontal
@@ -121,33 +123,9 @@ CurvyBox {
             root.showMenu(widget, menuComponent);
         }
 
-        // TODO: Find a way to anchor statically and use implicit length, this stuff is ugly
-        states: [
-            State {
-                name: "filled"
-                AnchorChanges {
-                    target: widgetContainer
-
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                }
-            },
-            State {
-                name: "locked"
-                AnchorChanges {
-                    target: widgetContainer
-
-                    anchors.top: isTop || (!horizontal && widgetsFillIsland) ? parent.top : undefined
-                    anchors.bottom: isBottom || (!horizontal && widgetsFillIsland) ? parent.bottom : undefined
-                    anchors.left: isLeft || (horizontal && widgetsFillIsland) ? parent.left : undefined
-                    anchors.right: isRight || (horizontal && widgetsFillIsland) ? parent.right : undefined
-                    anchors.horizontalCenter: horizontal && isHCenter && (!widgetsFillIsland) ? parent.horizontalCenter : undefined
-                    anchors.verticalCenter: !horizontal && isVCenter && (!widgetsFillIsland) ? parent.verticalCenter : undefined
-                }
-            }
-        ]
+        // TODO: Hacky calculations that have no actual roots in reality
+        width: (horizontal ? requestedLength : size - cornerMargins * 4)
+        height: (horizontal ? size : requestedLength - cornerMargins * 4) - anchors.margins * 2
     }
     property alias widgetContainer: widgetContainer
 
@@ -212,7 +190,6 @@ CurvyBox {
             hidePanel();
         }
 
-        widgetContainer.state = "locked";
         return true;
     }
 
