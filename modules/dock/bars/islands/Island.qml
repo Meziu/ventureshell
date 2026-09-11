@@ -45,9 +45,7 @@ CurvyBox {
 
     // Calculates ideal menu center point constrained within island bounds
     function calculateTargetCenter(currentMenuWidget: Widget): real {
-        const wPos = root.horizontal
-            ? (widgetContainer.x + currentMenuWidget.x + currentMenuWidget.width / 2)
-            : (widgetContainer.y + currentMenuWidget.y + currentMenuWidget.height / 2);
+        const wPos = root.horizontal ? (widgetContainer.x + currentMenuWidget.x + currentMenuWidget.width / 2) : (widgetContainer.y + currentMenuWidget.y + currentMenuWidget.height / 2);
 
         const halfLen = root.menuMainLength / 2;
         return Math.max(halfLen, Math.min(wPos, root.length - halfLen));
@@ -55,60 +53,52 @@ CurvyBox {
 
     // Calculates length expansion respecting attached/bounded edge constraints
     function calculateAdditionalLength(currentMenuWidget: Widget): real {
-        if (!menuLoader.item || !currentMenuWidget) return 0;
+        if (!menuLoader.item || !currentMenuWidget)
+            return 0;
 
         const baseLen = Math.max(widgetContainer.requestedLength, panelMainLength);
 
         let containerOffset = 0;
         if (root.horizontal) {
-            if (root.isRight) containerOffset = baseLen - widgetContainer.width;
-            else if (root.isHCenter) containerOffset = (baseLen - widgetContainer.width) / 2;
+            if (root.isRight)
+                containerOffset = baseLen - widgetContainer.width;
+            else if (root.isHCenter)
+                containerOffset = (baseLen - widgetContainer.width) / 2;
         } else {
-            if (root.isBottom) containerOffset = baseLen - widgetContainer.height;
-            else if (root.isVCenter) containerOffset = (baseLen - widgetContainer.height) / 2;
+            if (root.isBottom)
+                containerOffset = baseLen - widgetContainer.height;
+            else if (root.isVCenter)
+                containerOffset = (baseLen - widgetContainer.height) / 2;
         }
 
-        const localWPos = root.horizontal
-            ? (currentMenuWidget.x + currentMenuWidget.width / 2)
-            : (currentMenuWidget.y + currentMenuWidget.height / 2);
+        const localWPos = root.horizontal ? (currentMenuWidget.x + currentMenuWidget.width / 2) : (currentMenuWidget.y + currentMenuWidget.height / 2);
         const wPos = containerOffset + localWPos;
 
         const halfMenu = menuMainLength / 2;
         const cornerMargin = cornerRadius * 1.5;
 
         // Check edge attachment status
-        const startAttached = root.horizontal
-            ? (root.attached.left || root.isLeft)
-            : (root.attached.top || root.isTop);
-        const endAttached = root.horizontal
-            ? (root.attached.right || root.isRight)
-            : (root.attached.bottom || root.isBottom);
+        const startAttached = root.horizontal ? (root.attached.left || root.isLeft) : (root.attached.top || root.isTop);
+        const endAttached = root.horizontal ? (root.attached.right || root.isRight) : (root.attached.bottom || root.isBottom);
 
         const startDeficit = Math.max(0, (halfMenu + cornerMargin) - wPos);
         const endDeficit = Math.max(0, (wPos + halfMenu + cornerMargin) - baseLen);
 
         let added = 0;
         // Suppress expansion on attached/bounded sides; only accumulate overflow on unattached sides
-        if (!startAttached) added += startDeficit;
-        if (!endAttached) added += endDeficit;
+        if (!startAttached)
+            added += startDeficit;
+        if (!endAttached)
+            added += endDeficit;
 
         return added;
     }
 
     readonly property real additionalSize: panelCrossSize
 
-    readonly property real baseMainLength: Math.max(
-        widgetContainer.requestedLength,
-        panelMainLength
-    )
+    readonly property real baseMainLength: Math.max(widgetContainer.requestedLength, panelMainLength)
 
-    readonly property real length: Math.max(
-        minLength,
-        Math.min(
-            baseMainLength + additionalLength + cornerRadius * 2,
-            maxLength
-        )
-    )
+    readonly property real length: Math.max(minLength, Math.min(baseMainLength + additionalLength + cornerRadius * 2, maxLength))
 
     WidgetContainer {
         id: widgetContainer
@@ -131,7 +121,19 @@ CurvyBox {
             root.showMenu(widget, menuComponent);
         }
 
+        // TODO: Find a way to anchor statically and use implicit length, this stuff is ugly
         states: [
+            State {
+                name: "filled"
+                AnchorChanges {
+                    target: widgetContainer
+
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                }
+            },
             State {
                 name: "locked"
                 AnchorChanges {
@@ -234,7 +236,7 @@ CurvyBox {
     }
 
     function hidePanel() {
-        panelLoader.sourceComponent = undefined
+        panelLoader.sourceComponent = undefined;
     }
 
     function hideMenu() {

@@ -45,6 +45,10 @@ TextWidget {
         }
 
         if (hasWifiConnection()) {
+            if (!wifiDevice.networks.values[0]) {
+                return disconnectedIcon
+            }
+
             // Between 0 and 1
             let strength = wifiDevice.networks.values[0].signalStrength
 
