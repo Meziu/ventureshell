@@ -7,6 +7,7 @@ Widget {
 
     property bool clickable: true
     signal clicked()
+    signal altClicked()
 
     Rectangle {
         id: background
@@ -20,8 +21,15 @@ Widget {
             hoverEnabled: true
             anchors.fill: parent
             cursorShape: Qt.PointingHandCursor
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
 
-            onClicked: root.clicked()
+            onClicked: (mouseEvent) => {
+                if (mouseEvent.button === Qt.LeftButton) {
+                    root.clicked()
+                } else if (mouseEvent.button === Qt.RightButton) {
+                    root.altClicked()
+                }
+            }
         }
 
         SmoothHoverOpacity on opacity {

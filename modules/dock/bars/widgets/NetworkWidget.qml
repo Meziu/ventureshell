@@ -11,8 +11,16 @@ TextWidget {
     property string vpnDisconnectedIcon: ""
     property string vpnInactiveIcon: "󰂭"
 
-    property bool showSignalStrength: true
+    property bool showSignalStrength: false
 
+    readonly property string wifiIcon: {
+        if (NetworkService.activeNetwork) {
+            const strength = Math.min(NetworkService.activeNetwork.signalStrength, 0.999999);
+            return wifiStrengthIcons[Math.floor(strength * wifiStrengthIcons.length)]
+        }
+
+        return wifiStrengthIcons[0]
+    }
     readonly property string vpnIcon: {
         if (NetworkService.vpnStatus === NetworkService.VpnStatus.Inactive) {
             return vpnInactiveIcon
@@ -35,15 +43,10 @@ TextWidget {
                 return disconnectedIcon
             }
 
-            // Between 0 and 1
-            let strength = NetworkService.activeNetwork.signalStrength
-
-            let icon = wifiStrengthIcons[Math.floor(strength * wifiStrengthIcons.length)]
-
             if (showSignalStrength) {
-                return Math.round(strength*100) + "% " + icon + vpnIcon
+                return Math.round(NetworkService.activeNetwork.signalStrength*100) + "% " + wifiIcon + vpnIcon
             } else {
-                return icon + vpnIcon
+                return wifiIcon + vpnIcon
             }
         }
 
@@ -55,7 +58,6 @@ TextWidget {
         NetworkMenu {}
     }
 
-    onClicked: {
-        menuRequested(menuComponent)
-    }
+    onClicked: menuRequested(menuComponent)
+    onAltClicked: NetworkService.toggleVpn()
 }

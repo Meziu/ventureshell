@@ -100,6 +100,10 @@ Singleton {
         }
     }
 
+    function toggleVpn() {
+        setVpn(!vpnActive)
+    }
+
     Process {
         id: initProc
         stdout: StdioCollector {

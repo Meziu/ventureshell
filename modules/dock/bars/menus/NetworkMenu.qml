@@ -8,7 +8,7 @@ import "../../../services"
 
 Menu {
     id: root
-    implicitWidth: 220
+    implicitWidth: 260
     implicitHeight: list.implicitHeight
 
     ColumnLayout {

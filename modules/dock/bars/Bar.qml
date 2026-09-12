@@ -7,6 +7,7 @@ import QtQuick.Layouts
 import "islands"
 import "../../config"
 import "../../shapes"
+import "../../services"
 
 PanelWindow {
     id: root
@@ -39,6 +40,11 @@ PanelWindow {
                 islands[i].hideAdditionalContent()
             }
         }
+    }
+
+    IdleInhibitor {
+        window: root
+        enabled: IdleInhibitorService.inhibit
     }
 
     Item {

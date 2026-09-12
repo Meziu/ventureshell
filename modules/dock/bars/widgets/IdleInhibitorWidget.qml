@@ -1,10 +1,13 @@
 import QtQuick
 
 import "../menus"
+import "../../../services"
 
 TextWidget {
     property string uninhibitedIcon: ""
     property string inhibitedIcon: ""
 
-    text: uninhibitedIcon
+    text: IdleInhibitorService.inhibit ? inhibitedIcon : uninhibitedIcon
+
+    onAltClicked: IdleInhibitorService.toggle()
 }
