@@ -1,17 +1,15 @@
 import QtQuick
 import QtQuick.Layouts
-import Quickshell.Networking
+import Quickshell
 
 import "../widgets"
 import "../../../controls"
+import "../../../services"
 
 Menu {
     id: root
+    implicitWidth: 220
     implicitHeight: list.implicitHeight
-
-    function setWifi(enabled: bool) {
-        Networking.wifiEnabled = enabled
-    }
 
     ColumnLayout {
         id: list
@@ -22,6 +20,8 @@ Menu {
         Item {
             implicitHeight: 32
             Layout.fillWidth: true
+            Layout.leftMargin: 18
+            Layout.rightMargin: 18
 
             TextWidget {
                 anchors {
@@ -43,19 +43,60 @@ Menu {
                     margins: 2
                 }
 
-                checked: Networking.wifiEnabled
+                checked: NetworkService.wifiEnabled
 
-                onCheckedChanged: root.setWifi(checked)
+                onCheckedChanged: NetworkService.setWifi(checked)
             }
         }
 
         Item {
-            implicitHeight: 10
+            implicitHeight: 8
         }
 
         TextWidget {
-            text: "Option 1"
+            text: NetworkService.activeNetwork? NetworkService.activeNetwork.name : "No connection"
+            clickable: false
             Layout.fillWidth: true
+        }
+
+        Item {
+            implicitHeight: 8
+        }
+
+        Item {
+            implicitHeight: 32
+            Layout.fillWidth: true
+            Layout.leftMargin: 18
+            Layout.rightMargin: 18
+
+            TextWidget {
+                anchors {
+                    top: parent.top
+                    bottom: parent.bottom
+                    left: parent.left
+                }
+
+                text: "WireguardVPN"
+                fontSize: 14
+                clickable: false
+            }
+
+            Switch {
+                anchors {
+                    top: parent.top
+                    bottom: parent.bottom
+                    right: parent.right
+                    margins: 2
+                }
+
+                checked: NetworkService.vpnActive
+
+                onCheckedChanged: NetworkService.setVpn(checked)
+            }
+        }
+
+        Item {
+            implicitHeight: 16
         }
 
         Rectangle {
@@ -67,10 +108,10 @@ Menu {
         }
 
         TextWidget {
-            text: "Option 2"
+            text: "Open NetworkManager"
             Layout.fillWidth: true
 
-            onClicked: exited()
+            onClicked: Quickshell.execDetached("nm-connection-editor")
         }
     }
 }

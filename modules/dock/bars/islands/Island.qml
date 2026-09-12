@@ -26,7 +26,7 @@ CurvyBox {
     readonly property bool isHCenter: !(root.position & Position.Left) && !(root.position & Position.Right)
     readonly property bool isVCenter: !(root.position & Position.Top) && !(root.position & Position.Bottom)
 
-    property real transitionTime: 150
+    property real transitionTime: 200
 
     protrusionSide: Position.opposite(Position.cardinal(position, horizontal))
 
