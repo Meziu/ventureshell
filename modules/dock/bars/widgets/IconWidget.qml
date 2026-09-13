@@ -8,17 +8,19 @@ ClickableWidget {
     id: root
 
     required property url source
+    required property real iconSize
     property Component effect: null
 
-    // TODO: smarter than this please
-    requestedLength: horizontal ? height : width
+    requestedLength: iconSize
 
     Image {
         id: image
         anchors.fill: parent
         source: root.source
-        sourceSize.width: 128
-        sourceSize.height: 128
+
+        sourceSize.width: root.iconSize
+        sourceSize.height: root.iconSize
+
         fillMode: Image.PreserveAspectFit
         mipmap: true
 

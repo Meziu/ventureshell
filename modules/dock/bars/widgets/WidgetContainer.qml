@@ -1,29 +1,26 @@
 import QtQuick
 import QtQuick.Layouts
 
-import "../widgets"
-import "../panels"
-
 GridLayout {
     id: root
     clip: true
+    anchors.margins: root.margins
 
-    anchors.margins: 4
-
-    property list<Widget> widgets
     required property bool horizontal
     property real spacing: 10
+    property real margins: 4
 
-    property real requestedLength: horizontal ? implicitWidth : implicitHeight
+    property real requestedLength: (horizontal ? implicitWidth : implicitHeight) + margins * 2
 
-    signal panelRequested(widget: Widget, panel: Component)
-    signal menuRequested(widget: Widget, menu: Component)
+    signal panelRequested(widget: var, panel: Component)
+    signal menuRequested(widget: var, menu: Component)
 
-    children: root.widgets
+    // Declarative child placement
+    default property alias widgets: root.children
 
     flow: horizontal ? GridLayout.LeftToRight : GridLayout.TopToBottom
-    rows: horizontal ? 1 : root.widgets.length
-    columns: horizontal ? root.widgets.length : 1
+    rows: horizontal ? 1 : Math.max(1, root.visibleChildren.length)
+    columns: horizontal ? Math.max(1, root.visibleChildren.length) : 1
 
     rowSpacing: spacing
     columnSpacing: spacing
@@ -31,11 +28,16 @@ GridLayout {
     uniformCellHeights: horizontal
     uniformCellWidths: !horizontal
 
-    Repeater {
-        model: root.widgets
+    // Fully declarative signal wiring for all visible children
+    Instantiator {
+        model: root.visibleChildren
 
         Connections {
-            target: modelData // current widget
+            required property var modelData
+            target: modelData
+
+            // Connect when you can.
+            ignoreUnknownSignals: true
 
             function onPanelRequested(panel) {
                 root.panelRequested(modelData, panel)

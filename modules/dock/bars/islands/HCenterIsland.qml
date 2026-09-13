@@ -31,5 +31,7 @@ Island {
         Layout.fillWidth: true
     }
 
-    SessionControlWidget {}
+    SessionControlWidget {
+        iconSize: 40
+    }
 }
