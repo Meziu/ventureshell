@@ -9,5 +9,6 @@ TextWidget {
 
     text: IdleInhibitorService.inhibit ? inhibitedIcon : uninhibitedIcon
 
+    onClicked: altClicked()
     onAltClicked: IdleInhibitorService.toggle()
 }

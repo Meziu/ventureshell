@@ -7,6 +7,7 @@ import "../../../shapes"
 import "../widgets"
 
 Island {
+    horizontal: true
     widgetsFillIsland: false
 
     attached: Attach {

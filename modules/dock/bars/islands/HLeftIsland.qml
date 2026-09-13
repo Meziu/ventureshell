@@ -8,6 +8,7 @@ import "../widgets"
 Island {
     id: root
 
+    horizontal: true
     widgetsFillIsland: true
 
     anchors {

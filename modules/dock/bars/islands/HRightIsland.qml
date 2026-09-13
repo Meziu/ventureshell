@@ -10,6 +10,7 @@ import "../menus"
 Island {
     id: root
 
+    horizontal: true
     widgetsFillIsland: false
 
     anchors {
@@ -25,6 +26,10 @@ Island {
         right: true
         bottom: false
     }
+
+    TrayWidget {}
+
+    AudioWidget {}
 
     IdleInhibitorWidget {}
 

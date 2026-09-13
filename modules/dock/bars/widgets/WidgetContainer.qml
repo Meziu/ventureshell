@@ -10,8 +10,8 @@ GridLayout {
 
     anchors.margins: 4
 
-    default property list<Widget> widgets
-    property bool horizontal: true
+    default property list<Item> widgets
+    required property bool horizontal
     property real spacing: 10
 
     property real requestedLength: horizontal ? implicitWidth : implicitHeight
@@ -34,8 +34,8 @@ GridLayout {
             const w = widgets[i]
             w.Layout.row = Qt.binding(() => root.horizontal ? 0 : i)
             w.Layout.column = Qt.binding(() => root.horizontal ? i : 0)
-            w.panelRequested.connect(pc => panelRequested(w, pc))
-            w.menuRequested.connect(mc => menuRequested(w, mc))
+            w.panelRequested?.connect(pc => panelRequested(w, pc))
+            w.menuRequested?.connect(mc => menuRequested(w, mc))
         }
     }
 

@@ -18,7 +18,7 @@ ClickableWidget {
     //
     // sometimes the text is wrongly assumed to be smaller and elides
     // This wrongly supercedes the usual requestedLength made with content size, causing visual bugs
-    requestedLength: Math.max(Layout.preferredHeight, textMetrics.width + padding * 2)
+    requestedLength: Math.max(Layout.preferredHeight, textMetrics.width + padding * 4)
 
     implicitWidth: requestedLength
     implicitHeight: textMetrics.height + padding * 2

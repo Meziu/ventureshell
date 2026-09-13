@@ -11,6 +11,7 @@ import "../widgets"
 Island {
     id: root
 
+    horizontal: false
     widgetsFillIsland: true
 
     attached: Attach {
