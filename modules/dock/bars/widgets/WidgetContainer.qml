@@ -10,7 +10,6 @@ GridLayout {
 
     anchors.margins: 4
 
-    default property list<Item> widgets
     required property bool horizontal
     property real spacing: 10
 
@@ -19,25 +18,29 @@ GridLayout {
     signal panelRequested(widget: Widget, panel: Component)
     signal menuRequested(widget: Widget, menu: Component)
 
-    rows: root.horizontal ? 1 : widgets.length
-    columns: root.horizontal ? widgets.length : 1
+    flow: horizontal ? GridLayout.LeftToRight : GridLayout.TopToBottom
+    rows: horizontal ? 1 : widgets.length
+    columns: horizontal ? widgets.length : 1
 
     rowSpacing: spacing
     columnSpacing: spacing
-    children: widgets
 
     uniformCellHeights: horizontal
     uniformCellWidths: !horizontal
 
-    function syncWidgets() {
-        for (let i = 0; i < widgets.length; i++) {
-            const w = widgets[i]
-            w.Layout.row = Qt.binding(() => root.horizontal ? 0 : i)
-            w.Layout.column = Qt.binding(() => root.horizontal ? i : 0)
-            w.panelRequested?.connect(pc => panelRequested(w, pc))
-            w.menuRequested?.connect(mc => menuRequested(w, mc))
+    Repeater {
+        model: root.widgets
+
+        Connections {
+            target: modelData // current widget
+
+            function onPanelRequested(panel) {
+                root.panelRequested(modelData, panel)
+            }
+
+            function onMenuRequested(menu) {
+                root.menuRequested(modelData, menu)
+            }
         }
     }
-
-    onWidgetsChanged: syncWidgets()
 }

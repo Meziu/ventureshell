@@ -113,7 +113,7 @@ CurvyBox {
         }
 
         horizontal: root.horizontal
-        widgets: root.widgets
+        children: root.widgets
 
         onPanelRequested: (widget, panelComponent) => {
             root.showPanel(widget, panelComponent);
