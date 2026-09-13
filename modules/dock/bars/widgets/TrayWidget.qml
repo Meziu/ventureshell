@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import Quickshell.Services.SystemTray
 
 import "../menus"
 import "../../../services"
@@ -15,16 +16,24 @@ Widget {
         anchors.fill: parent
         horizontal: root.horizontal
         margins: 2
+        spacing: 4
 
         Repeater {
-            model: ["file:assets/images/outerwilds/planets/AmberTwin.png"]
+            model: SystemTray.items
 
             IconWidget {
-                required property string modelData
-                source: modelData
+                required property SystemTrayItem modelData
+                source: modelData.icon
 
-                iconSize: 40
+                iconSize: 20
             }
         }
+    }
+
+    Rectangle {
+        anchors.fill: container
+        anchors.margins: -2
+        opacity: 0.15
+        radius: height/2
     }
 }
