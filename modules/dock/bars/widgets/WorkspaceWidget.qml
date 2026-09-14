@@ -37,8 +37,6 @@ Widget {
         columns: root.horizontal ? -1 : 1
         uniformCellHeights: true
         uniformCellWidths: true
-        rowSpacing: -2
-        columnSpacing: -2
 
         Repeater {
             model: monitorWorkspaces
