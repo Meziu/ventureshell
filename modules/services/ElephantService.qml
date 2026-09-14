@@ -10,27 +10,16 @@ Singleton {
 
     property list<var> providers
 
-    onProvidersChanged: {
-        providers.map((p) => console.log(p))
-    }
-
-    Socket {
-        id: elephantSocket
-
-        connected: true
-        path: Quickshell.env("XDG_RUNTIME_DIR") + "/elephant/elephant.sock"
+    Process {
+        id: queryProc
 
         signal results(r: list<var>)
 
-        parser: SplitParser {
-            splitMarker: "\n"
-
-            onRead: data => {
-                console.log(data)
-
-                let r = data.split("\n").slice(0, -1); // last item is empty because elephant double returns at the end
+        stdout: StdioCollector {
+            onStreamFinished: {
+                let r = this.text.split("\n").slice(0, -1); // last item is empty because elephant double returns at the end
                 try {
-                    elephantSocket.results(r.map(e => JSON.parse(e)["item"]));
+                    queryProc.results(r.map(e => JSON.parse(e)["item"]));
                 } catch (e) {
                     console.error("Failed to parse JSON output:", e);
                 }
@@ -41,14 +30,20 @@ Singleton {
     function query(providers: list<string>, query: string, limit: int, callback: var) {
         let q = [providers.join(","), query, limit].join(";");
 
-        elephantSocket.write(q)
-        elephantSocket.flush()
-
-        /*var handler = function (results) {
-            elephantSocket.results.disconnect(handler);
+        var handler = function (results) {
+            queryProc.results.disconnect(handler);
             callback(results);
         };
-        elephantSocket.results.connect(handler);*/
+        queryProc.results.connect(handler);
+
+        queryProc.exec(["elephant", "query", "--json", q]);
+    }
+
+    function activate(provider: string, identifier: string, action: string, query: string, arguments: list<string>) {
+        let a = [provider, identifier, action, query, arguments.join(",")].join(";");
+
+        // activations can't be cancelled nor must be waited
+        Quickshell.execDetached(["elephant", "activate", a]);
     }
 
     function queryProviders() {
