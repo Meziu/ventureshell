@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 
 import "../../../assetloaders"
+import "../../../services"
 import "../widgets"
 
 Panel {
@@ -40,6 +41,6 @@ Panel {
             forceActiveFocus();
         }
 
-        onAccepted: exited()
+        onAccepted: ElephantService.queryProviders()
     }
 }
