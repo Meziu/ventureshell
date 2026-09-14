@@ -25,17 +25,19 @@ Widget {
                 id: iconWidget
                 required property SystemTrayItem modelData
 
+                signal exited()
+
                 source: modelData.icon
                 iconSize: 20
 
-                onClicked: modelData.activate()
-
-                // Secondary click triggers the menu anchor
-                onAltClicked: {
+                onClicked: {
                     if (modelData.hasMenu) {
                         root.menuRequested(menuComponent);
                     }
                 }
+                onAltClicked: modelData.activate()
+
+                Component.onDestruction: iconWidget.exited()
 
                 Component {
                     id: menuComponent
@@ -44,6 +46,14 @@ Widget {
                         id: menu
 
                         property SystemTrayItem trayItem: iconWidget.modelData
+
+                        Connections {
+                            target: iconWidget
+
+                            function onExited() {
+                                menu.exited()
+                            }
+                        }
 
                         QsMenuOpener {
                             id: opener
@@ -62,9 +72,7 @@ Widget {
                                 model: opener.children
 
                                 RowLayout {
-                                    Layout.preferredHeight: modelData.isSeparator ? 0 : -1
-                                    Layout.topMargin: 2
-                                    Layout.bottomMargin: 2
+                                    Layout.preferredHeight: modelData.isSeparator ? 4 : -1
                                     spacing: 4
 
                                     IconImage {
