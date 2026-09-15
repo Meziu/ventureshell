@@ -5,6 +5,8 @@ import "../menus"
 import "../../../services"
 
 TextWidget {
+    id: root
+
     property string muteIcon: ""
     property list<string> audioIcons: ["", "", ""]
 
@@ -17,4 +19,14 @@ TextWidget {
 
         return Math.round(volume * 100) + "% " + audioIcons[Math.floor(volume * audioIcons.length)]
     }
+
+    Component {
+        id: menuComponent
+
+        AudioMenu {}
+    }
+
+    onClicked: root.menuRequested(menuComponent)
+    onAltClicked: AudioService.toggleDefaultOutputMuted()
+
 }
