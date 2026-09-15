@@ -152,6 +152,7 @@ Panel {
                 MouseArea {
                     anchors.fill: parent
                     hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
                     onEntered: root.currentIndex = delegateRoot.index
                     onClicked: {
                         root.currentIndex = delegateRoot.index;
