@@ -36,6 +36,4 @@ Island {
     PowerWidget {}
 
     NetworkWidget {}
-
-    NotificationsWidget {}
 }

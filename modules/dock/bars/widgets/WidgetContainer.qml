@@ -15,8 +15,7 @@ GridLayout {
     signal panelRequested(widget: var, panel: Component)
     signal menuRequested(widget: var, menu: Component)
 
-    // Declarative child placement
-    default property alias widgets: root.children
+    default property alias widgets: root.data
 
     flow: horizontal ? GridLayout.LeftToRight : GridLayout.TopToBottom
     rows: horizontal ? 1 : Math.max(1, root.visibleChildren.length)
@@ -36,7 +35,7 @@ GridLayout {
             required property var modelData
             target: modelData
 
-            // Connect when you can.
+            // Connect when possible
             ignoreUnknownSignals: true
 
             function onPanelRequested(panel) {

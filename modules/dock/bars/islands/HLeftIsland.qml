@@ -25,6 +25,8 @@ Island {
         bottom: false
     }
 
+    NotificationsWidget {}
+
     WindowNameWidget {
         id: windowName
         Layout.fillWidth: true
