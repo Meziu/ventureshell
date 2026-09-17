@@ -12,8 +12,6 @@ Singleton {
         onNotification: notification => {
             notification.tracked = true
 
-            console.log(notification.summary, notification.body)
-
             root.notification(notification)
         }
     }

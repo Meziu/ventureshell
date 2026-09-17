@@ -11,19 +11,17 @@ ClickableWidget {
     property int horizontalAlignment: Text.AlignHCenter
     property int verticalAlignment: Text.AlignVCenter
     property real padding: 4
-    property bool elide: true
+    property bool elide: wrapMode === Text.NoWrap
     property font font: OuterWildsFont.uiWithSize(fontSize)
+    property int wrapMode: Text.NoWrap
 
-    // Length is AT MINIMUM a square (done for single character text as logos)
-    //
-    // sometimes the text is wrongly assumed to be smaller and elides
-    // This wrongly supercedes the usual requestedLength made with content size, causing visual bugs
-    requestedLength: Math.max(Layout.preferredHeight, textMetrics.width + padding * 4)
+    requestedLength: wrapMode === Text.NoWrap
+        ? Math.max(Layout.preferredHeight, textMetrics.width + padding * 4)
+        : 0
 
-    implicitWidth: requestedLength
+    implicitWidth: requestedLength > 0 ? requestedLength : textMetrics.width + padding * 2
     implicitHeight: textMetrics.height + padding * 2
 
-    // To avoid binding loops
     TextMetrics {
         id: textMetrics
         font: root.font
@@ -31,13 +29,15 @@ ClickableWidget {
     }
 
     Text {
-        anchors.fill: parent
+        width: root.width
+        height: root.height
 
         text: root.text
         horizontalAlignment: root.horizontalAlignment
         verticalAlignment: root.verticalAlignment
         elide: root.elide ? Text.ElideRight : Text.ElideNone
         padding: root.padding
+        wrapMode: root.wrapMode
         clip: true
 
         font: textMetrics.font

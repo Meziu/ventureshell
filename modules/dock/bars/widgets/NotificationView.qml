@@ -1,0 +1,93 @@
+import QtQuick
+import QtQuick.Layouts
+import Quickshell.Services.Notifications
+
+import "../../../config"
+import "../widgets"
+
+// Not to be confused with the NotificationsWidget
+ClickableWidget {
+    requestedLength: 400
+    implicitWidth: 400
+    implicitHeight: 100
+    anchors.fill: parent
+
+    required property Notification notification
+
+    signal exited()
+
+    ColumnLayout {
+        id: layout
+
+        anchors.fill: parent
+        anchors.margins: 2
+
+        RowLayout {
+            Layout.preferredHeight: 14
+
+            IconWidget {
+                Layout.fillHeight: true
+                visible: notification.appIcon !== ""
+
+                iconSize: height
+                source: notification.appIcon
+            }
+
+            TextWidget {
+                id: title
+
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+
+                clickable: true
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignLeft
+
+                text: notification.summary
+                fontSize: 12
+            }
+        }
+
+        RowLayout {
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+
+            TextWidget {
+                id: body
+
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+
+                clickable: false
+                verticalAlignment: Text.AlignTop
+                horizontalAlignment: Text.AlignLeft
+                wrapMode: Text.WordWrap
+                elide: false
+
+                text: notification.body
+                fontSize: 10
+            }
+
+            Image {
+                id: image
+
+                Layout.fillHeight: true
+                Layout.preferredWidth: height
+                visible: notification.image !== ""
+
+                source: notification.image
+                sourceSize.width: 128
+                sourceSize.height: 128
+
+                fillMode: Image.PreserveAspectCrop
+                verticalAlignment: Image.AlignTop
+                horizontalAlignment: Image.AlignLeft
+            }
+        }
+    }
+
+    onClicked: {
+        notification.dismiss()
+        exited()
+    }
+}

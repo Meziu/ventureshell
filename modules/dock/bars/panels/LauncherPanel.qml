@@ -132,7 +132,7 @@ Panel {
 
                         source: {
                             if (rawIcon === "") return "";
-                            if (rawIcon.startsWith("/") || rawIcon.startsWith("file://") || rawIcon.startsWith("image://"))
+                            if (rawIcon.startsWith("/") || rawIcon.startsWith("file:") || rawIcon.startsWith("image:"))
                                 return rawIcon;
 
                             return Quickshell.iconPath(rawIcon, rawIcon + "-symbolic");

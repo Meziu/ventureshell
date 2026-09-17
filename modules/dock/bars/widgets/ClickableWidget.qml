@@ -6,6 +6,7 @@ Widget {
     id: root
 
     property bool clickable: true
+    property bool isHovered: mouseArea.containsMouse
     signal clicked()
     signal altClicked()
 

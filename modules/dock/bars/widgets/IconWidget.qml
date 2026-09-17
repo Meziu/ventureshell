@@ -4,6 +4,7 @@ import QtQuick.Effects
 
 import "../../../effects"
 
+// TODO: Merge this with the IconImage widget from Quickshell to have a singular base widget
 ClickableWidget {
     id: root
 
