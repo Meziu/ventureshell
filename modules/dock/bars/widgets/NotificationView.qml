@@ -68,16 +68,16 @@ ClickableWidget {
                 fontSize: 10
             }
 
-            Image {
+            IconWidget {
                 id: image
 
                 Layout.fillHeight: true
                 Layout.preferredWidth: height
+
                 visible: notification.image !== ""
 
                 source: notification.image
-                sourceSize.width: 128
-                sourceSize.height: 128
+                iconSize: 128
 
                 fillMode: Image.PreserveAspectCrop
                 verticalAlignment: Image.AlignTop

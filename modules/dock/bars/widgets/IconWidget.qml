@@ -1,15 +1,19 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Effects
+import Quickshell
 
 import "../../../effects"
 
-// TODO: Merge this with the IconImage widget from Quickshell to have a singular base widget
 ClickableWidget {
     id: root
 
-    required property url source
+    required property string source
     required property real iconSize
+    property bool smooth: false
+    property int fillMode: Image.PreserveAspectFit
+    property int verticalAlignment: Image.AlignVCenter
+    property int horizontalAlignment: Image.AlignHCenter
     property Component effect: null
 
     requestedLength: iconSize
@@ -17,13 +21,21 @@ ClickableWidget {
     Image {
         id: image
         anchors.fill: parent
-        source: root.source
+        source: {
+            if (root.source === "") return "";
+            if (root.source.startsWith("/") || root.source.startsWith("file:") || root.source.startsWith("image:"))
+                return root.source;
+
+            return Quickshell.iconPath(root.source, root.source + "-symbolic");
+        }
 
         sourceSize.width: root.iconSize
         sourceSize.height: root.iconSize
 
-        fillMode: Image.PreserveAspectFit
-        mipmap: true
+        fillMode: root.fillMode
+        mipmap: root.smooth
+        verticalAlignment: root.verticalAlignment
+        horizontalAlignment: root.horizontalAlignment
 
         layer.enabled: root.effect ? true : false
         layer.textureSize: Qt.size(width * 4, height * 4)

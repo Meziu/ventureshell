@@ -2,7 +2,6 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell
-import Quickshell.Widgets
 
 import "../../../assetloaders"
 import "../../../services"
@@ -119,26 +118,14 @@ Panel {
                     id: row
                     anchors.fill: parent
 
-                    Image {
+                    IconWidget {
                         id: iconImg
-                        sourceSize.width: 64
-                        sourceSize.height: 64
                         Layout.fillHeight: true
                         Layout.margins: 2
-
-                        fillMode: Image.PreserveAspectFit
-
-                        property string rawIcon: delegateRoot.modelData["icon"] || ""
-
-                        source: {
-                            if (rawIcon === "") return "";
-                            if (rawIcon.startsWith("/") || rawIcon.startsWith("file:") || rawIcon.startsWith("image:"))
-                                return rawIcon;
-
-                            return Quickshell.iconPath(rawIcon, rawIcon + "-symbolic");
-                        }
-
                         visible: source !== ""
+
+                        source: delegateRoot.modelData["icon"] || ""
+                        iconSize: 64
                     }
 
                     TextWidget {

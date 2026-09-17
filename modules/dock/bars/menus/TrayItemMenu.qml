@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Widgets
 import Quickshell.Services.SystemTray
 
 import "../widgets"
@@ -40,11 +39,10 @@ Menu {
                 Layout.preferredHeight: modelData.isSeparator ? 4 : -1
                 spacing: 4
 
-                IconImage {
-                    source: modelData.icon
-                    implicitWidth: 16
-                    implicitHeight: 16
+                IconWidget {
                     visible: modelData.icon !== ""
+                    source: modelData.icon
+                    iconSize: 16
                 }
 
                 TextWidget {
