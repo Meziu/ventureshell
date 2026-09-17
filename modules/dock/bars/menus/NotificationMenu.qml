@@ -8,7 +8,7 @@ import "../widgets"
 Menu {
     id: root
     implicitWidth: 400
-    implicitHeight: 100
+    implicitHeight: 120
 
     required property Notification notification
 

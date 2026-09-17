@@ -29,6 +29,7 @@ ClickableWidget {
                 Layout.fillHeight: true
                 visible: notification.appIcon !== ""
 
+                clickable: false
                 iconSize: height
                 source: notification.appIcon
             }
@@ -39,7 +40,7 @@ ClickableWidget {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
 
-                clickable: true
+                clickable: false
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignLeft
 
@@ -75,6 +76,7 @@ ClickableWidget {
                 Layout.preferredWidth: height
 
                 visible: notification.image !== ""
+                clickable: false
 
                 source: notification.image
                 iconSize: 128

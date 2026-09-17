@@ -14,6 +14,7 @@ ClickableWidget {
     property bool elide: wrapMode === Text.NoWrap
     property font font: OuterWildsFont.uiWithSize(fontSize)
     property int wrapMode: Text.NoWrap
+    property int textFormat: Text.PlainText
 
     requestedLength: wrapMode === Text.NoWrap
         ? Math.max(Layout.preferredHeight, textMetrics.width + padding * 4)
@@ -38,6 +39,7 @@ ClickableWidget {
         elide: root.elide ? Text.ElideRight : Text.ElideNone
         padding: root.padding
         wrapMode: root.wrapMode
+        textFormat: root.textFormat
         clip: true
 
         font: textMetrics.font
