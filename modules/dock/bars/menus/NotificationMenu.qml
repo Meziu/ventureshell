@@ -3,16 +3,28 @@ import QtQuick.Layouts
 import Quickshell.Services.Notifications
 
 import "../../../config"
+import "../../../services"
 import "../widgets"
 
 Menu {
     id: root
-    implicitWidth: 400
-    implicitHeight: 120
+    implicitWidth: column.implicitWidth
+    implicitHeight: column.implicitHeight
 
-    required property Notification notification
+    ColumnLayout {
+        id: column
+        anchors.fill: parent
 
-    NotificationView {
-        notification: root.notification
+        Repeater {
+            model: NotificationService.trackedNotifications
+
+            NotificationView {
+                Layout.fillWidth: true
+
+                required property Notification modelData
+
+                notification: modelData
+            }
+        }
     }
 }

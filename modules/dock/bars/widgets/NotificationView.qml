@@ -10,11 +10,8 @@ ClickableWidget {
     requestedLength: 400
     implicitWidth: 400
     implicitHeight: 100
-    anchors.fill: parent
 
     required property Notification notification
-
-    signal exited()
 
     ColumnLayout {
         id: layout
@@ -80,16 +77,11 @@ ClickableWidget {
 
                 source: notification.image
                 iconSize: 128
-
-                fillMode: Image.PreserveAspectCrop
-                verticalAlignment: Image.AlignTop
-                horizontalAlignment: Image.AlignLeft
             }
         }
     }
 
     onClicked: {
         notification.dismiss()
-        exited()
     }
 }

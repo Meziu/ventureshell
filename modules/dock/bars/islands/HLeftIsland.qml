@@ -25,7 +25,7 @@ Island {
         bottom: false
     }
 
-    NotificationsWidget {}
+    NotificationWidget {}
 
     WindowNameWidget {
         id: windowName
