@@ -46,8 +46,8 @@ PanelWindow {
 
         onCleared: {
             for (let i = 0; i < islands.length; i++) {
-                // don't close panels/menus marked as persistent
-                islands[i].hideAdditionalContent(false);
+                // don't close popups marked as persistent
+                islands[i].hidePopup(false);
             }
         }
     }

@@ -6,8 +6,7 @@ import "../panels"
 Item {
     id: root
 
-    signal panelRequested(Component panelComponent)
-    signal menuRequested(Component menuComponent)
+    signal popupRequested(popup: Component)
 
     property bool horizontal: true
     required property real requestedLength

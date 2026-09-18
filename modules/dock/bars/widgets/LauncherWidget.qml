@@ -18,6 +18,6 @@ TextWidget {
     }
 
     onClicked: {
-        root.panelRequested(launcherPanelComponent)
+        root.popupRequested(launcherPanelComponent)
     }
 }

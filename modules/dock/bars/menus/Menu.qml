@@ -1,20 +1,9 @@
 import QtQuick
 import QtQuick.Layouts
 
+import "../panels"
 import "../widgets"
 
-import QtQuick
-import QtQuick.Layouts
+Panel {
 
-import "../widgets"
-
-Item {
-    anchors.fill: parent
-    implicitWidth: 140
-    implicitHeight: 100
-    clip: true
-
-    property bool persistent: false
-
-    signal exited()
 }

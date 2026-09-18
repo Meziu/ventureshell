@@ -4,14 +4,14 @@ import QtQuick.Layouts
 Item {
     id: root
 
-    required property bool fillSpace
-    required property real requestedLength
-    required property real requestedSize
+    property bool fillSpace: false
     property bool persistent: false
     property bool horizontal: true
 
-    implicitWidth: horizontal ? requestedLength : requestedSize
-    implicitHeight: horizontal ? requestedSize : requestedLength
+    anchors.fill: parent
+    implicitWidth: 140
+    implicitHeight: 100
+    clip: true
 
     signal exited()
 }

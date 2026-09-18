@@ -30,33 +30,32 @@ CurvyBox {
 
     protrusionSide: Position.opposite(Position.cardinal(position, horizontal))
 
-    // Enables position behavior ONLY during menu-to-menu switching
     property bool animateProtrusionPosition: false
 
-    // Orientation-aware dimension mapping for Panel and Menu
-    readonly property real panelMainLength: panelLoader.item ? (horizontal ? panelLoader.item.requestedLength : panelLoader.item.requestedSize) : 0
-    readonly property real panelCrossSize: panelLoader.item ? (horizontal ? panelLoader.item.requestedSize : panelLoader.item.requestedLength) : 0
+    readonly property real popupMainLength: popupLoader.item ? (horizontal ? popupLoader.requestedLength : popupLoader.requestedSize) : 0
+    readonly property real popupCrossSize: popupLoader.item ? (horizontal ? popupLoader.requestedSize : popupLoader.requestedLength) : 0
 
-    readonly property real menuMainLength: menuLoader.item ? (horizontal ? menuLoader.requestedLength : menuLoader.requestedSize) : 0
-    readonly property real menuCrossSize: menuLoader.item ? (horizontal ? menuLoader.requestedSize : menuLoader.requestedLength) : 0
+    readonly property bool popupFillsSpace: popupLoader.item !== null && popupLoader.item.fillSpace
 
     property real currentTargetCenter: 0
     property real additionalLength: 0
 
-    // Calculates ideal menu center point constrained within island bounds
-    function calculateTargetCenter(currentMenuWidget: Widget): real {
-        const wPos = root.horizontal ? (widgetContainer.x + currentMenuWidget.x + currentMenuWidget.width / 2) : (widgetContainer.y + currentMenuWidget.y + currentMenuWidget.height / 2);
+    function calculateTargetCenter(widget: Widget): real {
+        // Can't work after the item gets destroyed
+        //if (popupFillsSpace)
+        //    return root.length / 2;
 
-        const halfLen = root.menuMainLength / 2;
+        const wPos = root.horizontal ? (widgetContainer.x + widget.x + widget.width / 2) : (widgetContainer.y + widget.y + widget.height / 2);
+
+        const halfLen = root.popupMainLength / 2;
         return Math.max(halfLen, Math.min(wPos, root.length - halfLen));
     }
 
-    // Calculates length expansion respecting attached/bounded edge constraints
-    function calculateAdditionalLength(currentMenuWidget: Widget): real {
-        if (!menuLoader.item || !currentMenuWidget)
+    function calculateAdditionalLength(widget: Widget): real {
+        if (!popupLoader.item || !widget || popupLoader.item.fillSpace)
             return 0;
 
-        const baseLen = Math.max(widgetContainer.requestedLength, panelMainLength);
+        const baseLen = Math.max(widgetContainer.requestedLength, popupMainLength);
 
         let containerOffset = 0;
         if (root.horizontal) {
@@ -71,18 +70,18 @@ CurvyBox {
                 containerOffset = (baseLen - widgetContainer.height) / 2;
         }
 
-        const localWPos = root.horizontal ? (currentMenuWidget.x + currentMenuWidget.width / 2) : (currentMenuWidget.y + currentMenuWidget.height / 2);
+        const localWPos = root.horizontal ? (widget.x + widget.width / 2) : (widget.y + widget.height / 2);
         const wPos = containerOffset + localWPos;
 
-        const halfMenu = menuMainLength / 2;
+        const halfPopup = popupMainLength / 2;
         const cornerMargin = cornerRadius * 1.5;
 
         // Check edge attachment status
         const startAttached = root.horizontal ? (root.attached.left || root.isLeft) : (root.attached.top || root.isTop);
         const endAttached = root.horizontal ? (root.attached.right || root.isRight) : (root.attached.bottom || root.isBottom);
 
-        const startDeficit = Math.max(0, (halfMenu + cornerMargin) - wPos);
-        const endDeficit = Math.max(0, (wPos + halfMenu + cornerMargin) - baseLen);
+        const startDeficit = Math.max(0, (halfPopup + cornerMargin) - wPos);
+        const endDeficit = Math.max(0, (wPos + halfPopup + cornerMargin) - baseLen);
 
         let added = 0;
         // Suppress expansion on attached/bounded sides; only accumulate overflow on unattached sides
@@ -94,10 +93,7 @@ CurvyBox {
         return added;
     }
 
-    readonly property real additionalSize: panelCrossSize
-
-    readonly property real baseMainLength: Math.max(widgetContainer.requestedLength, panelMainLength)
-
+    readonly property real baseMainLength: Math.max(widgetContainer.requestedLength, popupFillsSpace ? popupMainLength : 0)
     readonly property real length: Math.max(minLength, Math.min(baseMainLength + additionalLength + cornerRadius * 2, maxLength))
 
     WidgetContainer {
@@ -115,12 +111,8 @@ CurvyBox {
         horizontal: root.horizontal
         widgets: root.widgets
 
-        onPanelRequested: (widget, panelComponent) => {
-            root.showPanel(widget, panelComponent);
-        }
-
-        onMenuRequested: (widget, menuComponent) => {
-            root.showMenu(widget, menuComponent);
+        onPopupRequested: (widget, panelComponent) => {
+            root.showPopup(widget, panelComponent);
         }
 
         // TODO: Hacky calculations that have no actual roots in reality
@@ -129,120 +121,59 @@ CurvyBox {
     }
     property alias widgetContainer: widgetContainer
 
-    Loader {
-        id: panelLoader
-
-        readonly property bool fillSpace: item && item.fillSpace
-
-        anchors {
-            margins: 4
-
-            top: root.horizontal ? (isBottom ? parent.top : widgetContainer.bottom) : ((fillSpace || isTop) ? parent.top : undefined)
-            bottom: root.horizontal ? (isTop ? parent.bottom : widgetContainer.top) : ((fillSpace || isBottom) ? parent.bottom : undefined)
-            left: !root.horizontal ? (isRight ? parent.left : widgetContainer.right) : ((fillSpace || isLeft) ? parent.left : undefined)
-            right: !root.horizontal ? (isLeft ? parent.right : widgetContainer.left) : ((fillSpace || isRight) ? parent.right : undefined)
-        }
-
-        onLoaded: {
-            panelLoader.item.exited.connect(() => {
-                root.hidePanel(true);
-            });
-        }
-    }
-
     protrusionContent: Loader {
-        id: menuLoader
+        id: popupLoader
 
         anchors.fill: parent
 
-        property real requestedPosition: {
-            const currentLen = root.protrusionLength;
-            const center = root.currentTargetCenter;
-
-            return center - (currentLen / 2);
-        }
-
-        property real requestedLength: menuLoader.item ? menuLoader.item.implicitWidth : 0
-        property real requestedSize: menuLoader.item ? menuLoader.item.implicitHeight : 0
+        property real requestedPosition: root.currentTargetCenter - (root.protrusionLength / 2)
+        property real requestedLength: popupLoader.item ? popupLoader.item.implicitWidth : 0
+        property real requestedSize: popupLoader.item ? popupLoader.item.implicitHeight : 0
 
         onLoaded: {
-            menuLoader.item.exited.connect(() => {
-                root.hideMenu(true);
+            popupLoader.item.exited.connect(() => {
+                root.hidePopup(true);
             });
         }
     }
 
-    // Common preparation helper enforcing mutual exclusivity
-    function prepareContent(targetLoader: Loader, component: Component): bool {
+    function showPopup(widget: Widget, component: Component) {
         if (!component)
-            return false;
-
-        // Toggle off if requesting the component currently visible in this loader
-        if (targetLoader.sourceComponent === component) {
-            hideAdditionalContent(false);
-            return false;
-        }
-
-        // Force close the opposing content type
-        if (targetLoader === panelLoader) {
-            hideMenu(true);
-        } else {
-            hidePanel(true);
-        }
-
-        return true;
-    }
-
-    function showPanel(widget: Widget, panelComponent: Component) {
-        if (!prepareContent(panelLoader, panelComponent))
             return;
 
-        panelLoader.sourceComponent = panelComponent;
-    }
-
-    function showMenu(widget: Widget, menuComponent: Component) {
-        if (!prepareContent(menuLoader, menuComponent))
+        if (popupLoader.sourceComponent === component) {
+            hidePopup(false);
             return;
+        }
 
-        // Animate position only if transitioning from another menu
-        animateProtrusionPosition = (menuLoader.item !== null);
+        // Animate the protrusion sliding over only when swapping between
+        // two already-open popups, not on a fresh open.
+        animateProtrusionPosition = (popupLoader.item !== null);
 
         currentTargetCenter = Qt.binding(() => calculateTargetCenter(widget));
         additionalLength = Qt.binding(() => calculateAdditionalLength(widget));
-        menuLoader.sourceComponent = menuComponent;
+
+        popupLoader.sourceComponent = component;
     }
 
-    // `force` parameter allows overriding persistence for explicit user intents
-    function hidePanel(force = false) {
-        if (!force && panelLoader.item && panelLoader.item.persistent)
-            return;
-
-        panelLoader.sourceComponent = undefined;
-    }
-
-    function hideMenu(force = false) {
-        if (!force && menuLoader.item && menuLoader.item.persistent)
+    // `force` allows overriding persistence for explicit user intents.
+    function hidePopup(force = false) {
+        if (!force && popupLoader.item && popupLoader.item.persistent)
             return;
 
         animateProtrusionPosition = false;
-        menuLoader.sourceComponent = undefined;
+        popupLoader.sourceComponent = undefined;
     }
 
-    function hideAdditionalContent(force = false) {
-        hidePanel(force);
-        hideMenu(force);
-    }
-
-    property bool popupOpen: menuLoader.sourceComponent !== null || panelLoader.sourceComponent !== null
+    property bool popupOpen: popupLoader.sourceComponent !== null
 
     // Evaluates true only if a popup is open AND it isn't persistent.
     // Used by the bar level to determine if a generic Hyprland focus grab is necessary.
     readonly property bool requiresFocusGrab:
-        (menuLoader.sourceComponent !== null && (!menuLoader.item || !menuLoader.item.persistent)) ||
-        (panelLoader.sourceComponent !== null && (!panelLoader.item || !panelLoader.item.persistent))
+        popupLoader.sourceComponent !== null && (!popupLoader.item || !popupLoader.item.persistent)
 
-    width: horizontal ? length : size + additionalSize
-    height: !horizontal ? length : size + additionalSize
+    width: horizontal ? length : size
+    height: !horizontal ? length : size
     cornerMarginsHorizontal: horizontal
 
     Behavior on width {

@@ -12,8 +12,7 @@ GridLayout {
 
     property real requestedLength: (horizontal ? implicitWidth : implicitHeight) + margins * 2
 
-    signal panelRequested(widget: var, panel: Component)
-    signal menuRequested(widget: var, menu: Component)
+    signal popupRequested(widget: Widget, popup: Component)
 
     default property alias widgets: root.data
 
@@ -38,12 +37,8 @@ GridLayout {
             // Connect when possible
             ignoreUnknownSignals: true
 
-            function onPanelRequested(panel) {
-                root.panelRequested(modelData, panel)
-            }
-
-            function onMenuRequested(menu) {
-                root.menuRequested(modelData, menu)
+            function onPopupRequested(panel) {
+                root.popupRequested(modelData, panel)
             }
         }
     }

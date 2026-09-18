@@ -11,8 +11,8 @@ Panel {
     id: root
 
     fillSpace: true
-    requestedLength: 500
-    requestedSize: column.implicitHeight + verticalMargin * 2
+    implicitWidth: 500
+    implicitHeight: column.implicitHeight + verticalMargin * 2 + 12
 
     property real verticalMargin: 5
     property list<var> results

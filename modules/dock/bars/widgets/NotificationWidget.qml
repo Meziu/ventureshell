@@ -21,6 +21,6 @@ TextWidget {
     }
 
     Component.onCompleted: {
-        NotificationService.notification.connect(() => root.menuRequested(menuComponent))
+        NotificationService.notification.connect(() => root.popupRequested(menuComponent))
     }
 }
