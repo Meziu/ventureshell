@@ -6,6 +6,7 @@ import QtQuick.VectorImage
 import QtQuick.Controls
 import QtQuick.Effects
 
+import "../paths"
 import "../config"
 import "../shapes"
 import "../effects"
@@ -56,7 +57,7 @@ PanelWindow {
     }
 
     Image {
-        source: "file:assets/images/outerwilds/backgrounds/StarrySky.png"
+        source: Paths.assets + "/images/outerwilds/backgrounds/StarrySky.png"
         fillMode: Image.PreserveAspectCrop
         opacity: 0.8
     }
@@ -87,7 +88,7 @@ PanelWindow {
 
             VectorImage {
                 anchors.centerIn: parent
-                source: "file:assets/images/session/" + modelData + ".svg"
+                source: Paths.assets + "/images/session/" + modelData + ".svg"
                 scale: 0.8
 
                 preferredRendererType: VectorImage.CurveRenderer
@@ -139,7 +140,7 @@ PanelWindow {
         id: eye
         anchors.centerIn: parent
 
-        source: "file:assets/images/outerwilds/symbols/Eye-Symbol-Nomai-Vector-Decal.svg"
+        source: Paths.assets + "/images/outerwilds/symbols/Eye-Symbol-Nomai-Vector-Decal.svg"
         fillMode: VectorImage.Stretch
 
         transformOrigin: Item.Center

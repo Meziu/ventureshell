@@ -5,10 +5,11 @@ import QtQuick.Layouts
 
 import "../../../services"
 import "../../../effects"
+import "../../../paths"
 
 IconWidget {
     id: shutdownWidget
-    source: "file:assets/images/outerwilds/symbols/MinimalEye.svg"
+    source: Paths.assets + "/images/outerwilds/symbols/MinimalEye.svg"
 
     effect: NomaiEyeGlow {}
 

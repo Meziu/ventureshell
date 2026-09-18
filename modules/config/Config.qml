@@ -8,7 +8,7 @@ Singleton {
     property bool ready: false
 
     FileView {
-        path: Qt.resolvedUrl(Quickshell.env("XDG_CONFIG_HOME") ? Quickshell.env("XDG_CONFIG_HOME") + "/ventureshell/config.json" : Quickshell.env("HOME") + "/.config/ventureshell/config.json")
+        path: Quickshell.env("XDG_CONFIG_HOME") ? Quickshell.env("XDG_CONFIG_HOME") + "/ventureshell/config.json" : Quickshell.env("HOME") + "/.config/ventureshell/config.json"
 
         watchChanges: true
         blockLoading: true

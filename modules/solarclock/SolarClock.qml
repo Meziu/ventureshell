@@ -8,7 +8,7 @@ import "../behaviours"
 Item {
     id: root
 
-    readonly property string planetsPath: "file:assets/images/outerwilds/planets/"
+    readonly property string planetsPath: Paths.assets + "/images/outerwilds/planets/"
     property real sunRadius: 100
     property real planetRadius: 50
     property real satelliteRadius: 20

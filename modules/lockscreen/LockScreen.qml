@@ -5,6 +5,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
+import "../paths"
 import "../services"
 import "../solarclock"
 import "../assetloaders"
@@ -25,7 +26,7 @@ WlSessionLock {
         }
 
         Image {
-            source: "file:assets/images/outerwilds/backgrounds/StarrySky.png"
+            source: Paths.assets + "/images/outerwilds/backgrounds/StarrySky.png"
             anchors.fill: parent
             fillMode: Image.PreserveAspectCrop
         }
