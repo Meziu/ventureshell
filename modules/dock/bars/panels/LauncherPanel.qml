@@ -17,6 +17,7 @@ Panel {
     property real verticalMargin: 5
     property list<var> results
     property int currentIndex: 0
+    property int resultLimit: 5
 
     // Reset selection whenever the result set changes so we never point
     // past the end of the new list (and so a fresh search starts at the top).
@@ -82,11 +83,10 @@ Panel {
 
             Component.onCompleted: {
                 forceActiveFocus();
-                ElephantService.queryProviders();
             }
 
             onTextEdited: {
-                ElephantService.query(["desktopapplications"], searchField.text, 5, r => root.results = r);
+                ElephantService.queryApps(searchField.text, root.resultLimit, r => root.results = r);
             }
 
             onAccepted: {
@@ -117,7 +117,7 @@ Panel {
                 Layout.preferredHeight: 48
 
                 radius: 8
-                color: index === root.currentIndex ? Qt.rgba(1, 1, 1, 0.12) : "transparent"
+                color: index === root.currentIndex ? Qt.rgba(1, 1, 1, 0.15) : Qt.rgba(0, 0, 0, 0.15)
 
                 RowLayout {
                     id: row

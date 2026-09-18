@@ -8,8 +8,6 @@ import Quickshell.Io
 Singleton {
     id: root
 
-    property list<var> providers
-
     Process {
         id: queryProc
 
@@ -46,7 +44,11 @@ Singleton {
         Quickshell.execDetached(["elephant", "activate", a]);
     }
 
-    function queryProviders() {
-        query(["providerlist"], "", 30, r => root.providers = r);
+    function queryProviders(identifier: string, limit: int, callback: var) {
+        query(["providerlist"], identifier, limit, callback);
+    }
+
+    function queryApps(identifier: string, limit: int, callback: var) {
+        query(["desktopapplications"], identifier, limit, callback);
     }
 }
