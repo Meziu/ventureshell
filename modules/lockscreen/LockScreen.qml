@@ -5,6 +5,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
+import "../services"
 import "../solarclock"
 import "../assetloaders"
 

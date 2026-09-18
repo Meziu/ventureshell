@@ -9,6 +9,7 @@ import QtQuick.Effects
 import "../config"
 import "../shapes"
 import "../effects"
+import "../services"
 
 PanelWindow {
     id: root

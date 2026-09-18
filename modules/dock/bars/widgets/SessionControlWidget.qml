@@ -3,7 +3,7 @@ import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
 
-import "../../../sessioncontrol"
+import "../../../services"
 import "../../../effects"
 
 IconWidget {
