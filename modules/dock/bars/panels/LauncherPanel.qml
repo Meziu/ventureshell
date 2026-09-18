@@ -44,9 +44,13 @@ Panel {
 
     ColumnLayout {
         id: column
-        anchors.fill: parent
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+        }
+
         anchors.topMargin: root.verticalMargin
-        anchors.bottomMargin: root.verticalMargin
 
         TextField {
             id: searchField
@@ -109,6 +113,7 @@ Panel {
                 required property int index
 
                 Layout.fillWidth: true
+                Layout.fillHeight: false
                 Layout.preferredHeight: 48
 
                 radius: 8

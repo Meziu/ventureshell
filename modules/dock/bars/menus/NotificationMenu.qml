@@ -9,18 +9,23 @@ import "../widgets"
 Menu {
     id: root
     implicitWidth: column.implicitWidth
-    implicitHeight: column.implicitHeight
+    implicitHeight: column.implicitHeight + 16 // likely comes from cornerRadius margin
 
     persistent: true
 
     ColumnLayout {
         id: column
-        anchors.fill: parent
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+        }
 
         Repeater {
             model: NotificationService.trackedNotifications
 
             NotificationView {
+                Layout.fillHeight: false
                 Layout.fillWidth: true
 
                 required property Notification modelData

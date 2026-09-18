@@ -27,7 +27,7 @@ Widget {
                 signal exited()
 
                 source: modelData.icon
-                iconSize: 20
+                iconSize: 22
 
                 onClicked: {
                     if (modelData.hasMenu) {
