@@ -11,6 +11,8 @@ Menu {
     implicitWidth: column.implicitWidth
     implicitHeight: column.implicitHeight
 
+    persistent: true
+
     ColumnLayout {
         id: column
         anchors.fill: parent

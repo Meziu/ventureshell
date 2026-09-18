@@ -145,7 +145,7 @@ CurvyBox {
 
         onLoaded: {
             panelLoader.item.exited.connect(() => {
-                root.hidePanel();
+                root.hidePanel(true);
             });
         }
     }
@@ -167,7 +167,7 @@ CurvyBox {
 
         onLoaded: {
             menuLoader.item.exited.connect(() => {
-                root.hideMenu();
+                root.hideMenu(true);
             });
         }
     }
@@ -179,15 +179,15 @@ CurvyBox {
 
         // Toggle off if requesting the component currently visible in this loader
         if (targetLoader.sourceComponent === component) {
-            hideAdditionalContent();
+            hideAdditionalContent(false);
             return false;
         }
 
-        // Close the opposing content type
+        // Force close the opposing content type
         if (targetLoader === panelLoader) {
-            hideMenu();
+            hideMenu(true);
         } else {
-            hidePanel();
+            hidePanel(true);
         }
 
         return true;
@@ -212,21 +212,34 @@ CurvyBox {
         menuLoader.sourceComponent = menuComponent;
     }
 
-    function hidePanel() {
+    // `force` parameter allows overriding persistence for explicit user intents
+    function hidePanel(force = false) {
+        if (!force && panelLoader.item && panelLoader.item.persistent)
+            return;
+
         panelLoader.sourceComponent = undefined;
     }
 
-    function hideMenu() {
+    function hideMenu(force = false) {
+        if (!force && menuLoader.item && menuLoader.item.persistent)
+            return;
+
         animateProtrusionPosition = false;
         menuLoader.sourceComponent = undefined;
     }
 
-    function hideAdditionalContent() {
-        hidePanel();
-        hideMenu();
+    function hideAdditionalContent(force = false) {
+        hidePanel(force);
+        hideMenu(force);
     }
 
-    property bool popupOpen: menuLoader.sourceComponent || panelLoader.sourceComponent
+    property bool popupOpen: menuLoader.sourceComponent !== null || panelLoader.sourceComponent !== null
+
+    // Evaluates true only if a popup is open AND it isn't persistent.
+    // Used by the bar level to determine if a generic Hyprland focus grab is necessary.
+    readonly property bool requiresFocusGrab:
+        (menuLoader.sourceComponent !== null && (!menuLoader.item || !menuLoader.item.persistent)) ||
+        (panelLoader.sourceComponent !== null && (!panelLoader.item || !panelLoader.item.persistent))
 
     width: horizontal ? length : size + additionalSize
     height: !horizontal ? length : size + additionalSize

@@ -25,19 +25,29 @@ PanelWindow {
 
     property bool popupOpen: {
         for (let i = 0; i < islands.length; i++) {
-            if (islands[i].popupOpen) return true
+            if (islands[i].popupOpen)
+                return true;
         }
-        return false
+        return false;
+    }
+
+    readonly property bool requiresFocusGrab: {
+        for (let i = 0; i < islands.length; i++) {
+            if (islands[i].requiresFocusGrab)
+                return true;
+        }
+        return false;
     }
 
     HyprlandFocusGrab {
         id: grab
-        active: root.popupOpen
+        active: root.requiresFocusGrab
         windows: [root]
 
         onCleared: {
             for (let i = 0; i < islands.length; i++) {
-                islands[i].hideAdditionalContent()
+                // don't close panels/menus marked as persistent
+                islands[i].hideAdditionalContent(false);
             }
         }
     }
