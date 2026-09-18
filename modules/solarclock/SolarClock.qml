@@ -2,6 +2,7 @@ import Quickshell
 import Quickshell.Wayland
 import QtQuick
 
+import "../paths"
 import "../shapes"
 import "../behaviours"
 
