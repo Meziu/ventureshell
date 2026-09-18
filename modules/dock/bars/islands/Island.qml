@@ -26,7 +26,7 @@ CurvyBox {
     readonly property bool isHCenter: !(root.position & Position.Left) && !(root.position & Position.Right)
     readonly property bool isVCenter: !(root.position & Position.Top) && !(root.position & Position.Bottom)
 
-    property real transitionTime: 200
+    property real transitionTime: 180
 
     protrusionSide: Position.opposite(Position.cardinal(position, horizontal))
 
@@ -35,15 +35,15 @@ CurvyBox {
     readonly property real popupMainLength: popupLoader.item ? (horizontal ? popupLoader.requestedLength : popupLoader.requestedSize) : 0
     readonly property real popupCrossSize: popupLoader.item ? (horizontal ? popupLoader.requestedSize : popupLoader.requestedLength) : 0
 
-    readonly property bool popupFillsSpace: popupLoader.item !== null && popupLoader.item.fillSpace
+    property bool popupFillsSpace: false
 
     property real currentTargetCenter: 0
     property real additionalLength: 0
 
     function calculateTargetCenter(widget: Widget): real {
         // Can't work after the item gets destroyed
-        //if (popupFillsSpace)
-        //    return root.length / 2;
+        if (popupFillsSpace)
+            return root.length / 2;
 
         const wPos = root.horizontal ? (widgetContainer.x + widget.x + widget.width / 2) : (widgetContainer.y + widget.y + widget.height / 2);
 
@@ -154,6 +154,7 @@ CurvyBox {
         additionalLength = Qt.binding(() => calculateAdditionalLength(widget));
 
         popupLoader.sourceComponent = component;
+        popupFillsSpace = popupLoader.item.fillSpace
     }
 
     // `force` allows overriding persistence for explicit user intents.
