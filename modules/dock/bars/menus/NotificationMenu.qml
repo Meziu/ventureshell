@@ -9,7 +9,7 @@ import "../widgets"
 Menu {
     id: root
     implicitWidth: column.implicitWidth
-    implicitHeight: column.implicitHeight + 16 // likely comes from cornerRadius margin
+    implicitHeight: column.implicitHeight
 
     persistent: true
 

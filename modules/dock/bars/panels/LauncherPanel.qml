@@ -12,9 +12,8 @@ Panel {
 
     fillSpace: true
     implicitWidth: 500
-    implicitHeight: column.implicitHeight + verticalMargin * 2 + 12
+    implicitHeight: column.implicitHeight
 
-    property real verticalMargin: 5
     property list<var> results
     property int currentIndex: 0
     property int resultLimit: 5
@@ -51,8 +50,6 @@ Panel {
             right: parent.right
         }
 
-        anchors.topMargin: root.verticalMargin
-
         TextField {
             id: searchField
 
@@ -62,8 +59,8 @@ Panel {
             background: Rectangle {
                 anchors.fill: parent
 
-                color: OuterWildsFont.darkColor
-                opacity: 0.7
+                color: "black"
+                opacity: 0.4
                 radius: 16
             }
 

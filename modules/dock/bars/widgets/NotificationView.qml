@@ -6,7 +6,7 @@ import "../../../config"
 import "../../../shapes"
 import "../widgets"
 
-// Not to be confused with the NotificationsWidget
+// Not to be confused with the NotificationWidget
 ClickableWidget {
     id: root
 

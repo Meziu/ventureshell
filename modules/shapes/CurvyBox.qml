@@ -16,10 +16,20 @@ Shape {
     property bool snapProtrusionToEdges: true
 
     property bool protrusionActive: protrusionContent !== null
-    property int protrusionSide: Position.Bottom
-    property real protrusionPosition: protrusionActive ? Math.max(protrusionContent.requestedPosition, 0) : 0
-    property real protrusionLength: protrusionActive ? (Position.isYAxis(protrusionSide) ? protrusionContent.requestedLength : protrusionContent.requestedSize) : 0
-    property real protrusionDepth: protrusionActive ? (Position.isYAxis(protrusionSide) ? protrusionContent.requestedSize : protrusionContent.requestedLength) : 0
+        property int protrusionSide: Position.Bottom
+
+        // Automatically calculate the required inner padding based on corner radius
+        readonly property real protrusionMargin: Math.max(0, Math.min(box.cornerRadius, box.width / 2, box.height / 2)) / 2
+
+        property real protrusionPosition: protrusionActive ? Math.max(protrusionContent.requestedPosition, 0) : 0
+
+        // Helper properties to check the actual requested size from the inner Item (the Loader)
+        readonly property real _rawReqLength: protrusionActive ? (Position.isYAxis(protrusionSide) ? protrusionContent.requestedLength : protrusionContent.requestedSize) : 0
+        readonly property real _rawReqDepth: protrusionActive ? (Position.isYAxis(protrusionSide) ? protrusionContent.requestedSize : protrusionContent.requestedLength) : 0
+
+        // Expand boundaries ONLY if the content actually has size. Otherwise, keep it collapsed at 0.
+        property real protrusionLength: (_rawReqLength > 0 && _rawReqDepth > 0) ? (_rawReqLength + protrusionMargin * 2) : 0
+        property real protrusionDepth: (_rawReqLength > 0 && _rawReqDepth > 0) ? (_rawReqDepth + protrusionMargin * 2) : 0
 
     default property alias content: contentItem.data
     readonly property alias contentChildren: contentItem.children
@@ -49,11 +59,26 @@ Shape {
         const sRaw = box.protrusionPosition;
         const eRaw = box.protrusionPosition + box.protrusionLength;
         const depth = box.protrusionDepth;
-        const rProt = Math.max(0, Math.min(r, depth, box.protrusionLength / 2));
-        const snapThreshold = r + rProt;
 
-        const expandStart = box.snapProtrusionToEdges && (sRaw <= snapThreshold);
-        const expandEnd = box.snapProtrusionToEdges && (eRaw >= L - snapThreshold);
+        const a = box.attached;
+        const cornerArc = [
+            !a.left && !a.top,
+            !a.top && !a.right,
+            !a.right && !a.bottom,
+            !a.bottom && !a.left
+        ];
+        let c0 = 0, cL = 0;
+        switch (edge) {
+            case Position.Top:    c0 = 0; cL = 1; break;
+            case Position.Right:  c0 = 1; cL = 2; break;
+            case Position.Bottom: c0 = 3; cL = 2; break;
+            case Position.Left:   c0 = 0; cL = 3; break;
+        }
+        const rSpace0 = cornerArc[c0] ? r : 0;
+        const rSpaceL = cornerArc[cL] ? r : 0;
+
+        const expandStart = box.snapProtrusionToEdges && (sRaw <= rSpace0);
+        const expandEnd = box.snapProtrusionToEdges && (eRaw >= L - rSpaceL);
 
         const sEff = expandStart ? 0 : Math.max(0, Math.min(L, sRaw));
         const eEff = expandEnd ? L : Math.max(0, Math.min(L, eRaw));
@@ -80,7 +105,7 @@ Shape {
             id: protrusionContentItem
             anchors {
                 fill: parent
-                margins: Math.max(0, Math.min(box.cornerRadius, box.width / 2, box.height / 2)) / 2
+                margins: box.protrusionMargin
             }
 
             data: protrusionContent
@@ -146,6 +171,7 @@ Shape {
         let expandStart = false;
         let expandEnd = false;
         let rProt = r;
+        let rSpace0 = 0, rSpaceL = 0;
 
         if (activeIdx !== -1) {
             const e = edges[activeIdx];
@@ -155,11 +181,17 @@ Shape {
             const sRaw = box.protrusionPosition;
             const eRaw = box.protrusionPosition + box.protrusionLength;
 
-            rProt = Math.max(0, Math.min(r, depth, box.protrusionLength / 2));
-            const snapThreshold = r + rProt;
+            let c0 = 0, cL = 0;
+            if (activeIdx === 0) { c0 = 0; cL = 1; }
+            else if (activeIdx === 1) { c0 = 1; cL = 2; }
+            else if (activeIdx === 2) { c0 = 3; cL = 2; }
+            else if (activeIdx === 3) { c0 = 0; cL = 3; }
 
-            expandStart = box.snapProtrusionToEdges && (sRaw <= snapThreshold);
-            expandEnd = box.snapProtrusionToEdges && (eRaw >= L - snapThreshold);
+            rSpace0 = corners[c0].arc ? r : 0;
+            rSpaceL = corners[cL].arc ? r : 0;
+
+            expandStart = box.snapProtrusionToEdges && (sRaw <= rSpace0);
+            expandEnd = box.snapProtrusionToEdges && (eRaw >= L - rSpaceL);
 
             const sEff = expandStart ? 0 : Math.max(0, Math.min(L, sRaw));
             const eEff = expandEnd ? L : Math.max(0, Math.min(L, eRaw));
@@ -193,26 +225,30 @@ Shape {
 
             if (i === activeIdx) {
                 const depth = box.protrusionDepth;
-
                 const sRaw = box.protrusionPosition;
                 const eRaw = box.protrusionPosition + box.protrusionLength;
 
-                const snapThreshold = r + rProt;
-                const uStartExpand = box.snapProtrusionToEdges && (i >= 2 ? (eRaw >= L - snapThreshold) : (sRaw <= snapThreshold));
-                const uEndExpand = box.snapProtrusionToEdges && (i >= 2 ? (sRaw <= snapThreshold) : (eRaw >= L - snapThreshold));
+                const sEff = expandStart ? 0 : Math.max(0, Math.min(L, sRaw));
+                const eEff = expandEnd ? L : Math.max(0, Math.min(L, eRaw));
 
-                const sEff = (uStartExpand && i < 2) || (uEndExpand && i >= 2) ? 0 : Math.max(0, Math.min(L, sRaw));
-                const eEff = (uEndExpand && i < 2) || (uStartExpand && i >= 2) ? L : Math.max(0, Math.min(L, eRaw));
+                const uStartExpand = box.snapProtrusionToEdges && (i >= 2 ? expandEnd : expandStart);
+                const uEndExpand = box.snapProtrusionToEdges && (i >= 2 ? expandStart : expandEnd);
 
                 const u0 = (i >= 2) ? (L - eEff) : sEff;
                 const u1 = (i >= 2) ? (L - sEff) : eEff;
+
+                let u0_space = (i < 2) ? (u0 - rSpace0) : (u0 - rSpaceL);
+                let u1_space = (i < 2) ? (L - rSpaceL - u1) : (L - rSpace0 - u1);
+
+                const rf0 = Math.max(0, Math.min(rProt, u0_space));
+                const rf1 = Math.max(0, Math.min(rProt, u1_space));
 
                 if (uStartExpand) {
                     d += `L ${pt(e.map(u0, depth - rProt))} `;
                     d += `A ${rProt} ${rProt} 0 0 1 ${pt(e.map(u0 + rProt, depth))} `;
                 } else {
-                    d += `L ${pt(e.map(u0 - rProt, 0))} `;
-                    d += `A ${rProt} ${rProt} 0 0 0 ${pt(e.map(u0, rProt))} `;
+                    d += `L ${pt(e.map(u0 - rf0, 0))} `;
+                    d += `A ${rf0} ${rf0} 0 0 0 ${pt(e.map(u0, rf0))} `;
                     d += `L ${pt(e.map(u0, depth - rProt))} `;
                     d += `A ${rProt} ${rProt} 0 0 1 ${pt(e.map(u0 + rProt, depth))} `;
                 }
@@ -224,8 +260,8 @@ Shape {
                     d += `L ${pt(e.map(u1, 0))} `;
                 } else {
                     d += `A ${rProt} ${rProt} 0 0 1 ${pt(e.map(u1, depth - rProt))} `;
-                    d += `L ${pt(e.map(u1, rProt))} `;
-                    d += `A ${rProt} ${rProt} 0 0 0 ${pt(e.map(u1 + rProt, 0))} `;
+                    d += `L ${pt(e.map(u1, rf1))} `;
+                    d += `A ${rf1} ${rf1} 0 0 0 ${pt(e.map(u1 + rf1, 0))} `;
                     d += `L ${pt(nextCorner.before)} `;
                 }
             } else {
