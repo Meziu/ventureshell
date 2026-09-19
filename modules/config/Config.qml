@@ -41,11 +41,11 @@ Singleton {
                 property JsonObject commands: JsonObject {
                     property bool useInternalLockscreen: true
 
-                    property list<string> shutdown: ["hyprshutdown", "-p", "systemctl poweroff"]
-                    property list<string> reboot: ["hyprshutdown", "-p", "systemctl reboot"]
-                    property list<string> lock: ["loginctl", "lock-session"]
-                    property list<string> suspend: ["systemctl", "sleep"]
-                    property list<string> logout: ["hyprshutdown"]
+                    property list<string> shutdown: ["systemd-run", "--user", "--scope", "hyprshutdown", "-p", "systemctl poweroff"]
+                    property list<string> reboot:   ["systemd-run", "--user", "--scope", "hyprshutdown", "-p", "systemctl reboot"]
+                    property list<string> logout:   ["systemd-run", "--user", "--scope", "hyprshutdown"]
+                    property list<string> suspend:  ["systemctl", "suspend"]
+                    property list<string> lock:     ["loginctl", "lock-session"]
                     property list<string> hibernate: ["systemctl", "hibernate"]
                 }
             }
