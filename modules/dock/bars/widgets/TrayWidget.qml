@@ -8,6 +8,8 @@ import "../menus"
 Widget {
     id: root
 
+    visible: SystemTray.items.values.length > 0
+
     requestedLength: container.requestedLength
 
     WidgetContainer {

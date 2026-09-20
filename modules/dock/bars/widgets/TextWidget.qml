@@ -6,6 +6,8 @@ import "../../../assetloaders"
 ClickableWidget {
     id: root
 
+    visible: text !== ""
+
     required property string text
     property real fontSize: 14
     property int horizontalAlignment: Text.AlignHCenter
