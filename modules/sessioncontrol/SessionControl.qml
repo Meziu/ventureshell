@@ -6,6 +6,7 @@ Item {
     HyprlandFocusGrab {
         id: grab
         windows: sessionctlScreens.instances
+        active: true
     }
 
     Variants {
