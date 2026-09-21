@@ -40,10 +40,6 @@ CurvyBox {
     property real currentTargetCenter: 0
     property real additionalLength: 0
 
-    onAdditionalLengthChanged: {
-        console.log(additionalLength)
-    }
-
     function calculateTargetCenter(widget: Widget): real {
         // Can't work after the item gets destroyed
         if (popupFillsSpace)

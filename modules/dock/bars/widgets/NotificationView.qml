@@ -10,9 +10,9 @@ import "../widgets"
 ClickableWidget {
     id: root
 
-    requestedLength: 400
-    implicitWidth: 400
-    implicitHeight: 100
+    requestedLength: layout.implicitWidth
+    implicitWidth: layout.implicitWidth
+    implicitHeight: layout.implicitHeight
     baseOpacity: 0.1
     hoverOpacity: 0.2
 
@@ -34,7 +34,8 @@ ClickableWidget {
         anchors.margins: 2
 
         RowLayout {
-            Layout.preferredHeight: 14
+            Layout.minimumWidth: 300
+            Layout.minimumHeight: 32
 
             IconWidget {
                 Layout.fillHeight: true
@@ -76,6 +77,7 @@ ClickableWidget {
         }
 
         RowLayout {
+            Layout.minimumHeight: 32
             Layout.fillHeight: true
             Layout.fillWidth: true
 
