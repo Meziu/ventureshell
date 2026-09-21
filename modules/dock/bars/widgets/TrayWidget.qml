@@ -10,11 +10,13 @@ Widget {
 
     visible: SystemTray.items.values.length > 0
 
-    requestedLength: container.requestedLength
+    implicitWidth: container.implicitWidth
+    implicitHeight: container.implicitHeight
 
     WidgetContainer {
         id: container
         anchors.fill: parent
+
         horizontal: root.horizontal
         margins: 2
         spacing: 4

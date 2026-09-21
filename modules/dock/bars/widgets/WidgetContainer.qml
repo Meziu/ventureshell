@@ -10,7 +10,7 @@ GridLayout {
     property real spacing: 4
     property real margins: 4
 
-    property real requestedLength: (horizontal ? implicitWidth : implicitHeight) + margins * 2
+    readonly property real requestedLength: (horizontal ? implicitWidth : implicitHeight) + margins * 2
 
     signal popupRequested(widget: Widget, popup: Component)
 

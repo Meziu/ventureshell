@@ -12,39 +12,30 @@ ClickableWidget {
     property real fontSize: 14
     property int horizontalAlignment: Text.AlignHCenter
     property int verticalAlignment: Text.AlignVCenter
-    property real padding: 4
+    property real margins: 4
     property bool elide: wrapMode === Text.NoWrap
     property font font: OuterWildsFont.uiWithSize(fontSize)
     property int wrapMode: Text.NoWrap
     property int textFormat: Text.AutoText
 
-    requestedLength: wrapMode === Text.NoWrap
-        ? Math.max(Layout.preferredHeight, textMetrics.width + padding * 4)
-        : 0
-
-    implicitWidth: requestedLength > 0 ? requestedLength : textMetrics.width + padding * 2
-    implicitHeight: textMetrics.height + padding * 2
-
-    TextMetrics {
-        id: textMetrics
-        font: root.font
-        text: root.text
-    }
+    implicitWidth: textItem.implicitWidth + margins * 2
+    implicitHeight: textItem.implicitHeight + margins * 2
 
     Text {
-        width: root.width
-        height: root.height
+        id: textItem
+
+        anchors.margins: root.margins
+        anchors.fill: parent
 
         text: root.text
         horizontalAlignment: root.horizontalAlignment
         verticalAlignment: root.verticalAlignment
         elide: root.elide ? Text.ElideRight : Text.ElideNone
-        padding: root.padding
         wrapMode: root.wrapMode
         textFormat: root.textFormat
         clip: true
 
-        font: textMetrics.font
+        font: root.font
         color: OuterWildsFont.lightColor
     }
 }

@@ -16,7 +16,8 @@ ClickableWidget {
     property int horizontalAlignment: Image.AlignHCenter
     property Component effect: null
 
-    requestedLength: iconSize
+    implicitWidth: iconSize
+    implicitHeight: iconSize
 
     Image {
         id: image

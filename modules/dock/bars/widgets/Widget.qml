@@ -9,10 +9,7 @@ Item {
     signal popupRequested(popup: Component)
 
     property bool horizontal: true
-    required property real requestedLength
-
-    Layout.preferredWidth: horizontal ? requestedLength : -1
-    Layout.preferredHeight: !horizontal ? requestedLength : -1
+    readonly property real requestedLength: horizontal ? root.implicitWidth : root.implicitHeight
 
     Layout.fillWidth: !horizontal
     Layout.fillHeight: horizontal

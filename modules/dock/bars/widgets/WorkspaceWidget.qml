@@ -24,7 +24,8 @@ Widget {
     }
     property HyprlandWorkspace activeWorkspace: monitor?.activeWorkspace
 
-    requestedLength: horizontal ? layout.implicitWidth : layout.implicitHeight
+    implicitWidth: layout.implicitWidth
+    implicitHeight: layout.implicitHeight
 
     GridLayout {
         id: layout
