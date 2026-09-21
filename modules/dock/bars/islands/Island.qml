@@ -51,53 +51,50 @@ CurvyBox {
         return Math.max(halfLen, Math.min(wPos, root.length - halfLen));
     }
 
+    readonly property real baseMainLength: Math.max(widgetContainer.requestedLength, popupLoader.item ? popupMainLength : 0)
+
     function calculateAdditionalLength(widget: Widget): real {
         if (!popupLoader.item || !widget)
             return 0;
 
         if (popupLoader.item.fillSpace) {
-            return Math.max(0, popupMainLength - widgetContainer.requestedLength)
+            return Math.max(0, popupMainLength - widgetContainer.requestedLength);
         }
 
-        const baseLen = Math.max(widgetContainer.requestedLength, popupMainLength);
-
-        let containerOffset = 0;
-        if (root.horizontal) {
-            if (root.isRight)
-                containerOffset = baseLen - widgetContainer.width;
-            else if (root.isHCenter)
-                containerOffset = (baseLen - widgetContainer.width) / 2;
-        } else {
-            if (root.isBottom)
-                containerOffset = baseLen - widgetContainer.height;
-            else if (root.isVCenter)
-                containerOffset = (baseLen - widgetContainer.height) / 2;
-        }
-
+        // Widget center relative to the widgetContainer origin
         const localWPos = root.horizontal ? (widget.x + widget.width / 2) : (widget.y + widget.height / 2);
-        const wPos = containerOffset + localWPos;
-
+        const containerLen = widgetContainer.requestedLength;
         const halfPopup = popupMainLength / 2;
-        const cornerMargin = cornerRadius * 1.5;
 
-        // Check edge attachment status
+        // Where the popup wants its start and end edges to be relative to widgetContainer
+        const desiredStart = localWPos - halfPopup;
+        const desiredEnd = localWPos + halfPopup;
+
+        // Check if island ends are pinned/attached
         const startAttached = root.horizontal ? (root.attached.left || root.isLeft) : (root.attached.top || root.isTop);
         const endAttached = root.horizontal ? (root.attached.right || root.isRight) : (root.attached.bottom || root.isBottom);
 
-        const startDeficit = Math.max(0, (halfPopup) - wPos);
-        const endDeficit = Math.max(0, (wPos + halfPopup) - baseLen);
+        // Compute overflow beyond the widget container boundaries
+        const startOverflow = Math.max(0, -desiredStart);
+        const endOverflow = Math.max(0, desiredEnd - containerLen);
 
         let added = 0;
-        // Suppress expansion on attached/bounded sides; only accumulate overflow on unattached sides
+
+        // If an edge is unattached, allow the island to expand in that direction
         if (!startAttached)
-            added += startDeficit;
+            added += startOverflow;
         if (!endAttached)
-            added += endDeficit;
+            added += endOverflow;
+
+        // If BOTH ends are attached/pinned, the island cannot expand outwards,
+        // so we guarantee the base diff is added if popup exceeds container.
+        if (startAttached && endAttached) {
+            added = Math.max(0, popupMainLength - containerLen);
+        }
 
         return added;
     }
 
-    readonly property real baseMainLength: widgetContainer.requestedLength
     readonly property real length: Math.max(minLength, Math.min(baseMainLength + additionalLength + cornerRadius * 2, maxLength))
 
     WidgetContainer {
