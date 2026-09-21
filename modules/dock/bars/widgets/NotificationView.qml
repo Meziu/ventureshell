@@ -10,8 +10,9 @@ import "../widgets"
 ClickableWidget {
     id: root
 
-    implicitWidth: layout.implicitWidth
-    implicitHeight: layout.implicitHeight
+    width: 400
+    implicitWidth: width
+    implicitHeight: layout.implicitHeight + layout.anchors.margins * 2
     baseOpacity: 0.1
     hoverOpacity: 0.2
 

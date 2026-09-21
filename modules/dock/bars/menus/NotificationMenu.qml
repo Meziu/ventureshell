@@ -15,17 +15,12 @@ Menu {
 
     ColumnLayout {
         id: column
-        anchors {
-            top: parent.top
-            left: parent.left
-            right: parent.right
-        }
 
         Repeater {
             model: NotificationService.trackedNotifications
 
             NotificationView {
-                Layout.fillHeight: false
+                Layout.fillHeight: true
                 Layout.fillWidth: true
 
                 required property Notification modelData
