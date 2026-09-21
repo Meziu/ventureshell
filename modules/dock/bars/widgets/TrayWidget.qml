@@ -10,8 +10,8 @@ Widget {
 
     visible: SystemTray.items.values.length > 0
 
-    implicitWidth: container.implicitWidth
-    implicitHeight: container.implicitHeight
+    implicitWidth: horizontal ? container.requestedLength : container.implicitWidth
+    implicitHeight: !horizontal ? container.requestedLength : container.implicitHeight
 
     WidgetContainer {
         id: container
@@ -29,6 +29,9 @@ Widget {
                 required property SystemTrayItem modelData
 
                 signal exited()
+
+                Layout.margins: 2
+                Layout.preferredWidth: iconSize
 
                 source: modelData.icon
                 iconSize: 22

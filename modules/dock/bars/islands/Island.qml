@@ -54,12 +54,8 @@ CurvyBox {
     readonly property real baseMainLength: Math.max(widgetContainer.requestedLength, popupLoader.item ? popupMainLength : 0)
 
     function calculateAdditionalLength(widget: Widget): real {
-        if (!popupLoader.item || !widget)
+        if (!popupLoader.item || !widget || popupLoader.item.fillSpace)
             return 0;
-
-        if (popupLoader.item.fillSpace) {
-            return Math.max(0, popupMainLength - widgetContainer.requestedLength);
-        }
 
         // Widget center relative to the widgetContainer origin
         const localWPos = root.horizontal ? (widget.x + widget.width / 2) : (widget.y + widget.height / 2);

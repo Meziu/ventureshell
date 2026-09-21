@@ -33,7 +33,6 @@ ClickableWidget {
         elide: root.elide ? Text.ElideRight : Text.ElideNone
         wrapMode: root.wrapMode
         textFormat: root.textFormat
-        clip: true
 
         font: root.font
         color: OuterWildsFont.lightColor
