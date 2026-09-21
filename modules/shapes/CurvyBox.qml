@@ -47,6 +47,20 @@ Shape {
     }
     readonly property alias contentItem: contentItem
 
+    // Maps the raw distance `g` between a protrusion end and the nearest corner to the
+    // distance actually drawn. Beyond 2r nothing changes. Inside the snap distance the
+    // protrusion is flush with the edge (0). In between, the gap is remapped linearly so
+    // that it is exactly 2*rad wide (room for the corner arc + the protrusion fillet, each
+    // of radius rad), which shrinks both radii smoothly to 0 right where the snap happens.
+    function _effectiveGap(g, snapDist, r) {
+        if (g <= snapDist)
+            return 0;
+        const full = 2 * r;
+        if (g >= full)
+            return g;
+        return full * (g - snapDist) / (full - snapDist);
+    }
+
     readonly property var _protrusionBounds: {
         const edge = box.protrusionSide;
         const w = box.width, h = box.height;
@@ -90,11 +104,11 @@ Shape {
         const rSpace0 = cornerArc[c0] ? r : 0;
         const rSpaceL = cornerArc[cL] ? r : 0;
 
-        const expandStart = box.snapProtrusionToEdges && (sRaw <= rSpace0);
-        const expandEnd = box.snapProtrusionToEdges && (eRaw >= L - rSpaceL);
-
-        const sEff = expandStart ? 0 : Math.max(0, Math.min(L, sRaw));
-        const eEff = expandEnd ? L : Math.max(0, Math.min(L, eRaw));
+        const snap = box.snapProtrusionToEdges;
+        const sClamped = Math.max(0, Math.min(L, sRaw));
+        const eClamped = Math.max(0, Math.min(L, eRaw));
+        const sEff = box._effectiveGap(sClamped, snap ? rSpace0 : 0, r);
+        const eEff = L - box._effectiveGap(L - eClamped, snap ? rSpaceL : 0, r);
         const lenEff = Math.max(0, eEff - sEff);
 
         switch (edge) {
@@ -166,48 +180,63 @@ Shape {
         const pt = p => `${p[0]} ${p[1]}`;
 
         const r = Math.max(0, Math.min(box.cornerRadius, w / 2, h / 2));
-        const arcTo = (p, foot) => `A ${r} ${r} 0 0 ${foot ? 0 : 1} ${pt(p)}`;
+        const arcTo = c => `A ${c.radius} ${c.radius} 0 0 ${c.foot ? 0 : 1} ${pt(c.after)}`;
 
-        function corner(cx, cy, beforeOffset, afterOffset, beforeAttached, afterAttached) {
-            if (beforeAttached && afterAttached)
-                return {
-                    before: [cx, cy],
-                    after: [cx, cy],
-                    arc: false,
-                    foot: false
-                };
+        // Corner routine (attached feet logic preserved), now with a per-corner radius
+        // so that corners next to the protrusion can shrink independently.
+        function buildCorners(cr) {
+            function corner(cx, cy, bDir, aDir, beforeAttached, afterAttached, rr) {
+                const beforeOffset = [bDir[0] * rr, bDir[1] * rr];
+                const afterOffset = [aDir[0] * rr, aDir[1] * rr];
 
-            if (!beforeAttached && !afterAttached)
+                if (beforeAttached && afterAttached)
+                    return {
+                        before: [cx, cy],
+                        after: [cx, cy],
+                        arc: false,
+                        foot: false,
+                        radius: 0
+                    };
+
+                if (!beforeAttached && !afterAttached)
+                    return {
+                        before: [cx + beforeOffset[0], cy + beforeOffset[1]],
+                        after: [cx + afterOffset[0], cy + afterOffset[1]],
+                        arc: true,
+                        foot: false,
+                        radius: rr
+                    };
+
+                if (!showFeet)
+                    return {
+                        before: [cx, cy],
+                        after: [cx, cy],
+                        arc: false,
+                        foot: false,
+                        radius: 0
+                    };
+
+                const bOff = beforeAttached ? [-beforeOffset[0], -beforeOffset[1]] : beforeOffset;
+                const aOff = afterAttached ? [-afterOffset[0], -afterOffset[1]] : afterOffset;
                 return {
-                    before: [cx + beforeOffset[0], cy + beforeOffset[1]],
-                    after: [cx + afterOffset[0], cy + afterOffset[1]],
+                    before: [cx + bOff[0], cy + bOff[1]],
+                    after: [cx + aOff[0], cy + aOff[1]],
                     arc: true,
-                    foot: false
+                    foot: true,
+                    radius: rr
                 };
+            }
 
-            if (!showFeet)
-                return {
-                    before: [cx, cy],
-                    after: [cx, cy],
-                    arc: false,
-                    foot: false
-                };
-
-            const bOff = beforeAttached ? [-beforeOffset[0], -beforeOffset[1]] : beforeOffset;
-            const aOff = afterAttached ? [-afterOffset[0], -afterOffset[1]] : afterOffset;
-            return {
-                before: [cx + bOff[0], cy + bOff[1]],
-                after: [cx + aOff[0], cy + aOff[1]],
-                arc: true,
-                foot: true
-            };
+            return [corner(0, 0, [0, 1], [1, 0], a.left, a.top, cr[0])       // 0: TL
+                , corner(w, 0, [-1, 0], [0, 1], a.top, a.right, cr[1])       // 1: TR
+                , corner(w, h, [0, -1], [-1, 0], a.right, a.bottom, cr[2])   // 2: BR
+                , corner(0, h, [1, 0], [0, -1], a.bottom, a.left, cr[3])     // 3: BL
+            ];
         }
 
-        const corners = [corner(0, 0, [0, r], [r, 0], a.left, a.top)        // 0: TL
-            , corner(w, 0, [-r, 0], [0, r], a.top, a.right)      // 1: TR
-            , corner(w, h, [0, -r], [-r, 0], a.right, a.bottom) // 2: BR
-            , corner(0, h, [r, 0], [0, -r], a.bottom, a.left)    // 3: BL
-        ];
+        // First pass at full radius: only used to learn which corners are arcs.
+        const cornerRadii = [r, r, r, r];
+        let corners = buildCorners(cornerRadii);
 
         const edges = [
             {
@@ -238,13 +267,16 @@ Shape {
         let suppressCorner = [false, false, false, false];
         let expandStart = false;
         let expandEnd = false;
-        let rProt = r;
         let rSpace0 = 0, rSpaceL = 0;
+
+        // Effective protrusion span along its edge (raw coordinates, same as _protrusionBounds)
+        let sEff = 0, eEff = 0;
+        // Fillet radii where the protrusion meets the main box (raw start / end side)
+        let rfRaw0 = 0, rfRawL = 0;
 
         if (activeIdx !== -1) {
             const e = edges[activeIdx];
             const L = e.len;
-            const depth = box.protrusionDepth;
 
             const sRaw = box.protrusionPosition;
             const eRaw = box.protrusionPosition + box.protrusionLength;
@@ -270,12 +302,6 @@ Shape {
             expandStart = box.snapProtrusionToEdges && (sRaw <= rSpace0);
             expandEnd = box.snapProtrusionToEdges && (eRaw >= L - rSpaceL);
 
-            const sEff = expandStart ? 0 : Math.max(0, Math.min(L, sRaw));
-            const eEff = expandEnd ? L : Math.max(0, Math.min(L, eRaw));
-            const lenEff = Math.max(0, eEff - sEff);
-
-            rProt = Math.max(0, Math.min(r, depth, lenEff / 2));
-
             if (expandStart) {
                 const startCornerIdx = (activeIdx === 2) ? 3 : (activeIdx === 3 ? 0 : activeIdx);
                 suppressCorner[startCornerIdx] = true;
@@ -284,13 +310,33 @@ Shape {
                 const endCornerIdx = (activeIdx === 2) ? 2 : (activeIdx === 3 ? 3 : activeIdx + 1);
                 suppressCorner[endCornerIdx] = true;
             }
+
+            const snap = box.snapProtrusionToEdges;
+            const sClamped = Math.max(0, Math.min(L, sRaw));
+            const eClamped = Math.max(0, Math.min(L, eRaw));
+            sEff = box._effectiveGap(sClamped, snap ? rSpace0 : 0, r);
+            eEff = L - box._effectiveGap(L - eClamped, snap ? rSpaceL : 0, r);
+
+            // The remapped gap is exactly 2*rad wide, so the main corner arc and the
+            // protrusion fillet (both radius rad) fill it completely and both reach
+            // 0 at the moment the protrusion snaps flush with the edge.
+            const radStart = Math.min(r, sEff / 2);
+            const radEnd = Math.min(r, (L - eEff) / 2);
+            cornerRadii[c0] = radStart;
+            cornerRadii[cL] = radEnd;
+            rfRaw0 = rSpace0 > 0 ? radStart : 0;
+            rfRawL = rSpaceL > 0 ? radEnd : 0;
+
+            corners = buildCorners(cornerRadii);
         }
 
         let startPt = corners[0].after;
         if (activeIdx === 0 && expandStart) {
-            startPt = [0, -box.protrusionDepth + rProt];
+            const rCap = Math.min(r, box.protrusionDepth, box.protrusionLength / 2);
+            startPt = [0, -box.protrusionDepth + rCap];
         } else if (activeIdx === 3 && expandStart) {
-            startPt = [-box.protrusionDepth + rProt, 0];
+            const rCap = Math.min(r, box.protrusionDepth, box.protrusionLength / 2);
+            startPt = [-box.protrusionDepth + rCap, 0];
         }
 
         let d = `M ${pt(startPt)} `;
@@ -302,11 +348,7 @@ Shape {
 
             if (i === activeIdx) {
                 const depth = box.protrusionDepth;
-                const sRaw = box.protrusionPosition;
-                const eRaw = box.protrusionPosition + box.protrusionLength;
-
-                const sEff = expandStart ? 0 : Math.max(0, Math.min(L, sRaw));
-                const eEff = expandEnd ? L : Math.max(0, Math.min(L, eRaw));
+                const lenEff = Math.max(0, eEff - sEff);
 
                 const uStartExpand = box.snapProtrusionToEdges && (i >= 2 ? expandEnd : expandStart);
                 const uEndExpand = box.snapProtrusionToEdges && (i >= 2 ? expandStart : expandEnd);
@@ -314,31 +356,36 @@ Shape {
                 const u0 = (i >= 2) ? (L - eEff) : sEff;
                 const u1 = (i >= 2) ? (L - sEff) : eEff;
 
-                let u0_space = (i < 2) ? (u0 - rSpace0) : (u0 - rSpaceL);
-                let u1_space = (i < 2) ? (L - rSpaceL - u1) : (L - rSpace0 - u1);
+                const maxRf0 = (i < 2) ? rfRaw0 : rfRawL;
+                const maxRf1 = (i < 2) ? rfRawL : rfRaw0;
 
-                const rf0 = Math.max(0, Math.min(rProt, u0_space));
-                const rf1 = Math.max(0, Math.min(rProt, u1_space));
+                const rf0 = uStartExpand ? 0 : Math.min(maxRf0, lenEff / 4, depth);
+                const rf1 = uEndExpand ? 0 : Math.min(maxRf1, lenEff / 4, depth);
+                const rProtCur = Math.max(0, Math.min(r, depth, lenEff / 2));
 
                 if (uStartExpand) {
-                    d += `L ${pt(e.map(u0, depth - rProt))} `;
-                    d += `A ${rProt} ${rProt} 0 0 1 ${pt(e.map(u0 + rProt, depth))} `;
+                    d += `L ${pt(e.map(u0, depth - rProtCur))} `;
+                    d += `A ${rProtCur} ${rProtCur} 0 0 1 ${pt(e.map(u0 + rProtCur, depth))} `;
                 } else {
                     d += `L ${pt(e.map(u0 - rf0, 0))} `;
-                    d += `A ${rf0} ${rf0} 0 0 0 ${pt(e.map(u0, rf0))} `;
-                    d += `L ${pt(e.map(u0, depth - rProt))} `;
-                    d += `A ${rProt} ${rProt} 0 0 1 ${pt(e.map(u0 + rProt, depth))} `;
+                    if (rf0 > 0) {
+                        d += `A ${rf0} ${rf0} 0 0 0 ${pt(e.map(u0, rf0))} `;
+                    }
+                    d += `L ${pt(e.map(u0, depth - rProtCur))} `;
+                    d += `A ${rProtCur} ${rProtCur} 0 0 1 ${pt(e.map(u0 + rProtCur, depth))} `;
                 }
 
-                d += `L ${pt(e.map(u1 - rProt, depth))} `;
+                d += `L ${pt(e.map(u1 - rProtCur, depth))} `;
 
                 if (uEndExpand) {
-                    d += `A ${rProt} ${rProt} 0 0 1 ${pt(e.map(u1, depth - rProt))} `;
+                    d += `A ${rProtCur} ${rProtCur} 0 0 1 ${pt(e.map(u1, depth - rProtCur))} `;
                     d += `L ${pt(e.map(u1, 0))} `;
                 } else {
-                    d += `A ${rProt} ${rProt} 0 0 1 ${pt(e.map(u1, depth - rProt))} `;
+                    d += `A ${rProtCur} ${rProtCur} 0 0 1 ${pt(e.map(u1, depth - rProtCur))} `;
                     d += `L ${pt(e.map(u1, rf1))} `;
-                    d += `A ${rf1} ${rf1} 0 0 0 ${pt(e.map(u1 + rf1, 0))} `;
+                    if (rf1 > 0) {
+                        d += `A ${rf1} ${rf1} 0 0 0 ${pt(e.map(u1 + rf1, 0))} `;
+                    }
                     d += `L ${pt(nextCorner.before)} `;
                 }
             } else {
@@ -349,8 +396,8 @@ Shape {
                 }
             }
 
-            if (!suppressCorner[nextCornerIdx] && nextCorner.arc) {
-                d += `${arcTo(nextCorner.after, nextCorner.foot)} `;
+            if (!suppressCorner[nextCornerIdx] && nextCorner.arc && nextCorner.radius > 0) {
+                d += `${arcTo(nextCorner)} `;
             }
         });
 

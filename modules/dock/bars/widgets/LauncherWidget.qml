@@ -16,7 +16,7 @@ TextWidget {
     font: OuterWildsFont.logoWithSize(24)
 
     function toggleLauncher() {
-        root.popupRequested(launcherPanelComponent)
+        root.popupRequested(launcherPanelComponent);
     }
 
     Component {
@@ -25,7 +25,7 @@ TextWidget {
     }
 
     onClicked: {
-        root.toggleLauncher()
+        root.toggleLauncher();
     }
 
     Connections {
@@ -34,7 +34,7 @@ TextWidget {
         function onToggle() {
             // Only on the focused monitor
             if (Hyprland.monitorFor(screen) === Hyprland.focusedMonitor) {
-                root.toggleLauncher()
+                root.toggleLauncher();
             }
         }
     }

@@ -28,7 +28,7 @@ Widget {
                 id: iconWidget
                 required property SystemTrayItem modelData
 
-                signal exited()
+                signal exited
 
                 Layout.margins: 2
                 Layout.preferredWidth: iconSize

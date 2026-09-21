@@ -58,7 +58,7 @@ CurvyBox {
             return 0;
 
         // Widget center relative to the widgetContainer origin
-        const localWPos = root.horizontal ? (widget.x + widget.width / 2) : (widget.y + widget.height / 2);
+        const localWPos = root.horizontal ? (widgetContainer.x + widget.x + widget.width / 2) : (widgetContainer.y + widget.y + widget.height / 2);
         const containerLen = widgetContainer.requestedLength;
         const halfPopup = popupMainLength / 2;
 
