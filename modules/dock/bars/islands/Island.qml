@@ -112,9 +112,8 @@ CurvyBox {
             root.showPopup(widget, panelComponent);
         }
 
-        // TODO: Hacky calculations that have no actual roots in reality
-        width: (horizontal ? requestedLength : size - cornerMargins * 4)
-        height: (horizontal ? size : requestedLength - cornerMargins * 4) - anchors.margins * 2
+        width: (horizontal ? requestedLength : size) - cornerMargins
+        height: (horizontal ? size : requestedLength) - cornerMargins
     }
     property alias widgetContainer: widgetContainer
 

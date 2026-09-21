@@ -11,7 +11,7 @@ Shape {
     property real cornerRadius: 14
     property bool showFeet: true
     property bool cornerMarginsHorizontal: true
-    property real cornerMargins: cornerRadius / 8
+    property real cornerMargins: cornerRadius / 2
 
     property bool snapProtrusionToEdges: true
 
