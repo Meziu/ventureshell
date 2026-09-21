@@ -10,8 +10,7 @@ import "../widgets"
 ClickableWidget {
     id: root
 
-    width: 400
-    implicitWidth: width
+    implicitWidth: 400
     implicitHeight: layout.implicitHeight + layout.anchors.margins * 2
     baseOpacity: 0.1
     hoverOpacity: 0.2
@@ -91,7 +90,7 @@ ClickableWidget {
                 clickable: false
                 verticalAlignment: Text.AlignTop
                 horizontalAlignment: Text.AlignLeft
-                wrapMode: Text.WordWrap
+                wrapMode: Text.Wrap
                 elide: false
 
                 text: notification.body
