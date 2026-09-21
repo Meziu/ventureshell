@@ -163,7 +163,7 @@ Item {
 
         Timer {
             id: settleTimer
-            interval: 60
+            interval: 16
             onTriggered: crownMouseArea.crownIndex = crownMouseArea.rawCrownIndex
         }
     }
