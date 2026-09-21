@@ -154,7 +154,7 @@ CurvyBox {
         additionalLength = Qt.binding(() => calculateAdditionalLength(widget));
 
         popupLoader.sourceComponent = component;
-        popupFillsSpace = popupLoader.item.fillSpace
+        popupFillsSpace = popupLoader.item.fillSpace;
     }
 
     // `force` allows overriding persistence for explicit user intents.
@@ -170,8 +170,7 @@ CurvyBox {
 
     // Evaluates true only if a popup is open AND it isn't persistent.
     // Used by the bar level to determine if a generic Hyprland focus grab is necessary.
-    readonly property bool requiresFocusGrab:
-        popupLoader.sourceComponent !== null && (!popupLoader.item || !popupLoader.item.persistent)
+    readonly property bool requiresFocusGrab: popupLoader.sourceComponent !== null && (!popupLoader.item || !popupLoader.item.persistent)
 
     width: horizontal ? length : size
     height: !horizontal ? length : size
