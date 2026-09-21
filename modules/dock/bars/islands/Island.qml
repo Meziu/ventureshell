@@ -40,6 +40,10 @@ CurvyBox {
     property real currentTargetCenter: 0
     property real additionalLength: 0
 
+    onAdditionalLengthChanged: {
+        console.log(additionalLength)
+    }
+
     function calculateTargetCenter(widget: Widget): real {
         // Can't work after the item gets destroyed
         if (popupFillsSpace)
@@ -52,8 +56,12 @@ CurvyBox {
     }
 
     function calculateAdditionalLength(widget: Widget): real {
-        if (!popupLoader.item || !widget || popupLoader.item.fillSpace)
+        if (!popupLoader.item || !widget)
             return 0;
+
+        if (popupLoader.item.fillSpace) {
+            return Math.max(0, popupMainLength - widgetContainer.requestedLength)
+        }
 
         const baseLen = Math.max(widgetContainer.requestedLength, popupMainLength);
 
@@ -80,8 +88,8 @@ CurvyBox {
         const startAttached = root.horizontal ? (root.attached.left || root.isLeft) : (root.attached.top || root.isTop);
         const endAttached = root.horizontal ? (root.attached.right || root.isRight) : (root.attached.bottom || root.isBottom);
 
-        const startDeficit = Math.max(0, (halfPopup + cornerMargin) - wPos);
-        const endDeficit = Math.max(0, (wPos + halfPopup + cornerMargin) - baseLen);
+        const startDeficit = Math.max(0, (halfPopup) - wPos);
+        const endDeficit = Math.max(0, (wPos + halfPopup) - baseLen);
 
         let added = 0;
         // Suppress expansion on attached/bounded sides; only accumulate overflow on unattached sides
@@ -93,7 +101,7 @@ CurvyBox {
         return added;
     }
 
-    readonly property real baseMainLength: Math.max(widgetContainer.requestedLength, popupFillsSpace ? popupMainLength : 0)
+    readonly property real baseMainLength: widgetContainer.requestedLength
     readonly property real length: Math.max(minLength, Math.min(baseMainLength + additionalLength + cornerRadius * 2, maxLength))
 
     WidgetContainer {
