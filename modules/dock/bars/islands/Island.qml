@@ -8,6 +8,7 @@ import ".."
 
 CurvyBox {
     id: root
+    /* sbimbs was here */
 
     default property list<Widget> widgets
 

@@ -33,12 +33,15 @@ Panel {
         const item = root.results[root.currentIndex];
         if (!item) return;
 
-        const provider = item["provider"] || "desktopapplications";
-        const identifier = item["identifier"] || "";
+        const provider = item["provider"];
+        const identifier = item["identifier"];
+        const actions = item["actions"];
+        const query = searchField.text;
 
-        if (identifier === "") return;
+        if (identifier === "" || provider === "" || actions === []) return;
 
-        ElephantService.activate(provider, identifier, "start", "", []);
+        // The first one is executed with a simple enter, should find some other way
+        ElephantService.activate(provider, identifier, actions[0], query, []);
         root.exited()
     }
 
@@ -83,7 +86,7 @@ Panel {
             }
 
             onTextEdited: {
-                ElephantService.queryApps(searchField.text, root.resultLimit, r => root.results = r);
+                ElephantService.query(["desktopapplications","calc"], searchField.text, root.resultLimit, r => root.results = r);
             }
 
             onAccepted: {
