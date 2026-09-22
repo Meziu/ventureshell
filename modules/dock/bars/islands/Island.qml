@@ -59,7 +59,6 @@ CurvyBox {
 
         // Widget center relative to the widgetContainer origin
         const localWPos = root.horizontal ? (widgetContainer.x + widget.x + widget.width / 2) : (widgetContainer.y + widget.y + widget.height / 2);
-        console.log(localWPos)
         const containerLen = root.baseMainLength;
         const halfPopup = popupMainLength / 2;
 
@@ -79,23 +78,19 @@ CurvyBox {
 
         // If an edge is unattached, allow the island to expand in that direction
         if (!startAttached) {
-            console.log("Here2!")
             added += startOverflow;
         }
 
         if (!endAttached) {
-            console.log("Here1!")
             added += endOverflow;
         }
 
         // If BOTH ends are attached/pinned, the island cannot expand outwards,
         // so we guarantee the base diff is added if popup exceeds container.
         if (startAttached && endAttached) {
-            console.log("Here!")
             added = Math.max(0, popupMainLength - containerLen);
         }
 
-        console.log(added)
         return added;
     }
 
