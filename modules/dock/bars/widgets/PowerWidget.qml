@@ -29,7 +29,7 @@ TextWidget {
     text: {
         let percentageLabel = ""
         if (showPercentage && PowerService.battery) {
-            percentageLabel = PowerService.battery.percentage * 100 + "% "
+            percentageLabel = Math.round(PowerService.battery.percentage * 100) + "% "
         }
 
         return percentageLabel + batteryIcon + " " + powerProfileIcon
