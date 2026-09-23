@@ -7,7 +7,7 @@ GridLayout {
     anchors.margins: root.margins
 
     required property bool horizontal
-    property real spacing: 4
+    property real spacing: 6
     property real margins: 4
 
     readonly property real requestedLength: (horizontal ? implicitWidth : implicitHeight) + margins * 2

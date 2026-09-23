@@ -19,7 +19,7 @@ Widget {
 
         horizontal: root.horizontal
         margins: 2
-        spacing: 4
+        spacing: 2
 
         Repeater {
             model: SystemTray.items

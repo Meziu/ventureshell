@@ -27,6 +27,8 @@ Island {
         bottom: false
     }
 
+    MediaPlayerWidget {}
+
     TrayWidget {}
 
     AudioWidget {}

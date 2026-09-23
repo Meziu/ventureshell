@@ -9,6 +9,7 @@ Widget {
     property bool isHovered: mouseArea.containsMouse
     property real baseOpacity: 0
     property real hoverOpacity: 0.2
+    property real radius: 12
     signal clicked()
     signal altClicked()
 
@@ -16,7 +17,7 @@ Widget {
         id: background
         anchors.fill: parent
         opacity: mouseArea.containsMouse ? hoverOpacity : baseOpacity
-        radius: 12
+        radius: root.radius
         visible: clickable
 
         MouseArea {
