@@ -245,7 +245,7 @@ Item {
         OrbitingBody {
             id: timberHearthOrbit
             item: sun
-            rotation: (((clock.hours % 12) * 60 + clock.minutes) / 720) * 360
+            rotation: (((clock.hours % 12) * 60 + clock.minutes - 30) / 720) * 360
             SmoothRotation on rotation {}
 
             orbitDistance: root.planetOrbitDistance * 2

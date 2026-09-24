@@ -4,6 +4,7 @@ import QtQuick.Controls
 import Quickshell.Services.Mpris
 
 import "../../../services"
+import "../menus"
 
 ClickableWidget {
     id: root
@@ -97,4 +98,12 @@ ClickableWidget {
         fontSize: 8
         horizontalAlignment: Text.AlignLeft
     }
+
+    Component {
+        id: menuComponent
+
+        MediaPlayerMenu {}
+    }
+
+    onClicked: root.popupRequested(menuComponent)
 }
