@@ -78,7 +78,7 @@ ClickableWidget {
 
         RowLayout {
             Layout.minimumHeight: 32
-            Layout.fillHeight: true
+            Layout.preferredHeight: 60
             Layout.fillWidth: true
 
             TextWidget {
