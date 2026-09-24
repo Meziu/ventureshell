@@ -10,12 +10,17 @@ Widget {
     property real baseOpacity: 0
     property real hoverOpacity: 0.2
     property real radius: 12
+    property bool hideWidgetWithoutHover: false
+
     signal clicked()
     signal altClicked()
+
+    opacity: !root.hideWidgetWithoutHover || mouseArea.containsMouse ? 1.0 : 0.0
 
     Rectangle {
         id: background
         anchors.fill: parent
+
         opacity: mouseArea.containsMouse ? hoverOpacity : baseOpacity
         radius: root.radius
         visible: clickable
@@ -37,7 +42,11 @@ Widget {
         }
 
         SmoothHoverOpacity on opacity {
-            isHovered: mouseArea.containsMouse
+            isHovered: mouseArea.containsMouse && !root.hideWidgetWithoutHover
         }
+    }
+
+    SmoothHoverOpacity on opacity {
+        isHovered: mouseArea.containsMouse
     }
 }

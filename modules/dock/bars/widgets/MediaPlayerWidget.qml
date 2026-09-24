@@ -9,9 +9,6 @@ import "../menus"
 ClickableWidget {
     id: root
 
-    property string playIcon: "media-playback-start-symbolic"
-    property string pauseIcon: "media-playback-pause-symbolic"
-
     property real length: 200
     implicitWidth: horizontal ? length : -1
     implicitHeight: !horizontal ? length : -1
@@ -20,10 +17,9 @@ ClickableWidget {
 
     ClippingRectangle {
         anchors.fill: parent
-        visible: true
-        layer.enabled: true
+
         color: "black"
-        opacity: 0.4
+        opacity: 0.6
         radius: root.radius
         border {
             color: "white"
@@ -36,8 +32,6 @@ ClickableWidget {
 
             source: MediaPlayerService.trackArtUrl
 
-            clip: true
-            opacity: 0.8
             fillMode: Image.PreserveAspectCrop
             mipmap: true
         }
@@ -57,7 +51,7 @@ ClickableWidget {
             visible: MediaPlayerService.canTogglePlaying
             clickable: MediaPlayerService.canTogglePlaying
 
-            source: MediaPlayerService.isPlaying ? pauseIcon : playIcon
+            source: MediaPlayerService.toggleIcon
             iconSize: height
             width: height
 

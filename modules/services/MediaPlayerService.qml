@@ -7,10 +7,16 @@ import Quickshell.Services.Mpris
 Singleton {
     id: root
 
+    property string playIcon: "media-playback-start-symbolic"
+    property string pauseIcon: "media-playback-pause-symbolic"
+    property string toggleIcon: MediaPlayerService.isPlaying ? MediaPlayerService.pauseIcon : MediaPlayerService.playIcon
+    property string nextIcon: "media-skip-backward-symbolic-rtl"
+    property string backIcon: "media-skip-backward-symbolic"
+
     // First player or the first one found currently playing
     property MprisPlayer mainPlayer: {
         const list = Mpris.players.values;
-        return (list[0] ?? list.find(p => p.isPlaying)) ?? null
+        return (list.find(p => p.isPlaying) ?? list[0]) ?? null
     }
 
     property bool canControl: mainPlayer?.canControl || false
