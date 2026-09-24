@@ -1,6 +1,6 @@
 import QtQuick
-import QtQuick.Effects
-import QtQuick.Controls
+import QtQuick.Layouts
+import Quickshell.Widgets
 import Quickshell.Services.Mpris
 
 import "../../../services"
@@ -12,91 +12,88 @@ ClickableWidget {
     property string playIcon: "media-playback-start-symbolic"
     property string pauseIcon: "media-playback-pause-symbolic"
 
-    property real length: 160
+    property real length: 200
     implicitWidth: horizontal ? length : -1
     implicitHeight: !horizontal ? length : -1
 
     visible: MediaPlayerService.mainPlayer
 
-    Image {
-        id: background
+    ClippingRectangle {
+        anchors.fill: parent
+        visible: true
+        layer.enabled: true
+        color: "black"
+        opacity: 0.4
+        radius: root.radius
+        border {
+            color: "white"
+            width: 1
+        }
+
+        Image {
+            id: background
+            anchors.fill: parent
+
+            source: MediaPlayerService.trackArtUrl
+
+            clip: true
+            opacity: 0.8
+            fillMode: Image.PreserveAspectCrop
+            mipmap: true
+        }
+    }
+
+    RowLayout {
         anchors.fill: parent
 
-        source: MediaPlayerService.trackArtUrl
+        IconWidget {
+            id: playButton
 
-        clip: true
-        opacity: 0.7
-        fillMode: Image.PreserveAspectCrop
-        mipmap: true
+            Layout.fillHeight: true
+            Layout.topMargin: 4
+            Layout.bottomMargin: 4
+            Layout.leftMargin: 6
 
-        Rectangle {
-            id: mask
+            visible: MediaPlayerService.canTogglePlaying
+            clickable: MediaPlayerService.canTogglePlaying
 
-            anchors.fill: parent
-            visible: false
-            layer.enabled: true
+            source: MediaPlayerService.isPlaying ? pauseIcon : playIcon
+            iconSize: height
+            width: height
 
-            radius: root.radius
+            onClicked: MediaPlayerService.playToggle()
         }
 
-        layer.enabled: true
-        layer.effect: MultiEffect {
-            maskEnabled: true
-            maskSource: mask
-            maskThresholdMin: 0.5
-            maskSpreadAtMin: 1.0
+        ColumnLayout {
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            Layout.margins: 4
+
+            TextWidget {
+                id: title
+
+                Layout.fillWidth: true
+                implicitHeight: 12
+
+                clickable: false
+                text: MediaPlayerService.trackTitle
+                fontSize: 12
+                horizontalAlignment: Text.AlignLeft
+            }
+
+            TextWidget {
+                id: artist
+
+                Layout.fillWidth: true
+
+                implicitHeight: 8
+
+                clickable: false
+                text: MediaPlayerService.trackArtist
+                fontSize: 8
+                horizontalAlignment: Text.AlignLeft
+            }
         }
-    }
-
-    IconWidget {
-        id: playButton
-        anchors {
-            top: parent.top
-            bottom: parent.bottom
-            left: parent.left
-            margins: 4
-        }
-
-        visible: MediaPlayerService.canTogglePlaying
-        clickable: MediaPlayerService.canTogglePlaying
-
-        source: MediaPlayerService.isPlaying ? pauseIcon : playIcon
-        iconSize: height
-        width: height
-
-        onClicked: MediaPlayerService.playToggle()
-    }
-
-    TextWidget {
-        id: title
-        anchors {
-            top: playButton.top
-            left: playButton.right
-            right: parent.right
-        }
-
-        implicitHeight: 12
-
-        clickable: false
-        text: MediaPlayerService.trackTitle
-        fontSize: 12
-        horizontalAlignment: Text.AlignLeft
-    }
-    TextWidget {
-        id: artist
-        anchors {
-            top: title.bottom
-            bottom: parent.bottom
-            left: title.left
-            right: title.right
-        }
-
-        implicitHeight: 8
-
-        clickable: false
-        text: MediaPlayerService.trackArtist
-        fontSize: 8
-        horizontalAlignment: Text.AlignLeft
     }
 
     Component {

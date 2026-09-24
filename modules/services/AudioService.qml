@@ -87,4 +87,8 @@ Singleton {
         if (Pipewire.defaultAudioSource)
            Pipewire.defaultAudioSource.audio.volume = volume
     }
+
+    function increaseDefaultInputVolume(increase: real) {
+        setDefaultInputVolume(defaultInputVolume() + increase)
+    }
 }

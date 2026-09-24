@@ -10,6 +10,7 @@ ClickableWidget {
 
     required property string text
     property real fontSize: 14
+    property color color: OuterWildsFont.lightColor
     property int horizontalAlignment: Text.AlignHCenter
     property int verticalAlignment: Text.AlignVCenter
     property real margins: 4
@@ -35,6 +36,6 @@ ClickableWidget {
         textFormat: root.textFormat
 
         font: root.font
-        color: OuterWildsFont.lightColor
+        color: root.color
     }
 }
