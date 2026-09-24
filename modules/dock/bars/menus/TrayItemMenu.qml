@@ -40,6 +40,7 @@ Menu {
                 spacing: 4
 
                 IconWidget {
+                    clickable: false
                     visible: modelData.icon !== ""
                     source: modelData.icon
                     iconSize: 16
