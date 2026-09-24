@@ -21,7 +21,7 @@ ClickableWidget {
 
     Image {
         id: image
-        anchors.fill: parent
+        anchors.centerIn: parent
         source: {
             if (root.source === "") return "";
             if (root.source.startsWith("/") || root.source.startsWith("file:") || root.source.startsWith("image:"))
