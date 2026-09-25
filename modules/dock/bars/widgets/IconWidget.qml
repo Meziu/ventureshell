@@ -31,6 +31,9 @@ ClickableWidget {
             return Quickshell.iconPath(root.source, root.source + "-symbolic");
         }
 
+        height: Math.min(root.iconSize, root.height)
+        width: Math.min(root.iconSize, root.width)
+
         sourceSize.width: root.iconSize
         sourceSize.height: root.iconSize
 

@@ -130,7 +130,7 @@ Panel {
                         visible: source !== ""
 
                         source: delegateRoot.modelData["icon"] || ""
-                        iconSize: 64
+                        iconSize: Math.max(height, 64)
                     }
 
                     TextWidget {
