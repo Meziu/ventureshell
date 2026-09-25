@@ -20,29 +20,39 @@ Singleton {
         return (list.find(p => p.isPlaying) ?? list[0]) ?? null
     }
 
-    property bool canControl: mainPlayer?.canControl || false
-    property bool canTogglePlaying: root.canControl && mainPlayer.canTogglePlaying
-    property bool canNext: root.canControl && mainPlayer.canGoNext
-    property bool canBack: root.canControl && mainPlayer.canGoPrevious
-    property alias canStop: root.canControl
+    readonly property bool canControl: mainPlayer?.canControl || false
+    readonly property bool canTogglePlaying: root.canControl && mainPlayer.canTogglePlaying
+    readonly property bool canNext: root.canControl && mainPlayer.canGoNext
+    readonly property bool canBack: root.canControl && mainPlayer.canGoPrevious
+    readonly property alias canStop: root.canControl
 
-    property string trackTitle: mainPlayer?.trackTitle || "Unknown Track"
-    property string trackArtUrl: mainPlayer?.trackArtUrl || ""
-    property string trackArtist: mainPlayer?.trackArtist || "Unknown Artist"
-    property string trackAlbum: mainPlayer?.trackAlbum || "Unknown Album"
+    readonly property string trackTitle: mainPlayer?.trackTitle || "Unknown Track"
+    readonly property string trackArtUrl: mainPlayer?.trackArtUrl || ""
+    readonly property string trackArtist: mainPlayer?.trackArtist || "Unknown Artist"
+    readonly property string trackAlbum: mainPlayer?.trackAlbum || "Unknown Album"
 
-    property bool positionSupported: mainPlayer?.positionSupported || false
-    property bool lengthSupported: mainPlayer?.lengthSupported || false
-    property bool canSeek: root.canControl && mainPlayer?.canSeek || false
-    property real position: mainPlayer?.position || 0
-    property real length: mainPlayer?.length || 0
+    readonly property bool positionSupported: mainPlayer?.positionSupported || false
+    readonly property bool lengthSupported: mainPlayer?.lengthSupported || false
+    readonly property bool canSeek: root.canControl && mainPlayer?.canSeek || false
+    readonly property real position: mainPlayer?.position || 0
+    readonly property real length: mainPlayer?.length || 0
 
-    property bool isPlaying: mainPlayer?.isPlaying || false
+    readonly property bool isPlaying: mainPlayer?.isPlaying || false
+
+    signal trackChanged
+
+    Connections {
+        target: mainPlayer
+
+        function onPostTrackChanged() {
+            root.trackChanged()
+        }
+    }
 
     // Position updater
     Timer {
       running: root.isPlaying
-      interval: 1000
+      interval: 500
       repeat: true
       onTriggered: mainPlayer.positionChanged()
     }

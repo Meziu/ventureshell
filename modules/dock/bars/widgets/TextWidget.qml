@@ -23,7 +23,7 @@ ClickableWidget {
     property bool slide: false
     property real slideSpeed: 50
     property int slidePauseDuration: 1500
-    property bool slideSmoothReturn: false
+    property bool slideSmoothReturn: true
     readonly property bool overflowing: slide && textItem.implicitWidth > clipItem.width
 
     implicitWidth: textItem.implicitWidth + margins * 2
@@ -85,5 +85,9 @@ ClickableWidget {
                 }
             }
         }
+    }
+
+    onTextChanged: {
+        textItem.x = 0
     }
 }

@@ -186,10 +186,11 @@ Menu {
                 Layout.fillWidth: true
 
                 clickable: false
-                text: "Like the wind gonna breeze fires will burn"
+                text: MediaPlayerService.positionSupported ? LyricsService.getLineAt(MediaPlayerService.position) : MediaPlayerService.trackArtist
                 font: OuterWildsFont.signalscopeWithSize(6)
                 color: "#ADE1E5"
                 horizontalAlignment: Text.AlignHCenter
+                slide: true
             }
 
             Signalscope {
@@ -203,7 +204,7 @@ Menu {
                 Layout.fillWidth: true
 
                 clickable: false
-                text: MediaPlayerService.trackArtist + " - " + MediaPlayerService.trackTitle
+                text: MediaPlayerService.positionSupported ? MediaPlayerService.trackArtist + " - " + MediaPlayerService.trackTitle : MediaPlayerService.trackTitle
                 font: OuterWildsFont.signalscopeWithSize(10)
                 color: OuterWildsFont.defaultColor
                 horizontalAlignment: Text.AlignHCenter
@@ -212,12 +213,35 @@ Menu {
         }
     }
 
+    function queryLyricsForCurrentTrack() {
+        if (MediaPlayerService.trackTitle === "Unknown Track" || MediaPlayerService.trackArtist === "Unknown Artist") {
+            return
+        }
+
+        LyricsService.queryTrack(
+            MediaPlayerService.trackTitle,
+            MediaPlayerService.trackArtist,
+            MediaPlayerService.trackAlbum !== "Unknown Album" ? MediaPlayerService.trackAlbum : "",
+            MediaPlayerService.lengthSupported ? MediaPlayerService.length : 0
+        )
+    }
+
+    Component.onCompleted: {
+        queryLyricsForCurrentTrack()
+    }
+
     Connections {
         target: MediaPlayerService
 
         function onMainPlayerChanged() {
             if (!MediaPlayerService.mediaPlayer) {
                 root.exited()
+            }
+        }
+
+        function onTrackChanged() {
+            if (!MediaPlayerService.mediaPlayer) {
+                root.queryLyricsForCurrentTrack()
             }
         }
     }
