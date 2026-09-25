@@ -73,6 +73,7 @@ ClickableWidget {
                 text: MediaPlayerService.trackTitle
                 fontSize: 12
                 horizontalAlignment: Text.AlignLeft
+                slide: true
             }
 
             TextWidget {
@@ -86,6 +87,7 @@ ClickableWidget {
                 text: MediaPlayerService.trackArtist
                 fontSize: 8
                 horizontalAlignment: Text.AlignLeft
+                slide: true
             }
         }
     }

@@ -182,11 +182,12 @@ Menu {
             anchors.margins: signaloscopeScreen.borderWidth + 6
 
             TextWidget {
+                id: lyrics
                 Layout.fillWidth: true
 
                 clickable: false
-                text: MediaPlayerService.trackArtist
-                font: OuterWildsFont.signalscopeWithSize(10)
+                text: "Like the wind gonna breeze fires will burn"
+                font: OuterWildsFont.signalscopeWithSize(6)
                 color: "#ADE1E5"
                 horizontalAlignment: Text.AlignHCenter
             }
@@ -198,13 +199,15 @@ Menu {
             }
 
             TextWidget {
+                id: trackInfo
                 Layout.fillWidth: true
 
                 clickable: false
-                text: MediaPlayerService.trackTitle
+                text: MediaPlayerService.trackArtist + " - " + MediaPlayerService.trackTitle
                 font: OuterWildsFont.signalscopeWithSize(10)
                 color: OuterWildsFont.defaultColor
                 horizontalAlignment: Text.AlignHCenter
+                slide: true
             }
         }
     }

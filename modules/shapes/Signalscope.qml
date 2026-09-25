@@ -61,7 +61,7 @@ Item {
 
                 let waveMids = Math.sin(normX * 4.0 - root.phase * 2.0) * (root.mids * h * 0.20);
 
-                let waveHighs = Math.sin(normX * 12.0 + root.phase * 4.0) * (root.highs * h * 0.10);
+                let waveHighs = Math.sin(normX * 12.0 + root.phase * 4.0) * (root.highs * h * 0.15);
 
                 return centerY + waveBass + waveMids + waveHighs;
             }
