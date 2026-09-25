@@ -211,4 +211,14 @@ Menu {
             }
         }
     }
+
+    Connections {
+        target: MediaPlayerService
+
+        function onMainPlayerChanged() {
+            if (!MediaPlayerService.mediaPlayer) {
+                root.exited()
+            }
+        }
+    }
 }
