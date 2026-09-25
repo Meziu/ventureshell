@@ -5,6 +5,7 @@ import Quickshell.Widgets
 
 import "../../../assetloaders"
 import "../../../services"
+import "../../../shapes"
 import "../widgets"
 
 Menu {
@@ -129,9 +130,9 @@ Menu {
                 horizontalAlignment: Text.AlignHCenter
             }
 
-            // Placeholder for cool line
-            Item {
+            Signalscope {
                 Layout.fillHeight: true
+                Layout.fillWidth: true
                 implicitHeight: 60
             }
 
