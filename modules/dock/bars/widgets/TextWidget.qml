@@ -89,5 +89,9 @@ ClickableWidget {
 
     onTextChanged: {
         textItem.x = 0
+
+        if (root.overflowing) {
+            slideAnim.restart()
+        }
     }
 }
