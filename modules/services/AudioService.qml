@@ -1,11 +1,49 @@
 pragma Singleton
 
 import Quickshell
+import Quickshell.Io
 import Quickshell.Services.Pipewire
 
 Singleton {
+    id: root
+
     PwObjectTracker {
         objects: [Pipewire.defaultAudioSink, Pipewire.defaultAudioSource]
+    }
+
+    // Frequency group averages (normalized 0.0 - 1.0)
+    signal cavaDataFetched(bass: real, mids: real, highs: real)
+
+    Process {
+        id: cavaProc
+        command: ["cava", "-p", Quickshell.shellPath("cava.conf")]
+        running: true
+
+        stdout: SplitParser {
+            onRead: data => {
+                // Parse line of semicolon-separated bar values: "20;45;80;10;..."
+                let values = data.trim().split(';').map(v => parseInt(v) || 0);
+                if (values.length < 12)
+                    return;
+
+                // Group 16 CAVA bars into Bass, Mids, Highs
+                let bSum = 0, mSum = 0, hSum = 0;
+
+                for (let i = 0; i < 4; i++)
+                    bSum += values[i];         // Bars 0-3: Bass
+                for (let i = 4; i < 10; i++)
+                    mSum += values[i];        // Bars 4-9: Mids
+                for (let i = 10; i < values.length; i++)
+                    hSum += values[i]; // Bars 10+: Highs
+
+                // Smoothly weight and normalize values
+                let bass = (bSum / 400.0);
+                let mids = (mSum / 600.0);
+                let highs = (hSum / 600.0);
+
+                root.cavaDataFetched(bass, mids, highs)
+            }
+        }
     }
 
     function defaultOutputMuted(): bool {

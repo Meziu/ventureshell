@@ -5,14 +5,23 @@ import Quickshell.Widgets
 
 import "../../../assetloaders"
 import "../../../services"
+import "../../../controls"
 import "../../../shapes"
 import "../widgets"
 
 Menu {
-    implicitWidth: 350
-    implicitHeight: 300
+    id: root
 
-    RowLayout {
+    implicitWidth: 360
+    implicitHeight: 320
+
+    function formatSeconds(totalSeconds) {
+        var minutes = Math.floor(totalSeconds / 60)
+        var seconds = Math.floor(totalSeconds % 60)
+        return (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds
+    }
+
+    ColumnLayout {
         id: controlZone
 
         anchors {
@@ -23,75 +32,127 @@ Menu {
             bottomMargin: 6
         }
 
-        IconWidget {
-            Layout.fillHeight: true
-            Layout.fillWidth: true
+        RowLayout {
+            IconWidget {
+                Layout.fillHeight: true
+                Layout.fillWidth: true
 
-            iconSize: 32
-            source: MediaPlayerService.backIcon
-            baseOpacity: 0.1
+                clickable: MediaPlayerService.canBack
+                iconSize: 32
+                source: MediaPlayerService.backIcon
+                baseOpacity: 0.1
 
-            onClicked: MediaPlayerService.back()
-        }
+                onClicked: MediaPlayerService.back()
+            }
 
-        Item {
-            Layout.fillHeight: true
-            implicitWidth: height
+            Item {
+                Layout.fillHeight: true
+                implicitWidth: height
 
-            ClippingRectangle {
-                anchors.fill: parent
-                anchors.margins: 1 // to avoid slight pixel overshoot
+                ClippingRectangle {
+                    anchors.fill: parent
+                    anchors.margins: 1 // to avoid slight pixel overshoot
 
-                implicitWidth: 200
-                implicitHeight: 200
+                    implicitWidth: 200
+                    implicitHeight: 200
 
-                color: "black"
-                opacity: 0.8
-                radius: toggleButton.radius
+                    color: "black"
+                    opacity: 0.8
+                    radius: toggleButton.radius
 
-                Image {
-                    id: background
+                    Image {
+                        id: background
+                        anchors.fill: parent
+
+                        source: MediaPlayerService.trackArtUrl
+
+                        fillMode: Image.PreserveAspectCrop
+                        mipmap: true
+                    }
+                }
+
+                // Separate border because clipping rectangle shows artifacts
+                Rectangle {
+                    anchors.fill: parent
+                    radius: toggleButton.radius
+                    color: "transparent"
+                    antialiasing: true
+                    border.color: "white"
+                    opacity: 0.8
+                    border.width: 2
+                }
+
+                IconWidget {
+                    id: toggleButton
                     anchors.fill: parent
 
-                    source: MediaPlayerService.trackArtUrl
+                    clickable: MediaPlayerService.canTogglePlaying
+                    hideWidgetWithoutHover: true
+                    iconSize: 32
+                    source: MediaPlayerService.toggleIcon
 
-                    fillMode: Image.PreserveAspectCrop
-                    mipmap: true
+                    onClicked: MediaPlayerService.playToggle()
                 }
             }
 
-            // Separate border because clipping rectangle shows artifacts
-            Rectangle {
-                anchors.fill: parent
-                radius: root.radius
-                color: "transparent"
-                antialiasing: true
-                border.color: "white"
-                opacity: 0.8
-                border.width: 2
-            }
-
             IconWidget {
-                id: toggleButton
-                anchors.fill: parent
+                Layout.fillHeight: true
+                Layout.fillWidth: true
 
-                hideWidgetWithoutHover: true
+                clickable: MediaPlayerService.canNext
                 iconSize: 32
-                source: MediaPlayerService.toggleIcon
+                source: MediaPlayerService.nextIcon
+                baseOpacity: 0.1
 
-                onClicked: MediaPlayerService.playToggle()
+                onClicked: MediaPlayerService.next()
             }
         }
 
-        IconWidget {
-            Layout.fillHeight: true
+        RowLayout {
+            visible: MediaPlayerService.positionSupported && MediaPlayerService.lengthSupported
             Layout.fillWidth: true
 
-            iconSize: 32
-            source: MediaPlayerService.nextIcon
-            baseOpacity: 0.1
+            TextWidget {
+                Layout.fillHeight: false
+                implicitWidth: 60
 
-            onClicked: MediaPlayerService.next()
+                clickable: false
+                horizontalAlignment: Text.AlignRight
+
+                text: root.formatSeconds(MediaPlayerService.position)
+                fontSize: 10
+            }
+
+            Slider {
+                Layout.fillWidth: true
+                live: false
+
+                enabled: MediaPlayerService.canSeek
+
+                from: 0
+                to: MediaPlayerService.length
+                value: MediaPlayerService.position
+
+                onPressedChanged: {
+                    if (pressed) {
+                        value = value
+                    } else {
+                        MediaPlayerService.seek(value)
+                        value = Qt.binding(() => MediaPlayerService.position)
+                    }
+                }
+            }
+
+            TextWidget {
+                Layout.fillHeight: false
+                implicitWidth: 60
+
+                clickable: false
+                horizontalAlignment: Text.AlignLeft
+
+                text: root.formatSeconds(MediaPlayerService.length)
+                fontSize: 10
+            }
         }
     }
 

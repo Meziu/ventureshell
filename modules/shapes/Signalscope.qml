@@ -1,51 +1,30 @@
 import QtQuick
 import Quickshell
-import Quickshell.Io
+
+import "../services"
 
 Item {
     id: root
     width: 400
     height: 200
 
-    // Frequency group averages (normalized 0.0 - 1.0)
-    property real bass: 0.6
-    property real mids: 0.2
-    property real highs: 0.4
+    property real bass: 0
+    property real mids: 0
+    property real highs: 0
 
     property real phase: 0.0
 
     readonly property color waveColor: "#4cc9f0"    // Bright signal cyan
     readonly property color glowColor: "#2a7590"    // Deep wave glow
 
-    Process {
-        id: cavaProc
-        command: ["cava", "-p", Quickshell.shellPath("cava.conf")]
-        running: true
+    Connections {
+        target: AudioService
 
-        stdout: SplitParser {
-            onRead: data => {
-                // Parse line of semicolon-separated bar values: "20;45;80;10;..."
-                let values = data.trim().split(';').map(v => parseInt(v) || 0);
-                if (values.length < 12)
-                    return;
-
-                // Group 16 CAVA bars into Bass, Mids, Highs
-                let bSum = 0, mSum = 0, hSum = 0;
-
-                for (let i = 0; i < 4; i++)
-                    bSum += values[i];         // Bars 0-3: Bass
-                for (let i = 4; i < 10; i++)
-                    mSum += values[i];        // Bars 4-9: Mids
-                for (let i = 10; i < values.length; i++)
-                    hSum += values[i]; // Bars 10+: Highs
-
-                // Smoothly weight and normalize values
-                root.bass = (bSum / 400.0);
-                root.mids = (mSum / 600.0);
-                root.highs = (hSum / 600.0);
-
-                scopeCanvas.requestPaint();
-            }
+        function onCavaDataFetched(bass: real, mids: real, highs: real) {
+            root.bass = bass
+            root.mids = mids
+            root.highs = highs
+            scopeCanvas.requestPaint();
         }
     }
 

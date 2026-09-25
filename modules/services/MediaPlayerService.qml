@@ -1,5 +1,6 @@
 pragma Singleton
 
+import QtQuick
 import Quickshell
 import Quickshell.Io
 import Quickshell.Services.Mpris
@@ -30,7 +31,21 @@ Singleton {
     property string trackArtist: mainPlayer?.trackArtist || "Unknown Artist"
     property string trackAlbum: mainPlayer?.trackAlbum || "Unknown Album"
 
+    property bool positionSupported: mainPlayer?.positionSupported || false
+    property bool lengthSupported: mainPlayer?.lengthSupported || false
+    property bool canSeek: root.canControl && mainPlayer?.canSeek || false
+    property real position: mainPlayer?.position || 0
+    property real length: mainPlayer?.length || 0
+
     property bool isPlaying: mainPlayer?.isPlaying || false
+
+    // Position updater
+    Timer {
+      running: root.isPlaying
+      interval: 1000
+      repeat: true
+      onTriggered: mainPlayer.positionChanged()
+    }
 
     function playToggle() {
         if (root.canTogglePlaying) {
@@ -50,6 +65,11 @@ Singleton {
     function stop() {
         if (root.canControl) {
             mainPlayer.stop()
+        }
+    }
+    function seek(position: real) {
+        if (root.canSeek && root.positionSupported) {
+            mainPlayer.position = position
         }
     }
 
