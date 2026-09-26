@@ -15,6 +15,8 @@ Menu {
     implicitWidth: 360
     implicitHeight: 320
 
+    property bool trackHasLyrics: MediaPlayerService.positionSupported && !LyricsService.isInstrumental
+
     function formatSeconds(totalSeconds) {
         var minutes = Math.floor(totalSeconds / 60)
         var seconds = Math.floor(totalSeconds % 60)
@@ -186,7 +188,7 @@ Menu {
                 Layout.fillWidth: true
 
                 clickable: false
-                text: MediaPlayerService.positionSupported ? LyricsService.getLineAt(MediaPlayerService.position) : MediaPlayerService.trackArtist
+                text: root.trackHasLyrics ? LyricsService.getLineAt(MediaPlayerService.position) : MediaPlayerService.trackArtist
                 font: OuterWildsFont.signalscopeWithSize(6)
                 color: "#ADE1E5"
                 horizontalAlignment: Text.AlignHCenter
@@ -204,7 +206,7 @@ Menu {
                 Layout.fillWidth: true
 
                 clickable: false
-                text: MediaPlayerService.positionSupported ? MediaPlayerService.trackArtist + " - " + MediaPlayerService.trackTitle : MediaPlayerService.trackTitle
+                text: root.trackHasLyrics ? MediaPlayerService.trackArtist + " - " + MediaPlayerService.trackTitle : MediaPlayerService.trackTitle
                 font: OuterWildsFont.signalscopeWithSize(10)
                 color: OuterWildsFont.defaultColor
                 horizontalAlignment: Text.AlignHCenter
