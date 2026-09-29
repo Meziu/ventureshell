@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Widgets
 
+import "../../../../libraries/utils.js" as UtilsJS
 import "../../../assetloaders"
 import "../../../services"
 import "../../../controls"
@@ -16,12 +17,6 @@ Menu {
     implicitHeight: 320
 
     property bool trackHasLyrics: MediaPlayerService.positionSupported && !LyricsService.isInstrumental
-
-    function formatSeconds(totalSeconds) {
-        var minutes = Math.floor(totalSeconds / 60)
-        var seconds = Math.floor(totalSeconds % 60)
-        return (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds
-    }
 
     ColumnLayout {
         id: controlZone
@@ -121,7 +116,7 @@ Menu {
                 clickable: false
                 horizontalAlignment: Text.AlignRight
 
-                text: root.formatSeconds(MediaPlayerService.position)
+                text: UtilsJS.formatSeconds(MediaPlayerService.position, false)
                 fontSize: 10
             }
 
@@ -152,7 +147,7 @@ Menu {
                 clickable: false
                 horizontalAlignment: Text.AlignLeft
 
-                text: root.formatSeconds(MediaPlayerService.length)
+                text: UtilsJS.formatSeconds(MediaPlayerService.length, false)
                 fontSize: 10
             }
         }

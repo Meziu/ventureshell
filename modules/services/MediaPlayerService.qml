@@ -52,7 +52,7 @@ Singleton {
     // Position updater
     Timer {
       running: root.isPlaying
-      interval: 500
+      interval: 250
       repeat: true
       onTriggered: mainPlayer.positionChanged()
     }
