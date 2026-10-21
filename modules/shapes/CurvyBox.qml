@@ -171,6 +171,7 @@ Shape {
 
     readonly property color fillColor: OuterWildsFont.backgroundColor
     readonly property color borderColor: Qt.rgba(250 / 255, 179 / 255, 135 / 255, 0.28)
+    readonly property real borderWidth: 0
     readonly property ShapeGradient gradient: RustyMetal {}
 
     preferredRendererType: Shape.CurveRenderer
@@ -408,7 +409,7 @@ Shape {
     ShapePath {
         strokeColor: box.borderColor
         fillColor: box.fillColor
-        strokeWidth: 1
+        strokeWidth: box.borderWidth
         fillGradient: box.gradient
 
         PathSvg {
