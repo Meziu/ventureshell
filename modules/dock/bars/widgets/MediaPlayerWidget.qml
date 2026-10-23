@@ -54,6 +54,7 @@ ClickableWidget {
             source: MediaPlayerService.toggleIcon
             iconSize: height
             width: height
+            tinted: true
 
             onClicked: MediaPlayerService.playToggle()
         }

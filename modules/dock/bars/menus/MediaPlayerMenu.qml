@@ -38,6 +38,7 @@ Menu {
                 iconSize: 32
                 source: MediaPlayerService.backIcon
                 baseOpacity: 0.1
+                tinted: true
 
                 onClicked: MediaPlayerService.back()
             }
@@ -87,6 +88,7 @@ Menu {
                     hideWidgetWithoutHover: true
                     iconSize: 32
                     source: MediaPlayerService.toggleIcon
+                    tinted: true
 
                     onClicked: MediaPlayerService.playToggle()
                 }
@@ -100,6 +102,7 @@ Menu {
                 iconSize: 32
                 source: MediaPlayerService.nextIcon
                 baseOpacity: 0.1
+                tinted: true
 
                 onClicked: MediaPlayerService.next()
             }

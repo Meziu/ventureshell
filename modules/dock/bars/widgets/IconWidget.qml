@@ -15,8 +15,10 @@ ClickableWidget {
     property int fillMode: Image.PreserveAspectFit
     property int verticalAlignment: Image.AlignVCenter
     property int horizontalAlignment: Image.AlignHCenter
+
+    property bool tinted: false
     property color color: OuterWildsFont.lightColor
-    property Component effect: defaultTint
+    property Component effect: tinted ? defaultTint : null
 
     Component {
         id: defaultTint

@@ -35,7 +35,6 @@ Widget {
 
                 source: modelData.icon
                 iconSize: 22
-                effect: null
 
                 onClicked: {
                     if (modelData.hasMenu) {

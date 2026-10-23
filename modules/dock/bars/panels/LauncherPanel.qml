@@ -128,7 +128,6 @@ Panel {
                         Layout.fillHeight: true
                         Layout.margins: 2
                         visible: source !== ""
-                        effect: null
 
                         source: delegateRoot.modelData["icon"] || ""
                         iconSize: Math.max(height, 64)
