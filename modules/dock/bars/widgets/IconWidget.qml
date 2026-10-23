@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Effects
 import Quickshell
 
+import "../../../assetloaders"
 import "../../../effects"
 
 ClickableWidget {
@@ -14,7 +15,17 @@ ClickableWidget {
     property int fillMode: Image.PreserveAspectFit
     property int verticalAlignment: Image.AlignVCenter
     property int horizontalAlignment: Image.AlignHCenter
-    property Component effect: null
+    property color color: OuterWildsFont.lightColor
+    property Component effect: defaultTint
+
+    Component {
+        id: defaultTint
+        MultiEffect {
+            brightness: 1.0
+            colorization: 1.0
+            colorizationColor: root.color
+        }
+    }
 
     implicitWidth: iconSize
     implicitHeight: iconSize

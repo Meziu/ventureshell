@@ -44,6 +44,7 @@ Menu {
                     visible: modelData.icon !== ""
                     source: modelData.icon
                     iconSize: 16
+                    effect: null
                 }
 
                 TextWidget {
