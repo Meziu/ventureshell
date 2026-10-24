@@ -2,6 +2,8 @@ import QtQuick
 import QtQuick.Shapes
 import QtQuick.Effects
 
+import "../theme"
+
 Item {
     id: slice
     anchors.horizontalCenter: parent.horizontalCenter
@@ -16,7 +18,7 @@ Item {
     property real margin: 0
     readonly property real outerRadius: innerRadius + length
 
-    property color baseColor: "#6A7DFE"
+    property color baseColor: Theme.shapes.radialSlice.baseColor
     property bool isHovered: false
 
     default property alias content: anchorPoint.data

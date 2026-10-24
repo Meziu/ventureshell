@@ -1,8 +1,10 @@
 import QtQuick
 import QtQuick.Effects
 
+import "../theme"
+
 MultiEffect {
-    property color eyeColor: "#6A7DFE"
+    property color eyeColor: Theme.nomaiColor
 
     brightness: 1.0
     colorization: 1.0

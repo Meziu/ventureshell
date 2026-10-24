@@ -1,6 +1,8 @@
 import QtQuick
 import QtQuick.Shapes
 
+import "../theme"
+
 Shape {
     id: circle
 
@@ -11,7 +13,7 @@ Shape {
 
     ShapePath {
         strokeWidth: 4
-        strokeColor: "white"
+        strokeColor: Theme.shapes.completionCircle.baseColor
         fillColor: "transparent"
         capStyle: ShapePath.RoundCap
 

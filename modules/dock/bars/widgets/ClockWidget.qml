@@ -2,7 +2,6 @@ import QtQuick
 import Quickshell
 
 import "../menus"
-import "../../../assetloaders"
 
 TextWidget {
     property bool dateAndTime: false
