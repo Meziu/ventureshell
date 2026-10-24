@@ -5,6 +5,7 @@ import Quickshell.Widgets
 
 import "../../../../libraries/utils.js" as UtilsJS
 import "../../../assetloaders"
+import "../../../theme"
 import "../../../services"
 import "../../../controls"
 import "../../../shapes"
@@ -23,7 +24,7 @@ Menu {
 
         anchors {
             top: parent.top
-            bottom: signaloscopeScreen.top
+            bottom: signalscopeScreen.top
             left: parent.left
             right: parent.right
             bottomMargin: 6
@@ -157,7 +158,7 @@ Menu {
     }
 
     Rectangle {
-        id: signaloscopeScreen
+        id: signalscopeScreen
         property real borderWidth: 10
 
         anchors {
@@ -168,10 +169,10 @@ Menu {
 
         implicitHeight: 120
 
-        color: "#242E37"
+        color: Theme.shapes.signalscope.screenColor
 
         border {
-            color: "#4E5065"
+            color: Theme.shapes.signalscope.screenBorderColor
             width: borderWidth
         }
 
@@ -179,7 +180,7 @@ Menu {
 
         ColumnLayout {
             anchors.fill: parent
-            anchors.margins: signaloscopeScreen.borderWidth + 6
+            anchors.margins: signalscopeScreen.borderWidth + 6
 
             TextWidget {
                 id: lyrics
@@ -188,7 +189,7 @@ Menu {
                 clickable: false
                 text: root.trackHasLyrics ? LyricsService.getLineAt(MediaPlayerService.position) : MediaPlayerService.trackArtist
                 font: OuterWildsFont.signalscopeWithSize(6)
-                color: "#ADE1E5"
+                color: Theme.text.signalscopeColor
                 horizontalAlignment: Text.AlignHCenter
                 slide: true
             }
@@ -206,7 +207,7 @@ Menu {
                 clickable: false
                 text: root.trackHasLyrics ? MediaPlayerService.trackArtist + " - " + MediaPlayerService.trackTitle : MediaPlayerService.trackTitle
                 font: OuterWildsFont.signalscopeWithSize(10)
-                color: OuterWildsFont.defaultColor
+                color: Theme.text.accentColor
                 horizontalAlignment: Text.AlignHCenter
                 slide: true
             }

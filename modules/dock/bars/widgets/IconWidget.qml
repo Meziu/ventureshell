@@ -3,7 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Effects
 import Quickshell
 
-import "../../../assetloaders"
+import "../../../theme"
 import "../../../effects"
 
 ClickableWidget {
@@ -17,7 +17,7 @@ ClickableWidget {
     property int horizontalAlignment: Image.AlignHCenter
 
     property bool tinted: false
-    property color color: OuterWildsFont.lightColor
+    property color color: Theme.text.lightColor
     property Component effect: tinted ? defaultTint : null
 
     Component {

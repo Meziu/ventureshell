@@ -1,5 +1,4 @@
 import QtQuick
-import Quickshell.Services.Pipewire
 
 import "../menus"
 import "../../../services"

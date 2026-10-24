@@ -4,6 +4,7 @@ import Quickshell.Hyprland
 import QtQuick
 import QtQuick.Layouts
 
+import "../../../theme"
 import "../../../assetloaders"
 import "../../../behaviours"
 
@@ -55,7 +56,7 @@ Widget {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
 
-                color: OuterWildsFont.lightColor
+                color: Theme.text.lightColor
                 font: OuterWildsFont.logoWithOverrides({
                     pointSize: 18,
                     letterSpacing: letterSpacing
@@ -65,7 +66,7 @@ Widget {
                 Rectangle {
                     anchors.fill: parent
 
-                    color: OuterWildsFont.lightColor
+                    color: Theme.text.lightColor
 
                     opacity: {
                         let opacity = 0

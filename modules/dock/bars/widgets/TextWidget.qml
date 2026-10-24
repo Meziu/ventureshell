@@ -1,6 +1,6 @@
 import QtQuick
-import QtQuick.Layouts
 
+import "../../../theme"
 import "../../../assetloaders"
 
 ClickableWidget {
@@ -10,7 +10,7 @@ ClickableWidget {
 
     required property string text
     property real fontSize: 14
-    property color color: OuterWildsFont.lightColor
+    property color color: Theme.text.lightColor
     property int horizontalAlignment: Text.AlignHCenter
     property int verticalAlignment: Text.AlignVCenter
     property real margins: 4

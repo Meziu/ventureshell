@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell
 
+import "../theme"
 import "../services"
 
 Item {
@@ -14,8 +15,8 @@ Item {
 
     property real phase: 0.0
 
-    readonly property color waveColor: "#4cc9f0"    // Bright signal cyan
-    readonly property color glowColor: "#2a7590"    // Deep wave glow
+    readonly property color waveColor: Theme.shapes.signalscope.waveColor
+    readonly property color glowColor: Theme.shapes.signalscope.glowColor
 
     Connections {
         target: AudioService

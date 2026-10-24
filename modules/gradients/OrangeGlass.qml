@@ -2,10 +2,11 @@ import QtQuick
 import QtQuick.Shapes
 
 LinearGradient {
-    x1: 0
-    y1: 0
-    x2: box.width
-    y2: box.height
+    property real width: 0
+    property real height: 0
+
+    x1: 0; y1: 0
+    x2: width; y2: height
 
     GradientStop {
         position: 0.0

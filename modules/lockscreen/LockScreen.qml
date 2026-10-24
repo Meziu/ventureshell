@@ -9,6 +9,7 @@ import "../paths"
 import "../services"
 import "../solarclock"
 import "../assetloaders"
+import "../theme"
 
 WlSessionLock {
     id: lock
@@ -56,7 +57,7 @@ WlSessionLock {
                 } else {
                     passwordField.text = "";
                     passwordField.placeholderText = "Incorrect password"
-                    passwordField.placeholderTextColor = "red"
+                    passwordField.placeholderTextColor = Theme.text.failedInputColor
                 }
             }
 
@@ -79,7 +80,7 @@ WlSessionLock {
                 Layout.bottomMargin: -50
 
                 text: Qt.formatTime(clock.date, "hh:mm")
-                color: OuterWildsFont.defaultColor
+                color: Theme.text.accentColor
                 font: OuterWildsFont.uiWithSize(140)
 
                 renderType: Text.CurveRendering
@@ -92,7 +93,7 @@ WlSessionLock {
                 Layout.alignment: Qt.AlignRight
 
                 text: Qt.formatDate(clock.date, "dddd, MMMM d")
-                color: OuterWildsFont.defaultColor
+                color: Theme.text.accentColor
                 font: OuterWildsFont.uiWithSize(40)
 
                 renderType: Text.CurveRendering
@@ -107,7 +108,7 @@ WlSessionLock {
 
                 background: Rectangle {
                     anchors.fill: parent
-                    border.color: OuterWildsFont.defaultColor
+                    border.color: Theme.text.accentColor
                     border.width: 4
 
                     color: "#00000000"
@@ -116,13 +117,13 @@ WlSessionLock {
 
                 font: OuterWildsFont.uiWithSize(30)
                 padding: 16
-                color: OuterWildsFont.defaultColor
+                color: Theme.text.accentColor
                 horizontalAlignment: Text.AlignLeft
 
                 echoMode: TextInput.Password
 
                 placeholderText: "Insert password..."
-                placeholderTextColor: "gray"
+                placeholderTextColor: Theme.text.placeholderColor
                 passwordCharacter: "●"
 
                 selectByMouse: false

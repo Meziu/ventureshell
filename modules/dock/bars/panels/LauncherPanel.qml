@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell
 
+import "../../../theme"
 import "../../../assetloaders"
 import "../../../services"
 import "../widgets"
@@ -69,12 +70,12 @@ Panel {
 
             font: OuterWildsFont.uiWithSize(18)
             padding: 10
-            color: OuterWildsFont.lightColor
+            color: Theme.text.lightColor
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignLeft
 
             placeholderText: "Search..."
-            placeholderTextColor: "gray"
+            placeholderTextColor: Theme.text.placeholderColor
 
             selectByMouse: true
             cursorVisible: false
