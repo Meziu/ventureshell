@@ -19,6 +19,9 @@ Singleton {
 
     readonly property string currentBatteryIcon: {
         if (root.battery) {
+            if (root.battery.state === UPowerDeviceState.Charging || root.battery.state === UPowerDeviceState.FullyCharged)
+                return pluggedIcon
+
             const percentage = Math.min(root.battery.percentage, 0.99);
             return root.batteryChargeIcons[Math.floor(percentage * root.batteryChargeIcons.length)];
         }
