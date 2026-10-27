@@ -3,9 +3,10 @@ import QtQuick.Controls as Ctls
 import QtQuick.Layouts
 import Quickshell
 
-import "../widgets"
 import "../../../controls"
 import "../../../services"
+import "../../../shapes"
+import "../widgets"
 
 Menu {
     id: root
@@ -39,12 +40,8 @@ Menu {
             }
         }
 
-        Rectangle {
+        MenuSeparator {
             Layout.fillWidth: true
-
-            color: "#FFFFFF"
-            opacity: 0.2
-            height: 1
         }
 
         TextWidget {

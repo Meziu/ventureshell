@@ -2,9 +2,10 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 
-import "../widgets"
 import "../../../controls"
 import "../../../services"
+import "../../../shapes"
+import "../widgets"
 
 Menu {
     id: root
@@ -49,18 +50,10 @@ Menu {
             }
         }
 
-        Item {
-            implicitHeight: 8
-        }
-
         TextWidget {
             text: NetworkService.activeNetwork? NetworkService.activeNetwork.name : "No connection"
             clickable: false
             Layout.fillWidth: true
-        }
-
-        Item {
-            implicitHeight: 8
         }
 
         Item {
@@ -95,16 +88,8 @@ Menu {
             }
         }
 
-        Item {
-            implicitHeight: 16
-        }
-
-        Rectangle {
+        MenuSeparator {
             Layout.fillWidth: true
-
-            color: "#FFFFFF"
-            opacity: 0.2
-            height: 1
         }
 
         TextWidget {

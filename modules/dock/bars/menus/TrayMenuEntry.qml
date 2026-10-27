@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 
+import "../../../shapes"
 import "../widgets"
 
 ColumnLayout {
@@ -24,11 +25,9 @@ ColumnLayout {
         Layout.leftMargin: root.depth * 12
         spacing: 4
 
-        Rectangle {
+        MenuSeparator {
             visible: root.entry.isSeparator
             Layout.fillWidth: true
-            Layout.preferredHeight: 1
-            color: "#44ffffff"
         }
 
         IconWidget {

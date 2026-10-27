@@ -38,6 +38,10 @@ Singleton {
             readonly property color baseColor: theme.nomaiColor
         }
 
+        readonly property QtObject menuSeparator: QtObject {
+            readonly property color baseColor: "white"
+        }
+
         readonly property QtObject completionCircle: QtObject {
             readonly property color baseColor: theme.text.lightColor
         }

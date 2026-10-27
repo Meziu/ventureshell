@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 
+import "../../../shapes"
 import "../../../services"
 import "../widgets"
 
@@ -43,6 +44,10 @@ Menu {
 
                 onClicked: PowerService.setProfilePerformance()
             }
+        }
+
+        MenuSeparator {
+            Layout.fillWidth: true
         }
 
         TextWidget {
