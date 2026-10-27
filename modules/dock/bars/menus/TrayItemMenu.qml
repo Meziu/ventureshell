@@ -21,8 +21,8 @@ Menu {
         menu: menu.trayItem && menu.trayItem.hasMenu ? menu.trayItem.menu : null
     }
 
-    implicitWidth: Math.max(160, contentLayout.implicitWidth)
-    implicitHeight: Math.max(40, contentLayout.implicitHeight)
+    implicitWidth: Math.max(160, contentLayout.implicitWidth + contentLayout.anchors.margins * 2)
+    implicitHeight: Math.max(40, contentLayout.implicitHeight + contentLayout.anchors.margins * 2)
 
     ColumnLayout {
         id: contentLayout
