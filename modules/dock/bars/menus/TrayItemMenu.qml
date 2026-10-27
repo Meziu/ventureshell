@@ -3,8 +3,6 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Services.SystemTray
 
-import "../widgets"
-
 Menu {
     id: menu
 
@@ -13,15 +11,14 @@ Menu {
 
     Connections {
         target: trayItemWidget
-
         function onExited() {
-            menu.exited()
+            menu.exited();
         }
     }
 
     QsMenuOpener {
         id: opener
-        menu: menu.trayItem ? menu.trayItem.menu : null
+        menu: menu.trayItem && menu.trayItem.hasMenu ? menu.trayItem.menu : null
     }
 
     implicitWidth: Math.max(160, contentLayout.implicitWidth)
@@ -29,34 +26,23 @@ Menu {
 
     ColumnLayout {
         id: contentLayout
-        anchors.fill: parent
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+        }
         anchors.margins: 4
+        spacing: 0
 
         Repeater {
             model: opener.children
 
-            RowLayout {
-                Layout.preferredHeight: modelData.isSeparator ? 4 : -1
-                spacing: 4
+            TrayMenuEntry {
+                required property var modelData
 
-                IconWidget {
-                    clickable: false
-                    visible: modelData.icon !== ""
-                    source: modelData.icon
-                    iconSize: 16
-                }
-
-                TextWidget {
-                    Layout.fillWidth: true
-
-                    text: modelData.text
-                    fontSize: 12
-                    horizontalAlignment: Text.AlignLeft
-
-                    clickable: !modelData.isSeparator && modelData.enabled
-
-                    onClicked: modelData.triggered()
-                }
+                Layout.fillWidth: true
+                Layout.fillHeight: false
+                entry: modelData
             }
         }
     }
