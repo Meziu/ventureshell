@@ -31,8 +31,6 @@ CurvyBox {
 
     protrusionSide: Position.opposite(Position.cardinal(position, horizontal))
 
-    property bool animateProtrusionPosition: false
-
     readonly property real popupMainLength: popupLoader.item ? (horizontal ? popupLoader.requestedLength : popupLoader.requestedSize) : 0
     readonly property real popupCrossSize: popupLoader.item ? (horizontal ? popupLoader.requestedSize : popupLoader.requestedLength) : 0
 
@@ -146,10 +144,6 @@ CurvyBox {
             return;
         }
 
-        // Animate the protrusion sliding over only when swapping between
-        // two already-open popups, not on a fresh open.
-        animateProtrusionPosition = (popupLoader.item !== null);
-
         currentTargetCenter = Qt.binding(() => calculateTargetCenter(widget));
         additionalLength = Qt.binding(() => calculateAdditionalLength(widget));
 
@@ -162,7 +156,6 @@ CurvyBox {
         if (!force && popupLoader.item && popupLoader.item.persistent)
             return;
 
-        animateProtrusionPosition = false;
         popupLoader.sourceComponent = undefined;
     }
 
@@ -183,13 +176,6 @@ CurvyBox {
         }
     }
     Behavior on height {
-        NumberAnimation {
-            duration: transitionTime
-            easing.type: Easing.OutCubic
-        }
-    }
-    Behavior on protrusionPosition {
-        enabled: root.animateProtrusionPosition
         NumberAnimation {
             duration: transitionTime
             easing.type: Easing.OutCubic
