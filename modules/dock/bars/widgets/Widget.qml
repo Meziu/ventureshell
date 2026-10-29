@@ -7,6 +7,7 @@ Item {
     id: root
 
     signal popupRequested(popup: Component)
+    signal popupClosed()
 
     property bool horizontal: true
     readonly property real requestedLength: horizontal ? root.implicitWidth : root.implicitHeight

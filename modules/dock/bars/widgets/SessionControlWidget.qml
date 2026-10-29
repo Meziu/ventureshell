@@ -13,5 +13,5 @@ IconWidget {
 
     effect: NomaiEyeGlow {}
 
-    onClicked: SessionControlService.show()
+    onClicked: SessionControlService.open()
 }

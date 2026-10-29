@@ -15,11 +15,11 @@ Singleton {
         visible = !visible
     }
 
-    function show() {
+    function open() {
         visible = true
     }
 
-    function hide() {
+    function close() {
         visible = false
     }
 
@@ -59,12 +59,12 @@ Singleton {
             root.toggle()
         }
 
-        function show() {
-            root.show()
+        function open() {
+            root.open()
         }
 
-        function hide() {
-            root.hide()
+        function close() {
+            root.close()
         }
     }
 }

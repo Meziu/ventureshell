@@ -114,6 +114,10 @@ CurvyBox {
             root.showPopup(widget, panelComponent);
         }
 
+        onPopupClosed: (widget) => {
+            root.hidePopup();
+        }
+
         width: (horizontal ? requestedLength : size) - cornerMargins
         height: (horizontal ? size : requestedLength) - cornerMargins
     }
@@ -138,11 +142,6 @@ CurvyBox {
     function showPopup(widget: Widget, component: Component) {
         if (!component)
             return;
-
-        if (popupLoader.sourceComponent === component) {
-            hidePopup(false);
-            return;
-        }
 
         currentTargetCenter = Qt.binding(() => calculateTargetCenter(widget));
         additionalLength = Qt.binding(() => calculateAdditionalLength(widget));

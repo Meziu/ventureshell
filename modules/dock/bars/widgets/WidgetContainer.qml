@@ -13,6 +13,7 @@ GridLayout {
     readonly property real requestedLength: (horizontal ? implicitWidth : implicitHeight) + margins * 2
 
     signal popupRequested(widget: Widget, popup: Component)
+    signal popupClosed(widget: Widget)
 
     default property alias widgets: root.data
 
@@ -39,6 +40,10 @@ GridLayout {
 
             function onPopupRequested(panel) {
                 root.popupRequested(modelData, panel)
+            }
+
+            function onPopupClosed() {
+                root.popupClosed(modelData)
             }
         }
     }

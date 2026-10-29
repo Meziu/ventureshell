@@ -15,13 +15,34 @@ TextWidget {
 
     font: OuterWildsFont.logoWithSize(24)
 
-    function toggleLauncher() {
+    property bool launcherOpen: false
+
+    function openLauncher() {
         root.popupRequested(launcherPanelComponent);
+    }
+
+    function toggleLauncher() {
+        if (!root.launcherOpen) {
+            root.openLauncher();
+        } else {
+            root.closeLauncher()
+        }
+    }
+
+    function closeLauncher() {
+        root.popupClosed();
     }
 
     Component {
         id: launcherPanelComponent
-        LauncherPanel {}
+        LauncherPanel {
+            Component.onCompleted: {
+                launcherOpen = true
+            }
+            Component.onDestruction: {
+                launcherOpen = false
+            }
+        }
     }
 
     onClicked: {
@@ -31,11 +52,26 @@ TextWidget {
     Connections {
         target: LauncherService
 
+        function onOpen() {
+            // Only on the focused monitor
+            if (Hyprland.monitorFor(screen) === Hyprland.focusedMonitor) {
+                root.openLauncher();
+            } else {
+                root.closeLauncher();
+            }
+        }
+
         function onToggle() {
             // Only on the focused monitor
             if (Hyprland.monitorFor(screen) === Hyprland.focusedMonitor) {
                 root.toggleLauncher();
+            } else {
+                root.closeLauncher();
             }
+        }
+
+        function onClose() {
+            root.closeLauncher();
         }
     }
 }
