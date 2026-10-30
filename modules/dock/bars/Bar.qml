@@ -1,6 +1,5 @@
 import Quickshell
 import Quickshell.Wayland
-import Quickshell.Hyprland
 import QtQuick
 import QtQuick.Layouts
 
@@ -18,7 +17,6 @@ PanelWindow {
     default property list<Island> islands
 
     WlrLayershell.layer: WlrLayer.Top
-    WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
     mask: Region {
         id: maskRegion
     }
@@ -31,30 +29,24 @@ PanelWindow {
         return false;
     }
 
+    function hidePopups() {
+        hidePopupsExcept(-1)
+    }
+    function hidePopupsExcept(except: int) {
+        for (let i = 0; i < islands.length; i++) {
+            if (i === except) continue;
+
+            // don't close popups marked as persistent
+            islands[i].hidePopup(false);
+        }
+    }
+
     readonly property bool requiresFocusGrab: {
         for (let i = 0; i < islands.length; i++) {
             if (islands[i].requiresFocusGrab)
                 return true;
         }
         return false;
-    }
-
-    HyprlandFocusGrab {
-        id: grab
-        active: root.requiresFocusGrab
-        windows: [root]
-
-        onCleared: {
-            for (let i = 0; i < islands.length; i++) {
-                // don't close popups marked as persistent
-                islands[i].hidePopup(false);
-            }
-        }
-    }
-
-    IdleInhibitor {
-        window: root
-        enabled: IdleInhibitorService.inhibit
     }
 
     Item {
