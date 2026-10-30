@@ -16,28 +16,39 @@ PanelWindow {
     property real cornerRadius: Config.options.bar.cornerRadius
     default property list<Island> islands
 
+    signal popupOpened
+
     WlrLayershell.layer: WlrLayer.Top
     mask: Region {
         id: maskRegion
     }
 
-    property bool popupOpen: {
-        for (let i = 0; i < islands.length; i++) {
-            if (islands[i].popupOpen)
-                return true;
-        }
-        return false;
-    }
-
     function hidePopups() {
-        hidePopupsExcept(-1)
+        hidePopupsExcept(-1);
     }
     function hidePopupsExcept(except: int) {
         for (let i = 0; i < islands.length; i++) {
-            if (i === except) continue;
+            if (i === except)
+                continue;
 
-            // don't close popups marked as persistent
             islands[i].hidePopup(false);
+        }
+    }
+
+    Instantiator {
+        model: root.islands
+        delegate: Connections {
+            required property Island modelData
+            required property int index
+            target: modelData
+
+            function onRequiresFocusGrabChanged() {
+                if (!modelData.requiresFocusGrab)
+                    return;
+
+                root.hidePopupsExcept(index); // this bar's other islands
+                root.popupOpened();           // let the Dock handle the other bar
+            }
         }
     }
 

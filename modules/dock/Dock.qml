@@ -38,6 +38,21 @@ Item {
                 window: horizontalBar
                 enabled: IdleInhibitorService.inhibit
             }
+
+            Connections {
+                target: verticalBar
+
+                function onPopupOpened() {
+                    horizontalBar.hidePopups()
+                }
+            }
+            Connections {
+                target: horizontalBar
+
+                function onPopupOpened() {
+                    verticalBar.hidePopups()
+                }
+            }
         }
     }
 }

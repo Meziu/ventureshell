@@ -136,7 +136,10 @@ CurvyBox {
         onLoaded: {
             popupLoader.parentWidget.popupOpened(popupLoader.sourceComponent);
             popupLoader.item.Component.destruction.connect(() => {
-                if (popupLoader.parentWidget) popupLoader.parentWidget.popupDestroyed();
+                if (popupLoader.parentWidget) {
+                    popupLoader.parentWidget.popupDestroyed();
+                    popupLoader.parentWidget = null;
+                }
             });
             popupLoader.item.exited.connect(() => {
                 root.hidePopup(true);
@@ -161,8 +164,7 @@ CurvyBox {
         if (!force && popupLoader.item && popupLoader.item.persistent)
             return;
 
-        popupLoader.parentWidget = null
-        popupLoader.sourceComponent = undefined;
+        popupLoader.sourceComponent = null;
     }
 
     property bool popupOpen: popupLoader.sourceComponent !== null
