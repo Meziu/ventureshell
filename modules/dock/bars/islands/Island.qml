@@ -114,7 +114,7 @@ CurvyBox {
             root.showPopup(widget, panelComponent);
         }
 
-        onPopupClosed: (widget) => {
+        onPopupClosed: widget => {
             root.hidePopup();
         }
 
@@ -128,11 +128,16 @@ CurvyBox {
 
         anchors.fill: parent
 
+        property Widget parentWidget: null
         property real requestedPosition: root.currentTargetCenter - (root.protrusionLength / 2)
         property real requestedLength: popupLoader.item ? popupLoader.item.implicitWidth : 0
         property real requestedSize: popupLoader.item ? popupLoader.item.implicitHeight : 0
 
         onLoaded: {
+            popupLoader.parentWidget.popupOpened(popupLoader.sourceComponent);
+            popupLoader.item.Component.destruction.connect(() => {
+                if (popupLoader.parentWidget) popupLoader.parentWidget.popupDestroyed();
+            });
             popupLoader.item.exited.connect(() => {
                 root.hidePopup(true);
             });
@@ -146,6 +151,7 @@ CurvyBox {
         currentTargetCenter = Qt.binding(() => calculateTargetCenter(widget));
         additionalLength = Qt.binding(() => calculateAdditionalLength(widget));
 
+        popupLoader.parentWidget = widget;
         popupLoader.sourceComponent = component;
         popupFillsSpace = popupLoader.item.fillSpace;
     }
@@ -155,6 +161,7 @@ CurvyBox {
         if (!force && popupLoader.item && popupLoader.item.persistent)
             return;
 
+        popupLoader.parentWidget = null
         popupLoader.sourceComponent = undefined;
     }
 

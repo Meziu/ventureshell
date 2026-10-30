@@ -99,5 +99,5 @@ ClickableWidget {
         MediaPlayerMenu {}
     }
 
-    onClicked: root.popupRequested(menuComponent)
+    onClicked: root.togglePopup(menuComponent)
 }

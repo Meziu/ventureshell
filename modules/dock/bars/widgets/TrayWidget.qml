@@ -38,7 +38,7 @@ Widget {
 
                 onClicked: {
                     if (modelData.hasMenu) {
-                        root.popupRequested(menuComponent);
+                        root.togglePopup(menuComponent);
                     }
                 }
                 onAltClicked: modelData.activate()

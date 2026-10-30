@@ -21,6 +21,6 @@ TextWidget {
         PowerMenu {}
     }
 
-    onClicked: popupRequested(menuComponent)
+    onClicked: togglePopup(menuComponent)
     onAltClicked: PowerService.cyclePowerProfile()
 }

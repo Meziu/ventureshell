@@ -58,6 +58,6 @@ TextWidget {
         NetworkMenu {}
     }
 
-    onClicked: popupRequested(menuComponent)
+    onClicked: togglePopup(menuComponent)
     onAltClicked: NetworkService.toggleVpn()
 }

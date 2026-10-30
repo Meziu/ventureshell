@@ -21,6 +21,7 @@ TextWidget {
     }
 
     Component.onCompleted: {
-        NotificationService.notification.connect(() => root.popupRequested(menuComponent))
+        // explicit open rather than toggle, it stays on with multiple notifications
+        NotificationService.notification.connect(() => root.openPopup(menuComponent))
     }
 }

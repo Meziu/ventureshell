@@ -25,7 +25,7 @@ TextWidget {
         AudioMenu {}
     }
 
-    onClicked: root.popupRequested(menuComponent)
+    onClicked: root.togglePopup(menuComponent)
     onAltClicked: AudioService.toggleDefaultOutputMuted()
 
 }
