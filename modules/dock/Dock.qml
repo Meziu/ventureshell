@@ -7,20 +7,16 @@ Item {
     Variants {
         model: Quickshell.screens
 
-        VerticalBar {
+        Item {
             required property var modelData
 
-            screen: modelData
-        }
-    }
+            VerticalBar {
+                screen: modelData
+            }
 
-    Variants {
-        model: Quickshell.screens
-
-        HorizontalBar {
-            required property var modelData
-
-            screen: modelData
+            HorizontalBar {
+                screen: modelData
+            }
         }
     }
 }

@@ -23,7 +23,7 @@ Widget {
         }
         return ws;
     }
-    property HyprlandWorkspace activeWorkspace: monitor?.activeWorkspace
+    property HyprlandWorkspace activeWorkspace: monitor?.activeWorkspace || null
 
     implicitWidth: layout.implicitWidth
     implicitHeight: layout.implicitHeight
@@ -46,7 +46,7 @@ Widget {
             Text {
                 id: workspaceLabel
                 required property HyprlandWorkspace modelData
-                property bool focused: modelData === activeWorkspace
+                property bool focused: workspaceLabel.modelData === root.activeWorkspace
                 property real letterSpacing: -4
 
                 Layout.preferredWidth: layout.cellSize
