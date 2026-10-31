@@ -53,6 +53,14 @@ Item {
                     verticalBar.hidePopups()
                 }
             }
+            Connections {
+                target: DockService
+
+                function onHideAllPopups() {
+                    horizontalBar.hidePopups()
+                    verticalBar.hidePopups()
+                }
+            }
         }
     }
 }
