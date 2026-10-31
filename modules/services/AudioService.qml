@@ -80,7 +80,7 @@ Singleton {
     }
 
     function setDefaultOutputVolume(volume: real) {
-        if (!Pipewire.ready) return 0
+        if (!Pipewire.ready) return
 
         if (Pipewire.defaultAudioSink)
            Pipewire.defaultAudioSink.audio.volume = volume
@@ -124,6 +124,10 @@ Singleton {
 
         if (Pipewire.defaultAudioSource)
            Pipewire.defaultAudioSource.audio.volume = volume
+    }
+
+    function increaseDefaultOutputVolume(increase: real) {
+        setDefaultInputVolume(defaultOutputVolume() + increase)
     }
 
     function increaseDefaultInputVolume(increase: real) {
