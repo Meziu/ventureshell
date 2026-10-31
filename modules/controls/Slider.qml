@@ -1,11 +1,11 @@
 import QtQuick
 import QtQuick.Controls
 
+import "../theme"
+
 Slider {
     id: slider
 
-    property color accentColor: "#6A2CA0"
-    property color trackColor: "#bdbebf"
     property real trackThickness: 6
     property real trackThicknessActive: 8
     property real knobSize: 14
@@ -40,7 +40,7 @@ Slider {
             width: slider.knobSize
             height: slider.knobSize
             radius: width / 2
-            color: slider.accentColor
+            color: Theme.controls.slider.accentColor
 
             scale: slider.pressed ? 1.0 : 0.0
             visible: scale > 0
@@ -81,7 +81,7 @@ Slider {
                 width: bar.width
                 height: bar.height
                 radius: bar.radius
-                color: slider.trackColor
+                color: Theme.controls.slider.trackColor
             }
         }
         Rectangle {
@@ -90,7 +90,7 @@ Slider {
             width: slider.horizontal ? bar.filled : bar.width
             height: slider.horizontal ? bar.height : bar.filled
             radius: bar.radius
-            color: slider.accentColor
+            color: Theme.controls.slider.accentColor
         }
     }
 }

@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 
 import "../effects"
+import "../theme"
 
 Switch {
     id: root
@@ -16,8 +17,8 @@ Switch {
         anchors.fill: parent
         radius: height / 2
 
-        color: root.checked ? "#2E2113" : "#241D14"
-        border.color: root.checked ? "#6A2CA0" : "#3D3122"
+        color: root.checked ? Theme.controls.flipswitch.track.checkedColor : Theme.controls.flipswitch.track.uncheckedColor
+        border.color: root.checked ? Theme.controls.flipswitch.track.borderCheckedColor : Theme.controls.flipswitch.track.borderUncheckedColor
         border.width: 1
 
         Behavior on color { ColorAnimation { duration: root.transitionTime } }
@@ -27,8 +28,8 @@ Switch {
             anchors.fill: parent
             anchors.margins: 3
             radius: height / 2
-            color: "#120E09"
-            border.color: "#0A0805"
+            color: Theme.controls.flipswitch.track.backgroundColor
+            border.color: Theme.controls.flipswitch.track.backgroundBorderColor
             border.width: 1
         }
 
@@ -50,8 +51,8 @@ Switch {
                 anchors.fill: parent
                 radius: width / 2
 
-                color: root.checked ? "#05020A" : "#33FFFFFF"
-                border.color: root.checked ? "transparent" : "#66FFFFFF"
+                color: root.checked ? Theme.controls.flipswitch.handle.checkedColor : Theme.controls.flipswitch.handle.uncheckedColor
+                border.color: root.checked ? Theme.controls.flipswitch.handle.borderCheckedColor : Theme.controls.flipswitch.handle.borderUncheckedColor
                 border.width: 1
 
                 Behavior on color { ColorAnimation { duration: root.transitionTime } }
@@ -69,7 +70,7 @@ Switch {
                         id: glowSource
                         anchors.fill: parent
                         radius: width / 2
-                        color: "black"
+                        color: Theme.controls.flipswitch.handle.glowSourceBaseColor
                     }
 
                     layer.enabled: true
