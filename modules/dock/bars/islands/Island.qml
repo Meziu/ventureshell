@@ -134,11 +134,11 @@ CurvyBox {
         property real requestedSize: popupLoader.item ? popupLoader.item.implicitHeight : 0
 
         onLoaded: {
-            popupLoader.parentWidget.popupOpened(popupLoader.sourceComponent);
+            let parent = popupLoader.parentWidget
+            parent.popupOpened(popupLoader.sourceComponent);
             popupLoader.item.Component.destruction.connect(() => {
-                if (popupLoader.parentWidget) {
-                    popupLoader.parentWidget.popupDestroyed();
-                    popupLoader.parentWidget = null;
+                if (parent) {
+                    parent.popupDestroyed();
                 }
             });
             popupLoader.item.exited.connect(() => {
@@ -164,6 +164,7 @@ CurvyBox {
         if (!force && popupLoader.item && popupLoader.item.persistent)
             return;
 
+        popupLoader.parentWidget = null;
         popupLoader.sourceComponent = null;
     }
 

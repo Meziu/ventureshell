@@ -49,7 +49,7 @@ PanelWindow {
     function executeSessionControl(type: string) {
         const fn = fnList[type];
         if (fn) {
-            SessionControlService.hide()
+            SessionControlService.close()
             fn()
         } else {
             console.warn("No command configured for session control:", type);
@@ -126,7 +126,7 @@ PanelWindow {
 
         onClicked: mouse => {
             if (region == -1) {
-                SessionControlService.hide();
+                SessionControlService.close();
             }
             if (region >= 0) {
                 let tempRegion = region
