@@ -61,6 +61,21 @@ Item {
                     verticalBar.hidePopups()
                 }
             }
+
+            Connections {
+                target: Hyprland
+
+                function onRawEvent(event) {
+                    switch (event.name) {
+                    //case "activewindowv2":   // focus moved to another window
+                    case "workspacev2":      // workspace switched
+                    case "focusedmonv2":     // focus moved to another monitor
+                        verticalBar.hidePopups()
+                        horizontalBar.hidePopups()
+                        break
+                    }
+                }
+            }
         }
     }
 }
