@@ -73,8 +73,12 @@ Singleton {
                         return
                     }
 
-                    let contentObject = JSON.parse(response.content)
-                    root.lyrics = Yaml.parse(contentObject.lyricsfile);
+                    if (response.status === 200) {
+                        let contentObject = JSON.parse(response.content)
+                        root.lyrics = Yaml.parse(contentObject.lyricsfile);
+                    } else {
+                        console.warn("Received response with status", response.status, "from", root.baseUrl)
+                    }
                 }
             }
 
