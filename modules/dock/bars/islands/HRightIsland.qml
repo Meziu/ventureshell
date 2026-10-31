@@ -31,8 +31,6 @@ Island {
 
     TrayWidget {}
 
-    AudioWidget {}
-
     IdleInhibitorWidget {}
 
     PowerWidget {}

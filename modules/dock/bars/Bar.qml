@@ -11,6 +11,9 @@ import "../../services"
 PanelWindow {
     id: root
 
+    implicitHeight: 1000
+    implicitWidth: 1000
+
     required property int position
     property real size: Config.options.bar.size
     property real cornerRadius: Config.options.bar.cornerRadius
