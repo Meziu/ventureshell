@@ -20,6 +20,7 @@ Slider {
     }
 
     opacity: enabled ? 1.0 : 0.3
+    layer.enabled: opacity < 1.0 // to avoid clipping issues with rounded corners
 
     leftPadding: horizontal ? knobSize / 2 : 0
     rightPadding: horizontal ? knobSize / 2 : 0
