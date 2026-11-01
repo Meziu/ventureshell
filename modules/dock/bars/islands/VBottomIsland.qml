@@ -5,7 +5,6 @@ import QtQuick.Layouts
 
 import "../../../config"
 import "../../../shapes"
-import "../../../effects"
 import "../widgets"
 
 Island {
@@ -13,6 +12,8 @@ Island {
 
     horizontal: false
     widgetsFillIsland: false
+
+    //widgetContainer.anchors.bottomMargin: root.cornerRadius
 
     attached: Attach {
         top: false

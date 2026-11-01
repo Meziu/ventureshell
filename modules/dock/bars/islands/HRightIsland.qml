@@ -18,7 +18,7 @@ Island {
         right: parent.right
     }
 
-    widgetContainer.anchors.rightMargin: root.cornerRadius
+    //widgetContainer.anchors.rightMargin: root.cornerRadius
 
     attached: Attach {
         top: true
