@@ -46,6 +46,14 @@ Singleton {
         }
     }
 
+    readonly property QtObject widgets: QtObject {
+        readonly property QtObject speedometer: QtObject {
+            readonly property color cpuColor: "#7C94E6"     // soft periwinkle, a washed-out nomaiColor
+            readonly property color ramColor: "#DB6551"     // muted coral-red, between curvyBox rust and "red"
+            readonly property color storageColor: "#E3B65A" // dusty amber-gold
+        }
+    }
+
     readonly property QtObject shapes: QtObject {
         readonly property QtObject curvyBox: QtObject {
             readonly property color fillColor: "#9C4A1C"

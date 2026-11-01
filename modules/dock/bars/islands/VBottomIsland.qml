@@ -27,6 +27,16 @@ Island {
         left: parent.left
     }
 
+    CPUWidget {
+        horizontal: root.horizontal
+    }
+    RAMWidget {
+        horizontal: root.horizontal
+    }
+    StorageWidget {
+        horizontal: root.horizontal
+    }
+
     AudioWidget {
         horizontal: root.horizontal
     }

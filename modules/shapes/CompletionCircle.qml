@@ -4,26 +4,32 @@ import QtQuick.Shapes
 import "../theme"
 
 Shape {
-    id: circle
+    id: root
+
+    property real strokeWidth: 4
+    property color strokeColor: Theme.shapes.completionCircle.baseColor
 
     property real completion: 1
     property real radius: 10
+    property real startAngle: -90
+    property real maxSweep: 360
+    property bool clockwise: false
 
     preferredRendererType: Shape.CurveRenderer
 
     ShapePath {
-        strokeWidth: 4
-        strokeColor: Theme.shapes.completionCircle.baseColor
+        strokeWidth: root.strokeWidth
+        strokeColor: root.strokeColor
         fillColor: "transparent"
         capStyle: ShapePath.RoundCap
 
         PathAngleArc {
-            centerX: circle.width / 2
-            centerY: circle.height / 2
-            radiusX: circle.radius
-            radiusY: circle.radius
-            startAngle: -90
-            sweepAngle: -circle.completion * 360
+            centerX: root.width / 2
+            centerY: root.height / 2
+            radiusX: root.radius
+            radiusY: root.radius
+            startAngle: root.startAngle
+            sweepAngle: (root.clockwise ? 1 : -1) * root.completion * root.maxSweep
         }
     }
 }

@@ -26,6 +26,16 @@ Singleton {
                 property real cornerRadius: 16
             }
 
+            property JsonObject widgets: JsonObject {
+                property JsonObject systemInfo: JsonObject {
+                    property JsonObject commands: JsonObject {
+                        property list<string> viewCPU:       ["gnome-system-monitor", "-r"]
+                        property list<string> viewRAM:       ["gnome-system-monitor", "-r"]
+                        property list<string> viewStorage:   ["gnome-system-monitor", "-f"]
+                    }
+                }
+            }
+
             property JsonObject sessionctl: JsonObject {
                 property real centerRadius: 180
                 property real eyeScalePerHundredRadius: 0.2
