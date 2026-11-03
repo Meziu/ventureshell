@@ -16,7 +16,11 @@ Menu {
     ColumnLayout {
         id: list
 
-        anchors.fill: parent
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+        }
         spacing: 2
 
         DeviceSelector {

@@ -15,7 +15,11 @@ Menu {
     ColumnLayout {
         id: list
 
-        anchors.fill: parent
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+        }
         spacing: 2
 
         Item {
@@ -51,9 +55,16 @@ Menu {
         }
 
         TextWidget {
-            text: NetworkService.activeNetwork? NetworkService.activeNetwork.name : "No connection"
+            text: NetworkService.activeNetwork ? NetworkService.activeNetwork.name : "No connection"
             clickable: false
             Layout.fillWidth: true
+        }
+
+        WifiScanner {
+            visible: NetworkService.wifiEnabled
+            Layout.fillWidth: true
+            Layout.leftMargin: 18
+            Layout.rightMargin: 18
         }
 
         Item {

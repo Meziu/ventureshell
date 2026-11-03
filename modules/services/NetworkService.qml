@@ -48,6 +48,31 @@ Singleton {
         return null;
     }
 
+    property bool scanning: false
+
+    Binding {
+        target: root.wifiDevice
+        property: "scannerEnabled"
+        value: root.scanning
+        when: root.wifiDevice !== null
+    }
+
+    // Deduplicated (same SSID on several APs), named, connected first, then by signal
+    readonly property var wifiNetworks: {
+        if (!wifiDevice) return []
+
+        const best = new Map()
+        for (const n of wifiDevice.networks.values) {
+            if (!n.name) continue
+            const prev = best.get(n.name)
+            if (!prev || n.connected || (!prev.connected && n.signalStrength > prev.signalStrength))
+                best.set(n.name, n)
+        }
+
+        return [...best.values()].sort((a, b) =>
+            (b.connected - a.connected) || (b.signalStrength - a.signalStrength))
+    }
+
     property string targetVpnName: "wireguardvpn"
     property string remoteHost: "10.214.101.1"
     property int pingTimeoutSeconds: 2
@@ -196,5 +221,23 @@ Singleton {
     }
     function hasWiredConnection(): bool {
         return wiredDevice && wiredDevice.connected;
+    }
+
+    function connectToNetwork(network) {
+        if (network && !network.connected)
+            network.connect()
+    }
+
+    function connectToNetworkWithPassword(network, password: string) {
+        if (network && password !== "")
+            network.connectWithPsk(password)
+    }
+
+    function needsPassword(reason): bool {
+        return reason === ConnectionFailReason.NoSecrets
+    }
+
+    function networkLabel(network): string {
+        return network.name
     }
 }
