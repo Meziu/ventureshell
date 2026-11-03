@@ -14,10 +14,22 @@ Singleton {
     property string nextIcon: "media-skip-backward-symbolic-rtl"
     property string backIcon: "media-skip-backward-symbolic"
 
-    // First player or the first one found currently playing
+    property MprisPlayer lastPlaying: null
+    readonly property MprisPlayer playingPlayer:
+        Mpris.players.values.find(p => p.isPlaying) ?? null
+
+    onPlayingPlayerChanged: {
+        if (playingPlayer)
+            lastPlaying = playingPlayer
+    }
+
     property MprisPlayer mainPlayer: {
-        const list = Mpris.players.values;
-        return (list.find(p => p.isPlaying) ?? list[0]) ?? null
+        const list = Mpris.players.values
+        if (playingPlayer)
+            return playingPlayer
+        if (lastPlaying && list.includes(lastPlaying))
+            return lastPlaying
+        return list.find(p => p.trackTitle) ?? list[0] ?? null
     }
 
     readonly property bool canControl: mainPlayer?.canControl || false

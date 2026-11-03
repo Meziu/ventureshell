@@ -7,8 +7,13 @@ import Quickshell.Services.Pipewire
 Singleton {
     id: root
 
+    readonly property PwNode defaultAudioSink: Pipewire.defaultAudioSink
+    readonly property PwNode defaultAudioSource: Pipewire.defaultAudioSource
+    readonly property list<PwNode> outputDevices: Pipewire.nodes.values.filter(n => n.audio && !n.isStream && n.isSink)
+    readonly property list<PwNode> inputDevices: Pipewire.nodes.values.filter(n => n.audio && !n.isStream && !n.isSink)
+
     PwObjectTracker {
-        objects: [Pipewire.defaultAudioSink, Pipewire.defaultAudioSource]
+        objects: [root.defaultAudioSink, root.defaultAudioSource]
     }
 
     // Frequency group averages (normalized 0.0 - 1.0)
@@ -41,96 +46,113 @@ Singleton {
                 let mids = (mSum / 600.0);
                 let highs = (hSum / 600.0);
 
-                root.cavaDataFetched(bass, mids, highs)
+                root.cavaDataFetched(bass, mids, highs);
             }
         }
     }
 
     function defaultOutputMuted(): bool {
-        if (!Pipewire.ready) return false
+        if (!Pipewire.ready)
+            return false;
 
-        if (Pipewire.defaultAudioSink)
-           return Pipewire.defaultAudioSink.audio.muted
+        if (root.defaultAudioSink)
+            return root.defaultAudioSink.audio.muted;
 
-        console.warn("No default audio output")
-        return false
+        console.warn("No default audio output");
+        return false;
     }
 
     function setDefaultOutputMuted(muted: bool) {
-        if (!Pipewire.ready) return
-
-        if (Pipewire.defaultAudioSink) {
-            Pipewire.defaultAudioSink.audio.muted = muted
+        if (!Pipewire.ready)
+            return;
+        if (root.defaultAudioSink) {
+            root.defaultAudioSink.audio.muted = muted;
         } else {
-            console.warn("No default audio output")
+            console.warn("No default audio output");
         }
     }
 
     function toggleDefaultOutputMuted() {
-        setDefaultOutputMuted(!defaultOutputMuted())
+        setDefaultOutputMuted(!defaultOutputMuted());
     }
 
     function defaultOutputVolume(): real {
-        if (!Pipewire.ready) return 0
+        if (!Pipewire.ready)
+            return 0;
 
-        if (Pipewire.defaultAudioSink)
-           return Pipewire.defaultAudioSink.audio.volume
+        if (root.defaultAudioSink)
+            return root.defaultAudioSink.audio.volume;
 
-        return 0
+        return 0;
     }
 
     function setDefaultOutputVolume(volume: real) {
-        if (!Pipewire.ready) return
-
-        if (Pipewire.defaultAudioSink)
-           Pipewire.defaultAudioSink.audio.volume = volume
+        if (!Pipewire.ready)
+            return;
+        if (root.defaultAudioSink)
+            root.defaultAudioSink.audio.volume = volume;
     }
 
     function defaultInputMuted(): bool {
-        if (!Pipewire.ready) return false
+        if (!Pipewire.ready)
+            return false;
 
-        if (Pipewire.defaultAudioSource)
-           return Pipewire.defaultAudioSource.audio.muted
+        if (root.defaultAudioSource)
+            return root.defaultAudioSource.audio.muted;
 
-        return 0
+        return 0;
     }
 
     function setDefaultInputMuted(muted: bool) {
-        if (!Pipewire.ready) return
-
-        if (Pipewire.defaultAudioSource) {
-            Pipewire.defaultAudioSource.audio.muted = muted
+        if (!Pipewire.ready)
+            return;
+        if (root.defaultAudioSource) {
+            root.defaultAudioSource.audio.muted = muted;
         } else {
-            console.warn("No default audio output")
+            console.warn("No default audio output");
         }
     }
 
     function toggleDefaultInputMuted() {
-        setDefaultInputMuted(!defaultInputMuted())
+        setDefaultInputMuted(!defaultInputMuted());
     }
 
     function defaultInputVolume(): real {
-        if (!Pipewire.ready) return 0
+        if (!Pipewire.ready)
+            return 0;
 
-        if (Pipewire.defaultAudioSource)
-           return Pipewire.defaultAudioSource.audio.volume
+        if (root.defaultAudioSource)
+            return root.defaultAudioSource.audio.volume;
 
-        console.warn("No default audio input")
-        return 0
+        console.warn("No default audio input");
+        return 0;
     }
 
     function setDefaultInputVolume(volume: real) {
-        if (!Pipewire.ready) return 0
+        if (!Pipewire.ready)
+            return 0;
 
-        if (Pipewire.defaultAudioSource)
-           Pipewire.defaultAudioSource.audio.volume = volume
+        if (root.defaultAudioSource)
+            root.defaultAudioSource.audio.volume = volume;
     }
 
     function increaseDefaultOutputVolume(increase: real) {
-        setDefaultInputVolume(defaultOutputVolume() + increase)
+        setDefaultInputVolume(defaultOutputVolume() + increase);
     }
 
     function increaseDefaultInputVolume(increase: real) {
-        setDefaultInputVolume(defaultInputVolume() + increase)
+        setDefaultInputVolume(defaultInputVolume() + increase);
+    }
+
+    function setDefaultOutputDevice(node: PwNode) {
+        Pipewire.preferredDefaultAudioSink = node
+    }
+
+    function setDefaultInputDevice(node: PwNode) {
+        Pipewire.preferredDefaultAudioSource = node
+    }
+
+    function nodeLabel(node: PwNode): string {
+        return node.nickname || node.description || node.name
     }
 }

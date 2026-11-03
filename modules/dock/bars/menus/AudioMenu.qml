@@ -10,7 +10,7 @@ import "../widgets"
 
 Menu {
     id: root
-    implicitWidth: 260
+    implicitWidth: list.implicitWidth
     implicitHeight: list.implicitHeight + list.spacing * list.children.length
 
     ColumnLayout {
@@ -19,25 +19,20 @@ Menu {
         anchors.fill: parent
         spacing: 2
 
-        RowLayout {
+        DeviceSelector {
             Layout.fillWidth: true
+            label: "Output"
+            devices: AudioService.outputDevices
+            current: AudioService.defaultAudioSink
+            onSelected: node => AudioService.setDefaultOutputDevice(node)
+        }
 
-            TextWidget {
-                text: "Volume"
-                clickable: false
-            }
-
-            Slider {
-                id: volumeSlider
-                value: AudioService.defaultOutputVolume()
-
-                Layout.margins: 8
-                Layout.fillWidth: true
-
-                stepSize: 0.05
-                snapMode: Slider.SnapOnRelease
-                onValueChanged: AudioService.setDefaultOutputVolume(volumeSlider.value)
-            }
+        DeviceSelector {
+            Layout.fillWidth: true
+            label: "Input"
+            devices: AudioService.inputDevices
+            current: AudioService.defaultAudioSource
+            onSelected: node => AudioService.setDefaultInputDevice(node)
         }
 
         MenuSeparator {
