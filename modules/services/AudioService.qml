@@ -11,9 +11,13 @@ Singleton {
     readonly property PwNode defaultAudioSource: Pipewire.defaultAudioSource
     readonly property list<PwNode> outputDevices: Pipewire.nodes.values.filter(n => n.audio && !n.isStream && n.isSink)
     readonly property list<PwNode> inputDevices: Pipewire.nodes.values.filter(n => n.audio && !n.isStream && !n.isSink)
+    readonly property list<PwNode> outputStreams: Pipewire.nodes.values.filter(n => n.audio && n.isStream && n.isSink)
 
     PwObjectTracker {
         objects: [root.defaultAudioSink, root.defaultAudioSource]
+    }
+    PwObjectTracker {
+        objects: root.outputStreams
     }
 
     // Frequency group averages (normalized 0.0 - 1.0)
@@ -51,97 +55,102 @@ Singleton {
         }
     }
 
-    function defaultOutputMuted(): bool {
+    function nodeMuted(node: PwNode): bool {
         if (!Pipewire.ready)
             return false;
 
-        if (root.defaultAudioSink)
-            return root.defaultAudioSink.audio.muted;
+        if (node && node.audio)
+            return node.audio.muted;
 
-        console.warn("No default audio output");
+        console.warn("No audio node");
         return false;
     }
 
-    function setDefaultOutputMuted(muted: bool) {
+    function setNodeMuted(node: PwNode, muted: bool) {
         if (!Pipewire.ready)
             return;
-        if (root.defaultAudioSink) {
-            root.defaultAudioSink.audio.muted = muted;
-        } else {
-            console.warn("No default audio output");
-        }
+
+        if (node && node.audio)
+            node.audio.muted = muted;
+        else
+            console.warn("No audio node");
+    }
+
+    function toggleNodeMuted(node: PwNode) {
+        setNodeMuted(node, !nodeMuted(node));
+    }
+
+    function nodeVolume(node: PwNode): real {
+        if (!Pipewire.ready)
+            return 0;
+
+        if (node && node.audio)
+            return node.audio.volume;
+
+        console.warn("No audio node");
+        return 0;
+    }
+
+    function setNodeVolume(node: PwNode, volume: real) {
+        if (!Pipewire.ready)
+            return;
+
+        if (node && node.audio)
+            node.audio.volume = volume;
+        else
+            console.warn("No audio node");
+    }
+
+    function increaseNodeVolume(node: PwNode, increase: real) {
+        setNodeVolume(node, nodeVolume(node) + increase);
+    }
+
+    function defaultOutputMuted(): bool {
+        return nodeMuted(root.defaultAudioSink);
+    }
+
+    function setDefaultOutputMuted(muted: bool) {
+        setNodeMuted(root.defaultAudioSink, muted);
     }
 
     function toggleDefaultOutputMuted() {
-        setDefaultOutputMuted(!defaultOutputMuted());
+        toggleNodeMuted(root.defaultAudioSink);
     }
 
     function defaultOutputVolume(): real {
-        if (!Pipewire.ready)
-            return 0;
-
-        if (root.defaultAudioSink)
-            return root.defaultAudioSink.audio.volume;
-
-        return 0;
+        return nodeVolume(root.defaultAudioSink);
     }
 
     function setDefaultOutputVolume(volume: real) {
-        if (!Pipewire.ready)
-            return;
-        if (root.defaultAudioSink)
-            root.defaultAudioSink.audio.volume = volume;
-    }
-
-    function defaultInputMuted(): bool {
-        if (!Pipewire.ready)
-            return false;
-
-        if (root.defaultAudioSource)
-            return root.defaultAudioSource.audio.muted;
-
-        return 0;
-    }
-
-    function setDefaultInputMuted(muted: bool) {
-        if (!Pipewire.ready)
-            return;
-        if (root.defaultAudioSource) {
-            root.defaultAudioSource.audio.muted = muted;
-        } else {
-            console.warn("No default audio output");
-        }
-    }
-
-    function toggleDefaultInputMuted() {
-        setDefaultInputMuted(!defaultInputMuted());
-    }
-
-    function defaultInputVolume(): real {
-        if (!Pipewire.ready)
-            return 0;
-
-        if (root.defaultAudioSource)
-            return root.defaultAudioSource.audio.volume;
-
-        console.warn("No default audio input");
-        return 0;
-    }
-
-    function setDefaultInputVolume(volume: real) {
-        if (!Pipewire.ready)
-            return 0;
-
-        if (root.defaultAudioSource)
-            root.defaultAudioSource.audio.volume = volume;
+        setNodeVolume(root.defaultAudioSink, volume);
     }
 
     function increaseDefaultOutputVolume(increase: real) {
-        setDefaultInputVolume(defaultOutputVolume() + increase);
+        increaseNodeVolume(root.defaultAudioSink, increase);
+    }
+
+    function defaultInputMuted(): bool {
+        return nodeMuted(root.defaultAudioSource);
+    }
+
+    function setDefaultInputMuted(muted: bool) {
+        setNodeMuted(root.defaultAudioSource, muted);
+    }
+
+    function toggleDefaultInputMuted() {
+        toggleNodeMuted(root.defaultAudioSource);
+    }
+
+    function defaultInputVolume(): real {
+        return nodeVolume(root.defaultAudioSource);
+    }
+
+    function setDefaultInputVolume(volume: real) {
+        setNodeVolume(root.defaultAudioSource, volume);
     }
 
     function increaseDefaultInputVolume(increase: real) {
-        setDefaultInputVolume(defaultInputVolume() + increase);
+        increaseNodeVolume(root.defaultAudioSource, increase);
     }
 
     function setDefaultOutputDevice(node: PwNode) {
@@ -153,6 +162,35 @@ Singleton {
     }
 
     function nodeLabel(node: PwNode): string {
-        return node.nickname || node.description || node.name
+        const p = node.properties;
+
+        return p["media.name"] || node.nickname || node.description || node.name
+    }
+
+    function nodeIcon(node: PwNode): string {
+        const fallback = "application-x-executable";
+        if (!node)
+            return fallback;
+
+        const p = node.properties;
+
+        if (p["application.icon-name"])
+            return p["application.icon-name"];
+
+        const candidates = [
+            p["application.process.binary"],
+            p["application.name"],
+            node.nickname,
+            node.name
+        ];
+        for (const c of candidates) {
+            if (!c)
+                continue;
+            const entry = DesktopEntries.heuristicLookup(c);
+            if (entry && entry.icon)
+                return entry.icon;
+        }
+
+        return fallback;
     }
 }

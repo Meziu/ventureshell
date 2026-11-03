@@ -17,13 +17,13 @@ Menu {
         id: list
 
         anchors {
-            top: parent.top
+            bottom: parent.bottom
             left: parent.left
             right: parent.right
         }
         spacing: 2
 
-        DeviceSelector {
+        AudioDeviceSelector {
             Layout.fillWidth: true
             label: "Output"
             devices: AudioService.outputDevices
@@ -31,12 +31,22 @@ Menu {
             onSelected: node => AudioService.setDefaultOutputDevice(node)
         }
 
-        DeviceSelector {
+        AudioDeviceSelector {
             Layout.fillWidth: true
             label: "Input"
             devices: AudioService.inputDevices
             current: AudioService.defaultAudioSource
             onSelected: node => AudioService.setDefaultInputDevice(node)
+        }
+
+        MenuSeparator {
+            Layout.fillWidth: true
+        }
+
+        AudioStreamMixer {
+            Layout.bottomMargin: 8
+
+            streams: AudioService.outputStreams
         }
 
         MenuSeparator {
