@@ -9,8 +9,6 @@ Item {
     property bool horizontal: true
 
     anchors.fill: parent
-    implicitWidth: 140
-    implicitHeight: 100
     clip: true
 
     signal exited()

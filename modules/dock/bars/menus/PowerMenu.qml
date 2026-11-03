@@ -8,7 +8,7 @@ import "../widgets"
 
 Menu {
     id: root
-    implicitWidth: Math.max(list.implicitWidth, 160)
+    implicitWidth: list.implicitWidth
     implicitHeight: list.implicitHeight
 
     ColumnLayout {

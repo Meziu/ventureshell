@@ -56,7 +56,7 @@ CurvyBox {
 
     readonly property real baseMainLength: Math.max(
         widgetContainer.requestedLength + cornerPad,
-        popupLoader.item ? popupMainLength : 0)
+        popupLoader.item ? popupMainLength + protrusionMargin * 2 : 0)
 
     function calculateAdditionalLength(widget: Widget): real {
         if (!popupLoader.item || !widget || popupLoader.item.fillSpace)
