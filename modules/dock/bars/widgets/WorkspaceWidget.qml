@@ -25,43 +25,33 @@ Widget {
     }
     property HyprlandWorkspace activeWorkspace: monitor?.activeWorkspace || null
 
-    implicitWidth: layout.implicitWidth
-    implicitHeight: layout.implicitHeight
+    implicitWidth: container.implicitWidth
+    implicitHeight: container.implicitHeight
 
-    GridLayout {
-        id: layout
+    WidgetContainer {
+        id: container
+
         anchors.fill: parent
-
-        // The cell width is the "limiting" size
-        property real cellSize: root.horizontal ? height : width
-
-        rows: root.horizontal ? 1 : -1
-        columns: root.horizontal ? -1 : 1
-        uniformCellHeights: true
-        uniformCellWidths: true
+        horizontal: root.horizontal
+        margins: 0
 
         Repeater {
             model: monitorWorkspaces
 
-            Text {
+            TextWidget {
                 id: workspaceLabel
                 required property HyprlandWorkspace modelData
                 property bool focused: workspaceLabel.modelData === root.activeWorkspace
-                property real letterSpacing: -4
+                property real letterSpacing: -2
+                horizontal: root.horizontal
 
-                Layout.preferredWidth: layout.cellSize
-                Layout.preferredHeight: layout.cellSize
-
+                clickable: false
                 text: modelData.id
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
 
-                color: Theme.text.lightColor
                 font: OuterWildsFont.logoWithOverrides({
                     pointSize: 18,
                     letterSpacing: letterSpacing
                 })
-                leftPadding: letterSpacing
 
                 Rectangle {
                     anchors.fill: parent

@@ -50,7 +50,13 @@ CurvyBox {
         return Math.max(halfLen, Math.min(wPos, root.length - halfLen));
     }
 
-    readonly property real baseMainLength: Math.max(widgetContainer.requestedLength, popupLoader.item ? popupMainLength : 0)
+    readonly property real cornerPad: horizontal
+        ? (attached.left ? 0 : cornerMargins) + (attached.right ? 0 : cornerMargins)
+        : (attached.top ? 0 : cornerMargins) + (attached.bottom ? 0 : cornerMargins)
+
+    readonly property real baseMainLength: Math.max(
+        widgetContainer.requestedLength + cornerPad,
+        popupLoader.item ? popupMainLength : 0)
 
     function calculateAdditionalLength(widget: Widget): real {
         if (!popupLoader.item || !widget || popupLoader.item.fillSpace)
@@ -93,7 +99,7 @@ CurvyBox {
         return added;
     }
 
-    readonly property real length: Math.max(minLength, Math.min(baseMainLength + additionalLength + cornerRadius * 2, maxLength))
+    readonly property real length: Math.max(minLength, Math.min(baseMainLength + additionalLength, maxLength))
 
     WidgetContainer {
         id: widgetContainer
