@@ -29,9 +29,13 @@ Panel {
     }
 
     function executeSelected() {
+        executeIndex(root.currentIndex)
+    }
+
+    function executeIndex(index: int) {
         if (root.results.length === 0) return;
 
-        const item = root.results[root.currentIndex];
+        const item = root.results[index];
         if (!item) return;
 
         const provider = item["provider"];
@@ -146,11 +150,7 @@ Panel {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onEntered: root.currentIndex = delegateRoot.index
-                    onClicked: {
-                        root.currentIndex = delegateRoot.index;
-                        root.executeSelected();
-                    }
+                    onClicked: root.executeIndex(delegateRoot.index)
                 }
             }
         }
