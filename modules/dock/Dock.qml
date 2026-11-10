@@ -29,8 +29,8 @@ Item {
                 windows: [verticalBar, horizontalBar]
 
                 onCleared: {
-                    verticalBar.hidePopups()
-                    horizontalBar.hidePopups()
+                    verticalBar.hidePopups();
+                    horizontalBar.hidePopups();
                 }
             }
 
@@ -43,22 +43,22 @@ Item {
                 target: verticalBar
 
                 function onPopupOpened() {
-                    horizontalBar.hidePopups()
+                    horizontalBar.hidePopups();
                 }
             }
             Connections {
                 target: horizontalBar
 
                 function onPopupOpened() {
-                    verticalBar.hidePopups()
+                    verticalBar.hidePopups();
                 }
             }
             Connections {
                 target: DockService
 
                 function onHideAllPopups() {
-                    horizontalBar.hidePopups()
-                    verticalBar.hidePopups()
+                    horizontalBar.hidePopups();
+                    verticalBar.hidePopups();
                 }
             }
 
@@ -67,12 +67,13 @@ Item {
 
                 function onRawEvent(event) {
                     switch (event.name) {
-                    //case "activewindowv2":   // focus moved to another window
-                    case "workspacev2":      // workspace switched
-                    case "focusedmonv2":     // focus moved to another monitor
-                        verticalBar.hidePopups()
-                        horizontalBar.hidePopups()
-                        break
+                        case "openwindow":          // a new window mapped, so the launch is done
+                        //case "activewindowv2":    // focus moved to another window
+                        case "workspacev2":         // workspace switched
+                        case "focusedmonv2":        // focus moved to another monitor
+                            verticalBar.hidePopups();
+                            horizontalBar.hidePopups();
+                            break;
                     }
                 }
             }
