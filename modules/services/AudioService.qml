@@ -1,5 +1,7 @@
 pragma Singleton
 
+import QtQuick
+
 import Quickshell
 import Quickshell.Io
 import Quickshell.Services.Pipewire
@@ -28,31 +30,44 @@ Singleton {
         command: ["cava", "-p", Quickshell.shellPath("cava.conf")]
         running: true
 
+        onExited: (exitCode, exitStatus) => {
+            console.warn("cava exited (code " + exitCode + ", status " + exitStatus + "), restarting...");
+            // Report silence so the UI doesn't freeze on the last frame
+            root.cavaDataFetched(0, 0, 0);
+            restartTimer.restart();
+        }
+
+        stderr: SplitParser {
+            onRead: data => console.warn("cava stderr:", data)
+        }
+
         stdout: SplitParser {
             onRead: data => {
-                // Parse line of semicolon-separated bar values: "20;45;80;10;..."
                 let values = data.trim().split(';').map(v => parseInt(v) || 0);
                 if (values.length < 12)
                     return;
 
-                // Group 16 CAVA bars into Bass, Mids, Highs
                 let bSum = 0, mSum = 0, hSum = 0;
-
                 for (let i = 0; i < 4; i++)
-                    bSum += values[i];         // Bars 0-3: Bass
+                    bSum += values[i];
                 for (let i = 4; i < 10; i++)
-                    mSum += values[i];        // Bars 4-9: Mids
+                    mSum += values[i];
                 for (let i = 10; i < values.length; i++)
-                    hSum += values[i]; // Bars 10+: Highs
+                    hSum += values[i];
 
-                // Smoothly weight and normalize values
-                let bass = (bSum / 400.0);
-                let mids = (mSum / 600.0);
-                let highs = (hSum / 600.0);
-
-                root.cavaDataFetched(bass, mids, highs);
+                root.cavaDataFetched(
+                    Math.min(bSum / 400.0, 1.0),
+                    Math.min(mSum / 600.0, 1.0),
+                    Math.min(hSum / 600.0, 1.0)
+                );
             }
         }
+    }
+
+    Timer {
+        id: restartTimer
+        interval: 1000   // delay avoids a tight crash loop
+        onTriggered: cavaProc.running = true
     }
 
     function nodeMuted(node: PwNode): bool {
