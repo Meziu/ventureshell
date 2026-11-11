@@ -13,19 +13,32 @@ Item {
         Item {
             required property var modelData
 
-            VerticalBar {
-                id: verticalBar
-                screen: modelData
-            }
+            readonly property alias verticalBar: verticalLoader.item
 
             HorizontalBar {
                 id: horizontalBar
                 screen: modelData
             }
 
+            LazyLoader {
+                id: verticalLoader
+                active: false
+
+                VerticalBar {
+                    screen: modelData
+                }
+            }
+
+            Timer {
+                interval: 50          // horrifying heuristic solution to the race condition for exclusionZone
+                running: true
+                repeat: false
+                onTriggered: verticalLoader.active = true
+            }
+
             HyprlandFocusGrab {
                 id: grab
-                active: verticalBar.requiresFocusGrab || horizontalBar.requiresFocusGrab
+                active: verticalBar?.requiresFocusGrab || horizontalBar.requiresFocusGrab
                 windows: [verticalBar, horizontalBar]
 
                 onCleared: {
@@ -67,13 +80,13 @@ Item {
 
                 function onRawEvent(event) {
                     switch (event.name) {
-                        case "openwindow":          // a new window mapped, so the launch is done
-                        //case "activewindowv2":    // focus moved to another window
-                        case "workspacev2":         // workspace switched
-                        case "focusedmonv2":        // focus moved to another monitor
-                            verticalBar.hidePopups();
-                            horizontalBar.hidePopups();
-                            break;
+                    case "openwindow":          // a new window mapped, so the launch is done
+                    //case "activewindowv2":    // focus moved to another window
+                    case "workspacev2":         // workspace switched
+                    case "focusedmonv2":        // focus moved to another monitor
+                        verticalBar.hidePopups();
+                        horizontalBar.hidePopups();
+                        break;
                     }
                 }
             }
