@@ -47,7 +47,7 @@ Panel {
 
         // The first one is executed with a simple enter, should find some other way
         ElephantService.activate(provider, identifier, actions[0], query, []);
-        // root.exited() // Not necessary anymore, the dock closes all popups on window opening
+        root.exited() // the dock closes all popups on window opening either way
     }
 
     ColumnLayout {

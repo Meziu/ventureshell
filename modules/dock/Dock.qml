@@ -42,7 +42,7 @@ Item {
                 windows: [verticalBar, horizontalBar]
 
                 onCleared: {
-                    verticalBar.hidePopups();
+                    verticalBar?.hidePopups();
                     horizontalBar.hidePopups();
                 }
             }
